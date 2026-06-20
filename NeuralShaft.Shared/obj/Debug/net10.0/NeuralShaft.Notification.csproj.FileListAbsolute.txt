@@ -1,0 +1,13 @@
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\bin\Debug\net10.0\NeuralShaft.Notification.deps.json
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\bin\Debug\net10.0\NeuralShaft.Notification.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\bin\Debug\net10.0\NeuralShaft.Notification.pdb
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.csproj.AssemblyReference.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.GeneratedMSBuildEditorConfig.editorconfig
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.AssemblyInfoInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.AssemblyInfo.cs
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.csproj.CoreCompileInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.sourcelink.json
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\refint\NeuralShaft.Notification.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\NeuralShaft.Notification.pdb
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Notification.Hub\obj\Debug\net10.0\ref\NeuralShaft.Notification.dll

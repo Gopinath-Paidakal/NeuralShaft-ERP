@@ -1,0 +1,13 @@
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\bin\Release\net10.0\NeuralShaft.Shared.deps.json
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\bin\Release\net10.0\NeuralShaft.Shared.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\bin\Release\net10.0\NeuralShaft.Shared.pdb
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.csproj.AssemblyReference.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.AssemblyInfoInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.AssemblyInfo.cs
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.csproj.CoreCompileInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.sourcelink.json
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\refint\NeuralShaft.Shared.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\NeuralShaft.Shared.pdb
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Shared\obj\Release\net10.0\ref\NeuralShaft.Shared.dll

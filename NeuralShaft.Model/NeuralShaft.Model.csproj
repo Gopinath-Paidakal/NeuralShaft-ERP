@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <BaseOutputPath>D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.RunTime</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Enquiry\**" />
+    <Compile Remove="Masters\**" />
+    <EmbeddedResource Remove="Enquiry\**" />
+    <EmbeddedResource Remove="Masters\**" />
+    <None Remove="Enquiry\**" />
+    <None Remove="Masters\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+  </ItemGroup>
+
+</Project>

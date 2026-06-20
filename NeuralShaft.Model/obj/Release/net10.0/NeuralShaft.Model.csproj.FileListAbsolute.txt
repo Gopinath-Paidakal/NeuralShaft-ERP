@@ -1,0 +1,12 @@
+D:\NEURAL-SHAFT-ERP\NeuralShaft.RunTime\Release\net10.0\NeuralShaft.Model.deps.json
+D:\NEURAL-SHAFT-ERP\NeuralShaft.RunTime\Release\net10.0\NeuralShaft.Model.dll
+D:\NEURAL-SHAFT-ERP\NeuralShaft.RunTime\Release\net10.0\NeuralShaft.Model.pdb
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.csproj.AssemblyReference.cache
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.GeneratedMSBuildEditorConfig.editorconfig
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.AssemblyInfoInputs.cache
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.AssemblyInfo.cs
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.csproj.CoreCompileInputs.cache
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.dll
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\refint\NeuralShaft.Model.dll
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\NeuralShaft.Model.pdb
+D:\NEURAL-SHAFT-ERP\NeuralShaft.Model\obj\Release\net10.0\ref\NeuralShaft.Model.dll
