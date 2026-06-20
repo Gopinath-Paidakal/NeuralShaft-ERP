@@ -1,0 +1,73 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_getContact]    Script Date: 04/06/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_getContact]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_getContact]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_getContact]    Script Date: 04/06/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_getContact]
+--(
+--	--@TalukFlag_No int,
+--	--@Language_No int,
+--	--@Display_Type varchar(20)
+--)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+		
+	-- GET DEPARTMENT AS JSON
+	SELECT
+	(
+		SELECT [ContactId]
+			  ,[ContactType]
+			  ,[ContactName]
+			  ,[ContactFirmName]
+			  ,[ContactDesignation]
+
+			  ,[ContactNumber]
+			  ,[CreatedUserId]
+			  ,[CreatedDate]
+
+			FROM [dbo].[Contact]
+
+		FOR JSON PATH, ROOT('Contact')
+	) As 'Conact'
+			
+END TRY
+
+	BEGIN CATCH
+
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+	
+
+
+
+

@@ -1,0 +1,85 @@
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetEnqSourceBy]    Script Date: 06/08/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetEnqSourceBy]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetEnqSourceBy]
+GO
+
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetEnqSourceBy]    Script Date: 06/08/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GetEnqSourceBy]
+(
+	@EnqSource nvarchar(100)
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+
+	--Set @FromDate = GETDATE()
+	--Set @ToDate = GETDATE()
+
+	SELECT
+(
+   SELECT 
+       --[ContactId]
+      --,[ContactType]
+      [ContactName]
+      --,[ContactFirmName]
+      --,[ContactDesignation]
+      --,[ContactNumber]
+      --,[CreatedUserId]
+      --,[CreatedDate]
+      --,[ModifiedUserId]
+      --,[ModifiedDate]
+  FROM [dbo].[Contact]
+  where upper(Contact.ContactType) = upper(@EnqSource)
+	
+    FOR JSON PATH, ROOT('Contact')  -- ROOT WITHOUT_ARRAY_WRAPPER
+
+) AS Contact
+
+END TRY
+
+	BEGIN CATCH
+		
+		--ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+--WHERE CAST([EnqHdr].[EnqDate] AS DATE) >= CAST(@FromDate AS DATE)
+	--and CAST([EnqHdr].[EnqDate] AS DATE) <= CAST(@ToDate AS DATE)
+
+	--WHERE [EnqHdr].[EnqDate] >= @FromDate
+	--and [EnqHdr].[EnqDate] <= @ToDate
+
+	--WHERE EnqDate >= @FromDate AND EnqDate <= @ToDate
+
+	--WHERE CAST([EnqHdr].[EnqDate] AS DATE) >= CAST(@FromDate AS DATE)
+	--and CAST([EnqHdr].[EnqDate] AS DATE) <= CAST(@ToDate AS DATE)
+
+	--WHERE [EnqHdr].[EnqDate] >= @FromDate
+	--and [EnqHdr].[EnqDate] <= @ToDate

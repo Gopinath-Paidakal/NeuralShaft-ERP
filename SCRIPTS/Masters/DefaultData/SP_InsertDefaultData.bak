@@ -1,0 +1,591 @@
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_InsertDefaultData]    Script Date: 20/03/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertDefaultData]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_InsertDefaultData]
+GO
+
+--USE [NSHAFTERPDB]
+--GO
+--/****** Object:  StoredProcedure [dbo].[SP_InsertDefaultData]    Script Date: 20/03/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_InsertDefaultData]
+(
+	@DefaultData nvarchar(Max)
+
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+
+	--Declare @CompId int
+	--Declare @BranchId int
+
+	Declare @DefaultDataId int
+
+     --IF ISJSON(@DefaultData) = 0
+     --   BEGIN
+     --       --THROW 50001, 'Invalid JSON format', 1;
+     --       GOTO End_Prog
+     --   END
+
+    --- GST and HSN Code added on 01-06-2026
+
+	BEGIN TRANSACTION
+
+	--- ============= Enquiry
+
+	INSERT INTO [dbo].[DefaultData]
+           ([FormType]
+           ,[DefaultDataType]
+           ,[DefaultProductWidth]
+           ,[DefaultProductDepth]
+           ,[DefaultDataName]
+
+           ,[DefaultDataDesc]
+           ,[DefaultDataStatus]
+           ,[Price]
+           ,[DefaultTotalStops]
+           ,[DefaultCapacity]    --10
+           
+           ,[DefaultWeight]
+           ,[DefaultNoStopPrice]
+           ,[DouEntType]
+           ,[DouEntPrice901st]
+           ,[DouEntPrice902nd]
+           
+           ,[DouEntPrice1801st]
+           ,[DouEntPrice1802nd]
+           ,[DouEntPrice1803rd]
+           ,[DefaultCabinWidth]
+           ,[DefaultCabinDepth]  -- 20
+           
+           ,[DefaultCabinHeight]
+           ,[ShaftTypeWidth]
+           ,[ShaftTypeDepth]
+           ,[ElevatorSpeed]
+           ,[DefaultOverheadHeight]
+           
+           ,[DefaultElevatorPit]
+           ,[DefaultMaxFloors]
+           ,[DefaultMinWidthSingle]
+           ,[DefaultMinDepthSingle]
+           ,[DefaultMinWidthDouble]  --30
+           
+           ,[DefaultMinDepthDouble]
+           ,[DefaultMinWidthTriple]
+           ,[DefaultMinDepthTriple]
+           ,[DefaultDoorHeight]
+           ,[DefaultDoorWidth]
+
+           ,[DefaultDoorMinShaftWidth]
+           ,[DefaultDataOrderBy]    -- 37 
+
+           ,[DefaultPowerSupply]
+           ,[DefaultMachine]
+           ,[DefaultDrive]
+           ,[DefaultController]
+           ,[DefaultOperation]
+           ,[DefaultGuideRails]
+           ,[DefaultRope]          -- 44
+
+           ,[DefaultSpecialFeatures]
+           ,[DoorFormulaMultiply]
+           ,[DoorFormulaAdd]
+           ,[DoorTechWidth]
+           ,[DoorTechDepth]
+
+           ,[GST]
+           ,[HSNCode]
+
+           ,[CabinLeftPanel]
+           ,[CabinRightPanel]
+           ,[CabinFrontPanel]
+           ,[CabinRarePanel]
+           
+           ,[TentativeDuration1]
+           ,[TentativeDuration2]
+           ,[TentativeDuration3]
+           ,[TentativeDuration4]
+           ,[TentativeDuration5]
+
+           ,[TentativeDuration6]
+           ,[TentativeDuration7]
+
+           ,[CreatedUserId]
+           ,[CreatedDate])    
+	
+	SELECT    
+		   FormType, 
+           DefaultDataType, 
+           DefaultProductWidth, 
+           DefaultProductDepth, 
+           DefaultDataName, 
+
+           DefaultDataDesc, 
+           DefaultDataStatus, 
+           Price, 
+           DefaultTotalStops, 
+           DefaultCapacity,     --10
+           
+           DefaultWeight,
+           DefaultNoStopPrice,
+           DouEntType, 
+           DouEntPrice901st,
+           DouEntPrice902nd, 
+           
+           DouEntPrice1801st, 
+           DouEntPrice1802nd, 
+           DouEntPrice1803rd, 
+           DefaultCabinWidth, 
+           DefaultCabinDepth,   --20
+           
+           DefaultCabinHeight, 
+           ShaftTypeWidth, 
+           ShaftTypeDepth, 
+           ElevatorSpeed, 
+           DefaultOverheadHeight, 
+           
+           DefaultElevatorPit, 
+           DefaultMaxFloors, 
+           DefaultMinWidthSingle, 
+           DefaultMinDepthSingle, 
+           DefaultMinWidthDouble, --30
+           
+           DefaultMinDepthDouble, 
+           DefaultMinWidthTriple, 
+           DefaultMinDepthTriple, 
+           DefaultDoorHeight,
+           DefaultDoorWidth,
+
+           DefaultDoorMinShaftWidth,
+           DefaultDataOrderBy,   -- 37    
+           
+           DefaultPowerSupply,
+           DefaultMachine,
+           DefaultDrive,
+           DefaultController,
+           DefaultOperation,
+           DefaultGuideRails,
+           DefaultRope,         -- 44
+
+           DefaultSpecialFeatures,
+           DoorFormulaMultiply,
+           DoorFormulaAdd,
+           DoorTechWidth,
+           DoorTechDepth,
+
+           GST,
+           HSNCode,
+           CabinLeftPanel,
+           CabinRightPanel,
+           CabinFrontPanel,
+           CabinRarePanel,
+
+           TentativeDuration1,
+           TentativeDuration2,
+           TentativeDuration3,
+           TentativeDuration4,
+           TentativeDuration5,
+
+           TentativeDuration6,
+           TentativeDuration7,
+
+           CreatedUserId,
+		   CreatedDate
+
+	FROM OPENJSON(@DefaultData, '$.DefaultData')
+	WITH
+	(
+		   FormType nvarchar(100),
+           DefaultDataType nvarchar(50),
+           DefaultProductWidth int,
+           DefaultProductDepth int,
+           DefaultDataName nvarchar(100),
+
+           DefaultDataDesc nvarchar(500),
+           DefaultDataStatus bit,
+           Price numeric(10,2),
+           DefaultTotalStops int,
+           DefaultCapacity int,              --10
+           
+           DefaultWeight int,
+           DefaultNoStopPrice int,
+           DouEntType nvarchar(5),
+           DouEntPrice901st int,
+           DouEntPrice902nd int,
+           
+           DouEntPrice1801st int,
+           DouEntPrice1802nd int,
+           DouEntPrice1803rd int,
+           DefaultCabinWidth int,
+           DefaultCabinDepth int,   --20
+           
+           DefaultCabinHeight int,
+           ShaftTypeWidth int,
+           ShaftTypeDepth int,
+           ElevatorSpeed numeric(18,2),
+           DefaultOverheadHeight int,
+           
+           DefaultElevatorPit int,
+           DefaultMaxFloors int,
+           DefaultMinWidthSingle int,
+           DefaultMinDepthSingle int,
+           DefaultMinWidthDouble int,   --30
+           
+           DefaultMinDepthDouble int,
+           DefaultMinWidthTriple int,
+           DefaultMinDepthTriple int,
+           DefaultDoorHeight int,
+           DefaultDoorWidth int,        -- 35
+
+           DefaultDoorMinShaftWidth int,
+           DefaultDataOrderBy smallint,  --37
+
+           DefaultPowerSupply nvarchar(200),
+           DefaultMachine nvarchar(200),
+           DefaultDrive nvarchar(200),
+           DefaultController nvarchar(200),
+           DefaultOperation nvarchar(200),
+           DefaultGuideRails nvarchar(200),
+           DefaultRope nvarchar(200),   -- 44
+
+           DefaultSpecialFeatures nvarchar(500),
+           DoorFormulaMultiply numeric(10,2),
+           DoorFormulaAdd int,
+           DoorTechWidth int,
+           DoorTechDepth int,
+                   
+           ---- Updated on 01-06-2026
+           GST numeric(5,2),
+           HSNCode nvarchar(50),
+
+           [CabinLeftPanel] nvarchar(100),
+           [CabinRightPanel] nvarchar(100),
+           [CabinFrontPanel] nvarchar(100),
+           [CabinRarePanel] nvarchar(100),
+
+           [TentativeDuration1] smallint,
+           [TentativeDuration2] smallint,
+           [TentativeDuration3] smallint,
+           [TentativeDuration4] smallint,
+           [TentativeDuration5] smallint,
+
+           [TentativeDuration6] smallint,
+           [TentativeDuration7] smallint,
+
+           CreatedUserId int,         
+           CreatedDate nvarchar(20)
+           
+	)
+
+	
+	SET @DefaultDataId =  SCOPE_IDENTITY();
+	--================= =================
+	
+	Select @DefaultDataId
+    --FOR JSON PATH, ROOT('InsertDefaultData')
+		
+	---- ================================================
+	COMMIT TRANSACTION
+	
+END TRY
+
+	BEGIN CATCH
+		
+        --IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION;
+		
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+   --ISNULL([FormType], '') AS [FormType],
+       --         ISNULL([DefaultDataType], '') AS [DefaultDataType],
+       --         ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
+       --         ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
+
+       --         ISNULL([DefaultDataName], '') AS [DefaultDataName],
+       --         ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
+       --         ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
+       --         ISNULL([Price], 0) AS [Price],
+       --         ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
+
+       --         ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
+       --         ISNULL([DefaultWeight], 0) AS [DefaultWeight],
+       --         ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
+       --         ISNULL([DouEntType], '') AS [DouEntType],
+       --         ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
+
+       --         ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
+       --         ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
+       --         ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
+       --         ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
+       --         ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
+
+       --         ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
+       --         ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
+       --         ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
+       --         ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
+       --         ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
+
+       --         ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
+       --         ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
+       --         ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
+       --         ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
+       --         ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
+
+       --         ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
+       --         ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
+
+       --         ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
+       --         ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
+
+       --         ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
+       --         ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
+       --         ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
+
+       --         ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
+
+--	INSERT INTO [dbo].[Enquiry]
+--(
+--    CompanyId,
+--    BranchId,
+--    EnqClientId,
+--    EnqShaftDetailsId,
+--    EnqDoorTypeId,
+
+--    EnqFloorDetailsId,
+--    EnqProductTypeId,
+--    EnqCabinTypeId,
+--    EnqNo,
+--    EnqSlno,
+
+--    EnqDate,
+--    EnqRefDetails,
+--    EnqRemarks,
+--    EnqStatus,
+--    Latitude,
+    
+--	Longitude,
+--    CreatedBy,
+--    CreatedDate
+--)
+--SELECT
+--     1,
+--     1,
+--     @EnqClientId,
+--     @EnqShaftDetailsId,
+--     @EnqDoorTypeId,
+
+--     @EnqFloorDetailsId,
+--     @EnqProductTypeId,
+--     @EnqCabinTypeId,
+--     1,
+--     1,
+
+--     GETDATE(),                -- better than hardcoded date
+--     EnqRefDetails,
+--     EnqRemarks,
+--     EnqStatus,
+--     Latitude,
+
+--     Longitude,
+--     'Admin',
+--     GETDATE()
+--FROM OPENJSON(@Enquiry, '$.Enquiry')
+--WITH
+--(
+--    EnqRefDetails NVARCHAR(100), 
+--    EnqRemarks    NVARCHAR(500),
+--    EnqStatus     NVARCHAR(5),   
+--    Latitude      NVARCHAR(50),  
+--    Longitude     NVARCHAR(50)  
+--);
+
+--INSERT INTO [dbo].[EnqClientDetails]
+ --          ([EnqClientGUID]
+ --          ,[EnqClientCategory]
+ --          ,[EnqClientName]
+ --          ,[EnqClientMobileNo]
+ --          ,[EnqClientEmailId]
+
+ --          ,[EnqClientAddress1]
+ --          --,[EnqClientAddress2]
+ --          ,[EnqLeadSource]
+ --          ,[EnqRefDetails]
+ --          ,[EnqRemarks]
+           
+	--	   ,[CreatedBy]
+ --          ,[CreatedDate])
+ --   Values
+ --          (NEWID()
+ --          ,@EnqClientCategory
+ --          ,@EnqClientName
+ --          ,@EnqClientMobileNo
+ --          ,@EnqClientEmailId
+ --          ,@EnqClientAddress1
+
+ --          --,@EnqClientAddress2
+ --          ,@EnqLeadSource
+ --          ,@EnqRefDetails
+ --          ,@EnqRemarks
+ --          ,@CreatedBy
+ --          ,getdate())
+	--@EnqClientDetails nvarchar(Max),
+ --   @EnqShaftDetails nvarchar(Max),
+	--@EnqFloorDetails nvarchar(Max),
+	--@EnqDoorDetails nvarchar(Max),
+
+	--@EnqCabinType nvarchar(Max),
+	--@EnqPanelType nvarchar(Max),
+	--@EnqProductType nvarchar(Max)	
+
+
+	--INSERT INTO [dbo].[Enquiry]
+ --          ([CompanyId]
+ --          ,[BranchId]
+ --          ,[EnqClientId]
+ --          ,[EnqShaftDetailsId]
+	--	   ,[EnqDoorTypeId]
+           
+	--	   ,[EnqFloorDetailsId]
+	--	   ,[EnqProductTypeId]
+ --          ,[EnqCabinTypeId]
+ --          ,[EnqNo]
+ --          ,[EnqSlno]
+
+ --          ,[EnqDate]
+	--	   --,[EnqRefDetails]
+ --          --,[EnqRemarks]
+ --          ,[EnqStatus]
+ --          ,[Lattitude]
+           
+	--	   ,[Longitude]
+ --          ,[CreatedBy]
+ --          ,[CreatedDate])
+ --    Select
+ --           1
+ --          ,1
+ --          ,@EnqClientId
+ --          ,@EnqShaftDetailsId
+	--	   ,@EnqDoorTypeId
+
+	--	   ,@EnqFloorDetailsId
+ --          ,@EnqProductTypeId
+ --          ,@EnqCabinTypeId
+ --          ,1
+ --          ,1
+
+ --          ,'2026-03-10'         
+ --          ,CreatedBy
+	--	   ,Getdate()
+	--FROM OPENJSON(@Enquiry, '$.Enquiry')
+ --   WITH
+ --   (
+	--	  EnqRefDetails nvarchar(100),
+ --         EnqRemarks nvarchar(500),
+ --         EnqStatus nvarchar(5),
+ --         Lattitude nvarchar(50),
+ --         Longitude nvarchar(50)
+
+
+ --	INSERT INTO [dbo].[EnqClientDetails]
+--(
+--    EnqClientGUID,
+--    EnqConsultant,
+--    EnqClientName,
+--    EnqClientMobileNo,
+--    EnqClientEmailId,
+--    EnqClientAddress,
+--    EnqClientCategory,
+--    EnqLeadSource,
+--    EnqSourceBy,
+--    CreatedBy
+--)
+
+--SELECT
+--    NEWID(),
+--    EnqConsultant,
+--    EnqClientName,
+--    EnqClientMobileNo,
+--    EnqClientEmailId,
+--    EnqClientAddress,
+--    EnqClientCategory,
+--    EnqLeadSource,
+--    EnqSourceBy,
+--    CreatedBy
+
+--FROM OPENJSON(@Enquiry, '$.EnqClientDetails')
+--WITH
+--(
+--    EnqConsultant      NVARCHAR(100) '$.EnqConsultant',
+--    EnqClientName      NVARCHAR(100) '$.EnqClientName',
+--    EnqClientMobileNo  NVARCHAR(100) '$.EnqClientMobileNo',
+--    EnqClientEmailId   NVARCHAR(100) '$.EnqClientEmailId',
+--    EnqClientAddress   NVARCHAR(100) '$.EnqClientAddress',
+--    EnqClientCategory  NVARCHAR(100) '$.EnqClientCategory',
+--    EnqLeadSource      NVARCHAR(100) '$.EnqLeadSource',
+--    EnqSourceBy        NVARCHAR(100) '$.EnqSourceBy',
+--    CreatedBy          NVARCHAR(20)  '$.CreatedBy'
+--)
+
+
+---=============Product Type
+	--INSERT INTO [dbo].[EnqProductType]
+ --          (EnquiryId
+ --          ,ProductType
+ --          ,ProductVariant
+ --          ,NoOfPassengers
+ --          ,TotalLandings
+ --          ,CreatedBy
+ --          ,CreatedDate)
+ --    Select
+ --          EnquiryId, 
+ --          ProductType, 
+ --          ProductVariant, 
+ --          NoOfPassengers, 
+ --          TotalLandings, 
+ --          CreatedBy,
+	--	   Getdate()
+	--FROM OPENJSON(@Enquiry, '$.EnqProductType')
+ --   WITH
+ --   (
+	--	  EnquiryId int,
+ --         ProductType nvarchar(100),
+ --         ProductVariant nvarchar(100),
+ --         NoOfPassengers nvarchar(100),
+ --         TotalLandings nvarchar(100),
+ --         CreatedBy nvarchar(20)
+ --   )
+	--SET @EnqProductTypeId  = IDENT_CURRENT('EnqProductType')
+	----=============================================
+
+	--select 
+	--	JSON_VALUE(@Enquiry, '$.Enquiry.EnqNo') AS EnqNo,
+	--	--JSON_VALUE(@Enquiry, '$.Enquiry.Date') AS EnqDate,
+	--	JSON_VALUE(@Enquiry, '$.EnqClient.EnqConsultant') AS Consultant,
+	--	JSON_VALUE(@Enquiry, '$.EnqClient.EnqClientName') AS ClientName,	
+	--	JSON_VALUE(@Enquiry, '$.EnqClient.EnqClientMobileNo') AS MobileNo
+	--FOR JSON PATH, ROOT('Enquiry')

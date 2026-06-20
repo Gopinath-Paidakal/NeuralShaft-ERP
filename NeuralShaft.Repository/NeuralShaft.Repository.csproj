@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <BaseOutputPath>D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.RunTime</BaseOutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="RepoImplementation\Enquiry\**" />
+    <Compile Remove="RepoImplementation\Masters\**" />
+    <Compile Remove="RepoInterfaces\Enquiry\**" />
+    <Compile Remove="RepoInterfaces\Masters\**" />
+    <EmbeddedResource Remove="RepoImplementation\Enquiry\**" />
+    <EmbeddedResource Remove="RepoImplementation\Masters\**" />
+    <EmbeddedResource Remove="RepoInterfaces\Enquiry\**" />
+    <EmbeddedResource Remove="RepoInterfaces\Masters\**" />
+    <None Remove="RepoImplementation\Enquiry\**" />
+    <None Remove="RepoImplementation\Masters\**" />
+    <None Remove="RepoInterfaces\Enquiry\**" />
+    <None Remove="RepoInterfaces\Masters\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SP_GetEnqHdr.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.72" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NeuralShart.Data\NeuralShaft.Data.csproj" />
+  </ItemGroup>
+
+</Project>

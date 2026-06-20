@@ -1,0 +1,188 @@
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.RateLimiting;
+using NeuralShaft.Repository.RepoImplementation;
+using NeuralShaft.Repository.RepoInterfaces;
+using NeuralShaft.Service.ServiceImplementation;
+using NeuralShaft.Service.ServiceInterfaces;
+using NeuralShart.Data;
+using System.Net;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<DbConnection>();
+//builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+//builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+builder.Services.AddScoped<IFormDefaultDataService, FormDefaultDataService>();
+//builder.Services.AddScoped<IEnquiryRepository, EnquiryRepository>();
+
+builder.Services.AddScoped<IEnquiryService, EnquiryService>();
+//builder.Services.AddScoped<IFormDefaultDataRepository, FormDefaultDataRepository>();
+
+// === JSON Generic Repository for all db data
+builder.Services.AddScoped<IJsonRepository, JsonRepository>();
+
+
+////////////////////////////////////////////////single domain -CORS - Cross - origin resource sharing 
+//builder.Services.AddCors(p => p.AddPolicy("AllowAll", build =>
+//{
+//    // build.WithOrigins("http://192.168.1.0:5000", "http://localhost:5000").AllowAnyMethod().AllowAnyHeader();
+//    //build.WithOrigins("http://0.0.0.0:5143").AllowAnyOrigin();
+//    build.WithOrigins("http://0.0.0.0:5173").AllowAnyMethod().AllowAnyHeader();
+
+
+//}
+//));
+
+
+builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
+//builder.Services.AddControllers();
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAll", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+//});
+
+
+
+builder.Services.AddRateLimiter(p => p.AddFixedWindowLimiter(policyName: "fixedwindow", options =>
+{
+    options.Window = TimeSpan.FromSeconds(10);
+    options.PermitLimit = 1;
+    options.QueueLimit = 1;
+    options.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+}).RejectionStatusCode = 401);
+
+
+var app = builder.Build();
+
+// 2. Configure Forwarded Headers (CRITICAL for Nginx/HTTPS)
+// This tells .NET that Nginx is handling the SSL/HTTPS
+
+
+//app.UseForwardedHeaders(new ForwardedHeadersOptions
+//{
+//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+//});
+
+
+
+///////////////////// Configure forwarded headers and trust the local Nginx proxy on 127.0.0.1//////////////////
+var forwardedHeadersOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+};
+
+
+//////////////////////////// If Nginx runs on the same host, add the loopback address as a known proxy//////////////////////////
+///
+forwardedHeadersOptions.KnownProxies.Clear();
+
+forwardedHeadersOptions.KnownProxies.Add(IPAddress.Parse("127.0.0.1"));
+
+app.UseForwardedHeaders(forwardedHeadersOptions);
+
+// --- Configure HTTPS redirection to use port 443 explicitly ---
+
+//app.UseHttpsRedirection(new HttpsRedirectionOptions
+
+//{
+//    HttpsPort = 443
+//});
+
+
+
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+//app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
+
+app.UseRateLimiter();
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
+
+// Ensure it listens on port 5000 (matching your Nginx config)
+app.Run();
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")??
+//    throw new InvalidOperationException("Connection string not found")));
+
+// 15-01-2025
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//});
+
+//builder.Services.AddAuthentication(
+//        options =>
+//        {
+//            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+//            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+//        })
+//        .AddIdentityCookies();
+
+
+
+
+// multiple domains CORS - Cross-origin resource sharing 
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+//{
+//    build.WithOrigins("http://localhost:4200", "http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+//}
+//));
+
+// ANY domain CORS - Cross-origin resource sharing 
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+//{
+//    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+//}
+//));
+
+// another Way or CORS
+//app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllerRoute(
+//        name: "default",
+//        pattern: "{controller=Home}/{action=Index}/{id?}");
+//});
+
+//-------- Controlles end points tried not clear how it works
+//app.UseRouting();
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//});
+
+//builder.Services.Configure<IISServerOptions>(options =>
+//{
+//    options.MaxRequestBodySize = 104857600; // 100 MB
+//});
+

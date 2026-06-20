@@ -1,0 +1,254 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetEmp_ById]    Script Date: 09/03/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetEmp_ById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetEmp_ById]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetEmp_ById]    Script Date: 09/03/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GetEmp_ById]
+(
+    @EmpId int, 
+    @GetEmpData nvarchar(100)
+	
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	--BEGIN TRANSACTION
+
+    Declare @EmpStr nvarchar(max)
+
+    if (@GetEmpData = upper('EMPLOYEE'))
+    BEGIN
+
+        set @EmpStr = (SELECT
+        (
+  
+            -- =========== EnqHdr
+	        SELECT
+             
+                 [Employee].[EmpId]
+                ,[Employee].[BranchId]
+                ,[Employee].[DeptId]
+                ,[Employee].[DesigId]
+                ,[Employee].[GradeId]
+                ,[Employee].[EmpTitle]
+                ,[Employee].[EmpFirstName]
+                ,[Employee].[EmpLastName]
+                ,[Employee].[EmpDOB]
+
+                ,[Employee].[EmpGender]
+                ,[Employee].[EmpBloodGroup]
+                ,[Employee].[EmpMaritalStatus]
+                ,[Employee].[EmpFatherName]
+                ,[Employee].[EmpMotherName]
+
+                ,[Employee].[EmpPersEmailId]
+                ,[Employee].[EmpOffEmailId]
+                ,[Employee].[EmpMobileNo]
+                ,[Employee].[EmpAltMobileNo]
+                ,[Employee].[EmpEmerNo]
+
+                ,[Employee].[EmpNationality]
+                ,[Employee].[EmpPresAddr1]
+                ,[Employee].[EmpPresAddr2]
+                ,[Employee].[EmpPresState]
+                ,[Employee].[EmpPresCity]
+
+                ,[Employee].[EmpPresPinCode]
+                ,[Employee].[EmpPermAddr1]
+                ,[Employee].[EmpPermsAddr2]
+                ,[Employee].[EmpPermState]
+                ,[Employee].[EmpPermCity]
+
+                ,[Employee].[EmpPermPinCode]
+                --,[Employee].[EmpBranch]
+                --,[Employee].[EmpDept]
+                --,[Employee].[EmpDesig]
+                --,[Employee].[EmpGrade]
+
+                ,[Employee].[EmpType]
+                ,[Employee].[EmpPunch]
+                ,[Employee].[EmpLeaveGrroup]
+                ,[Employee].[EmpBioId]
+                ,[Employee].[EmpDOC]
+
+                ,[Employee].[EmpDOJ]
+                ,[Employee].[EmpDOR]
+                ,[Employee].[EmpAttendance]
+                ,[Employee].[EmpESIC]
+                ,[Employee].[EmpPF]
+
+                ,[Employee].[EmpPanNo]
+                ,[Employee].[EmpAadhar]
+                ,[Employee].[EmpInsPolicyNo]
+                ,[Employee].[EmpPFNo]
+                ,[Employee].[EmpUANNo]
+
+                ,[Employee].[EmpESICNo]
+                ,[Employee].[EmpPrevLeave]
+                ,[Employee].[EmpCasualLeave]
+                ,[Employee].[EmpSickLeave]
+                ,[Employee].[EmpLeaveYear]
+
+                ,[Employee].[EmpSalGross]
+                ,[Employee].[EmpOverTime]
+                ,[Employee].[EmpAssets]
+                ,[Employee].[EmpDocuments]
+                ,[Employee].[EmpLogin]
+
+                ,[Employee].[CreatedUserId]
+                ,[Employee].[CreatedDate]
+
+                ,[Employee].[ModifiedUserId]
+                ,[Employee].[ModifiedDate]
+
+                ,[Users].[UserName]
+                ,[Users].[UserPwd]
+                ,[Users].[UserActive]
+
+
+            FROM [dbo].[Employee]
+            inner Join [Users] on [Users].EmpId = Employee.EmpId
+
+            WHERE [Employee].EmpId = @EmpId
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+
+        ) AS Employee)
+
+        select @EmpStr
+    END
+
+    
+    if (@GetEmpData = upper('EMPACADEMIC'))
+    BEGIN
+
+        set @EmpStr = (SELECT
+        (
+	        -- =========== EmpAcademic
+            SELECT
+		          [EmpAcadId]
+                  ,[EmpId]
+                  ,[EmpQual]
+                  ,[EmpClass]
+                  ,[EmpInstitution]
+
+                  ,[EmpUniversity]
+                  ,[EmpPercent]
+                  ,[EmpYearOfPass]
+                  ,[EmpAcadStatus]
+                  ,[EmpAcadQuery]
+
+                  ,[EmpAcaCrudType]
+
+            FROM [dbo].[EmpAcademic]
+            WHERE EmpId = @EmpId
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ) AS EmpAcademic)
+        
+        select @EmpStr
+    END
+
+    if (@GetEmpData = upper('EMPPASTEMPLOYMENT'))
+    BEGIN
+
+        set @EmpStr = (SELECT
+        (
+            -----========== EmpPastEmployment
+	     SELECT [EmpPastEmployId]
+              ,[EmpId]
+              ,[EmpCompName]
+              ,[EmpDesig]
+              ,[EmpLastDrnSal]
+              ,[EmpFromDate]
+
+              ,[EmpToDate]
+              ,[EmpPastActive]
+              ,[EmpPastQuery]
+              ,[EmpPastCrudType]
+
+          FROM [dbo].[EmpPastEmployment]
+            
+          WHERE EmpId = @EmpId
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ) AS EmpPastEmployment)
+
+        select @EmpStr
+    END
+
+    if (@GetEmpData = upper('EMPASSETS'))
+    BEGIN
+
+        set @EmpStr = (SELECT
+        (
+         -----========== EmpAssets
+        SELECT [EmpAssetId]
+              ,[EmpId]
+              ,[EmpAssetName]
+              ,[EmpAssetDesc]
+              ,[EmpAssetSlNo]
+              ,[EmpAssetValue]
+              ,[EmpAssetCondition]
+          
+        FROM [dbo].[EmpAssets]
+            
+          WHERE EmpId = @EmpId
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ) AS EmpAssets)
+
+        select @EmpStr
+    END
+
+    if (@GetEmpData = upper('EMPDOCS'))
+    BEGIN
+
+          set @EmpStr = (SELECT
+          (
+            SELECT [EmpDocId]
+              ,[EmpId]
+              ,[EmpDocName]
+              ,[EmpDocDesc]
+              ,[EmpDocRemarks]
+            FROM [dbo].[EmpDocs]
+            
+          WHERE EmpId = @EmpId
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ) AS EmpDocs)
+        --FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        select @EmpStr
+    END
+
+    --select @EmpStr
+
+	--COMMIT TRANSACTION
+END TRY
+
+	BEGIN CATCH
+		--ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:

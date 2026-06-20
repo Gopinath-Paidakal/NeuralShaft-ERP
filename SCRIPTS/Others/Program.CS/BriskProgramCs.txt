@@ -1,0 +1,198 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+
+using NeuralShaft.Repository.RepoImplementation;
+using NeuralShaft.Repository.RepoInterfaces;
+
+using NeuralShaft.Service.ServiceImplementation;
+using NeuralShaft.Service.ServiceInterfaces;
+using NeuralShart.Data;
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// -- Database Configuration and connection string
+builder.Services.AddSingleton<DbConnection>();
+
+// === JSON Generic Repository for all db data
+builder.Services.AddScoped<IJsonRepository, JsonRepository>();
+
+//-- Enquiry Services
+builder.Services.AddScoped<IEnquiryService, EnquiryService>();
+
+//-- Form Default Data Services
+builder.Services.AddScoped<IFormDefaultDataService, FormDefaultDataService>();
+
+
+
+////////////////////////////////Localhost///////////////////////////////////////////////////////////////
+
+
+builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+{
+    build.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+    build.WithOrigins("http://192.168.1.43:5173").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin(); /// Allow InComing
+}
+));
+
+////////////////////////////////Localhost///////////////////////////////////////////////////////////////
+
+
+
+//builder.Services.AddRateLimiter(p => p.AddFixedWindowLimiter(policyName: "fixedwindow", options =>
+//{
+//    options.Window = TimeSpan.FromSeconds(10);
+//    options.PermitLimit = 1;
+//    options.QueueLimit = 1;
+//    options.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+//}).RejectionStatusCode = 401);
+
+var app = builder.Build();
+
+///////////////////////////////////Cloud Server///////////////////////////////////////////////////////////////
+
+//app.UseForwardedHeaders(new ForwardedHeadersOptions
+//{
+//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+//});
+
+
+//builder.Services.AddControllers();
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("corspolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+//});
+
+////////////////////////////////Cloud Server///////////////////////////////////////////////////////////////
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+
+app.UseCors("corspolicy");
+
+//app.UseCors("AllowAll");
+
+//app.UseRateLimiter();
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// build.WithOrigins("http://192.168.1.0:5000", "http://localhost:5000").AllowAnyMethod().AllowAnyHeader();
+//build.WithOrigins("http://0.0.0.0:5143").AllowAnyOrigin();
+// build.WithOrigins("http://0.0.0.0").AllowAnyMethod().AllowAnyHeader();
+// build.WithOrigins("http://0.0.0.0:5173").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+// build.WithOrigins("*").AllowAnyOrigin();
+
+
+
+
+
+
+
+//builder.Services.AddScoped<IFormDefaultDataRepository, FormDefaultDataRepository>();
+
+//builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+//builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+//builder.Services.AddScoped<IEnquiryRepository, EnquiryRepository>();
+
+
+
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")??
+//    throw new InvalidOperationException("Connection string not found")));
+
+// 15-01-2025
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//});
+
+//builder.Services.AddAuthentication(
+//        options =>
+//        {
+//            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+//            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+//        })
+//        .AddIdentityCookies();
+
+
+
+
+// multiple domains CORS - Cross-origin resource sharing 
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+//{
+//    build.WithOrigins("http://localhost:4200", "http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+//}
+//));
+
+// ANY domain CORS - Cross-origin resource sharing 
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+//{
+//    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+//}
+//));
+
+// another Way or CORS
+//app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllerRoute(
+//        name: "default",
+//        pattern: "{controller=Home}/{action=Index}/{id?}");
+//});
+
+//-------- Controlles end points tried not clear how it works
+//app.UseRouting();
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//});
+
+//builder.Services.Configure<IISServerOptions>(options =>
+//{
+//    options.MaxRequestBodySize = 104857600; // 100 MB
+//});
+

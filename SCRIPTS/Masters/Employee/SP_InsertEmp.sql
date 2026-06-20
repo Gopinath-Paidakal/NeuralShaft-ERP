@@ -1,0 +1,407 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_InsertEmp]    Script Date: 21/04/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Sp_InsertEmp]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[Sp_InsertEmp]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_InsertEmp]    Script Date: 21/04/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[Sp_InsertEmp]     
+(
+    @InserEmpData nvarchar(100),
+	@Emp nvarchar(Max)
+
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	BEGIN TRANSACTION
+
+	DECLARE @EmpId INT;
+
+	---------------------------------------------------
+    -- 🔹 1. INSERT EMPLOYEE (MASTER)
+    ---------------------------------------------------
+    if (@InserEmpData = upper('INSERTEMPLOYEE'))
+    BEGIN
+
+            INSERT INTO Employee
+            (
+                BranchId, DeptId, DesigId, GradeId,
+                EmpTitle, EmpFirstName, EmpLastName, EmpDOB,
+                EmpGender, EmpBloodGroup, EmpMaritalStatus,
+                EmpFatherName, EmpMotherName,
+
+                EmpPersEmailId, EmpOffEmailId,
+                EmpMobileNo, EmpAltMobileNo, EmpEmerNo,
+                EmpNationality,
+                EmpPresAddr1, EmpPresAddr2, EmpPresState, EmpPresCity, EmpPresPinCode,
+                EmpPermAddr1, EmpPermsAddr2, EmpPermState, EmpPermCity, EmpPermPinCode,
+                EmpType,
+
+                EmpPunch, EmpLeaveGrroup, EmpBioId,
+                EmpDOC, EmpDOJ, EmpDOR,
+                EmpAttendance, EmpESIC, EmpPF,
+                EmpPanNo, EmpAadhar, EmpInsPolicyNo,
+                EmpPFNo, EmpUANNo, EmpESICNo,
+        
+                EmpPrevLeave, EmpCasualLeave, EmpSickLeave,
+                EmpLeaveYear,
+                EmpSalGross, EmpOverTime,
+                EmpAssets, EmpDocuments, EmpLogin,
+
+                CreatedUserId, CreatedDate
+            )
+            SELECT *
+            FROM OPENJSON(@Emp, '$.Employee')
+            WITH (
+
+                BranchId int,
+                DeptId int,
+                DesigId int, 
+                GradeId int,
+
+                EmpTitle NVARCHAR(50),
+                EmpFirstName NVARCHAR(100),
+                EmpLastName NVARCHAR(100),
+                EmpDOB DATE,
+                EmpGender NVARCHAR(10),
+
+                EmpBloodGroup NVARCHAR(100),
+                EmpMaritalStatus NVARCHAR(20),
+                EmpFatherName NVARCHAR(100),
+                EmpMotherName NVARCHAR(100),
+                EmpPersEmailId NVARCHAR(100),
+        
+                EmpOffEmailId NVARCHAR(100),
+                EmpMobileNo NVARCHAR(100),
+                EmpAltMobileNo NVARCHAR(100),
+                EmpEmerNo NVARCHAR(100),
+                EmpNationality NVARCHAR(100),
+        
+                EmpPresAddr1 NVARCHAR(100),
+                EmpPresAddr2 NVARCHAR(100),
+                EmpPresState NVARCHAR(100),
+                EmpPresCity NVARCHAR(100),
+                EmpPresPinCode NVARCHAR(100),
+        
+                EmpPermAddr1 NVARCHAR(100),
+                EmpPermsAddr2 NVARCHAR(100),
+                EmpPermState NVARCHAR(100),
+                EmpPermCity NVARCHAR(100),
+                EmpPermPinCode NVARCHAR(100),
+
+                --EmpBranch NVARCHAR(100),
+                --EmpDept NVARCHAR(100),
+                --EmpDesig NVARCHAR(100),
+                --EmpGrade NVARCHAR(100),
+                EmpType NVARCHAR(100),
+        
+                EmpPunch NVARCHAR(100),
+                EmpLeaveGrroup NVARCHAR(100),
+                EmpBioId NVARCHAR(50),
+                EmpDOC DATE,
+                EmpDOJ DATE,
+        
+                EmpDOR DATE,
+                EmpAttendance NVARCHAR(100),
+                EmpESIC NVARCHAR(100),
+                EmpPF NVARCHAR(100),
+                EmpPanNo NVARCHAR(100),
+        
+                EmpAadhar NVARCHAR(100),
+                EmpInsPolicyNo NVARCHAR(100),
+                EmpPFNo NVARCHAR(100),
+                EmpUANNo NVARCHAR(100),
+                EmpESICNo NVARCHAR(100),
+        
+                EmpPrevLeave INT,
+                EmpCasualLeave INT,
+                EmpSickLeave INT,
+                EmpLeaveYear DATE,
+                EmpSalGross NUMERIC(18,2),
+        
+                EmpOverTime INT,
+                EmpAssets NVARCHAR(500),
+                EmpDocuments NVARCHAR(500),
+
+                EmpLogin bit,
+
+                CreatedUserId INT,
+                CreatedDate nvarchar(20)
+
+
+            );
+
+            SET @EmpId = SCOPE_IDENTITY();
+           
+            -----------------------------------
+            ---------------------------------------------------
+            -- 🔹 5. INSERT USERS
+            ---------------------------------------------------
+            --declare @EmpLogin int
+            --set @EmpLogin = JSON_VALUE(@Emp, '$.Employee.EmpLogin') 
+    
+            if (JSON_VALUE(@Emp, '$.Employee.EmpLogin') = 1)
+            BEGIN 
+                INSERT INTO Users
+                (
+                    EmpId,
+                    DeptId,
+                    RoleId,
+                    UserName,
+                    LoginName,
+                    UserPwd,
+                    UserActive
+                )
+                SELECT
+                    @EmpId,
+                    DeptId,
+                    0,
+                    UserName,
+                    UserName,
+                    'brisk',
+                    UserActive
+
+                FROM OPENJSON(@Emp, '$.Employee')
+                WITH
+                (
+                    DeptId int,
+                    UserName NVARCHAR(50),
+                    UserPwd NVARCHAR(50),
+                    UserActive bit
+                );
+            END
+
+           Select @EmpId
+
+    END
+    ---------------------------------------------------
+    -- 🔹 2. INSERT EMP ACADEMIC
+    ---------------------------------------------------
+    if (@InserEmpData = upper('INSERTACADEMIC'))
+    BEGIN
+        Declare @EmpAcadId int
+
+        INSERT INTO EmpAcademic
+        (
+            EmpId, EmpQual, EmpClass, EmpInstitution,
+            EmpUniversity, EmpPercent, EmpYearOfPass,
+            EmpAcadStatus, EmpAcadQuery, EmpAcaCrudType
+        )
+        SELECT
+            EmpId,
+            EmpQual, EmpClass, EmpInstitution,
+            EmpUniversity, EmpPercent, EmpYearOfPass,
+            EmpAcadStatus, EmpAcadQuery,EmpAcaCrudType
+        FROM OPENJSON(@Emp, '$.EmpAcademic')
+        WITH (
+            EmpId int, 
+            EmpQual NVARCHAR(100),
+            EmpClass NVARCHAR(100),
+            EmpInstitution NVARCHAR(100),
+
+            EmpUniversity NVARCHAR(100),
+            EmpPercent NUMERIC(18,2),
+            EmpYearOfPass NVARCHAR(100),
+            EmpAcadStatus NVARCHAR(100),
+
+            EmpAcadQuery NVARCHAR(100),
+            EmpAcaCrudType NVARCHAR(20)
+        );
+
+        SET @EmpAcadId = SCOPE_IDENTITY();
+
+        Select @EmpAcadId
+
+    END
+
+    ---------------------------------------------------
+    -- 🔹 3. INSERT EMP PAST EMPLOYMENT
+    ---------------------------------------------------
+    if (@InserEmpData = upper('INSERTPASTEMPLOYMENT'))
+    BEGIN
+        Declare @EmpPastEmployId int
+
+        INSERT INTO EmpPastEmployment
+        (
+            EmpId, EmpCompName, EmpDesig,
+            EmpLastDrnSal, EmpFromDate, EmpToDate,
+            EmpPastActive, EmpPastQuery, EmpPastCrudType
+        )
+        SELECT
+            EmpId,
+            EmpCompName, EmpDesig,
+            EmpLastDrnSal, EmpFromDate, EmpToDate,
+            EmpPastActive, EmpPastQuery, EmpPastCrudType
+        FROM OPENJSON(@Emp, '$.EmpPastEmployment')
+        WITH (
+            EmpId int, 
+            EmpCompName NVARCHAR(100),
+            EmpDesig NVARCHAR(100),
+            EmpLastDrnSal NVARCHAR(100),
+            EmpFromDate DATE,
+            EmpToDate DATE,
+            EmpPastActive BIT,
+            EmpPastQuery NVARCHAR(100),
+            EmpPastCrudType NVARCHAR(20)
+        );
+
+        
+        SET @EmpPastEmployId = SCOPE_IDENTITY();
+
+        Select @EmpPastEmployId
+
+    END
+    ---------------------------------------------------
+    -- 🔹 4. INSERT EMP ASSETS
+    ---------------------------------------------------
+    if (@InserEmpData = upper('INSERTASSETS'))
+    BEGIN
+
+        Declare @EmpAssetId int
+
+        INSERT INTO EmpAssets
+        (
+            EmpId,
+            EmpAssetName,
+            EmpAssetDesc,
+            EmpAssetSlNo,
+            EmpAssetValue,
+            EmpAssetCondition,
+            EmpAssetCrudType
+        )
+        SELECT
+            EmpId,
+            EmpAssetName,
+            EmpAssetDesc,
+            EmpAssetSlNo,
+            EmpAssetValue,
+            EmpAssetCondition,
+            EmpAssetCrudType
+
+        FROM OPENJSON(@Emp, '$.EmpAssets')
+        WITH
+        (
+            EmpId int, 
+            EmpAssetName NVARCHAR(100),
+            EmpAssetDesc NVARCHAR(500),
+            EmpAssetSlNo NVARCHAR(100),
+            EmpAssetValue DECIMAL(18,2),
+            EmpAssetCondition NVARCHAR(500),
+            EmpAssetCrudType NVARCHAR(20)
+        );
+         
+        SET @EmpAssetId = SCOPE_IDENTITY();
+
+        Select @EmpAssetId
+
+    END
+    ---------------------------------------------------
+    -- 🔹 5. INSERT EMP DOCUMENTS
+    ---------------------------------------------------
+    if (@InserEmpData = upper('INSERTDOCUMENTS'))
+    BEGIN
+        Declare @EmpDocId int
+
+        INSERT INTO EmpDocs
+        (
+            EmpId,
+            EmpDocName,
+            EmpDocDesc,
+            EmpDocRemarks,
+            EmpDocCrudType
+        )
+        SELECT
+            EmpId,
+            EmpDocName,
+            EmpDocDesc,
+            EmpDocRemarks,    
+            EmpDocCrudType
+        FROM OPENJSON(@Emp, '$.EmpDocs')
+        WITH
+        (
+            EmpId int, 
+            EmpDocName NVARCHAR(200),
+            EmpDocDesc NVARCHAR(500),
+            EmpDocRemarks NVARCHAR(100),
+            EmpDocCrudType NVARCHAR(20)
+        );
+
+        SET @EmpDocId = SCOPE_IDENTITY();
+
+        Select @EmpDocId
+
+    END
+
+    -----------------------------------------------------
+    ---- 🔹 5. INSERT USERS
+    -----------------------------------------------------
+    ----declare @EmpLogin int
+    ----set @EmpLogin = JSON_VALUE(@Emp, '$.Employee.EmpLogin') 
+    
+    --if (JSON_VALUE(@Emp, '$.Employee.EmpLogin') = 1)
+    --BEGIN 
+    --    INSERT INTO Users
+    --    (
+    --        EmpId,
+    --        DeptId,
+    --        RoleId,
+    --        UserName,
+    --        LoginName,
+    --        UserPwd,
+    --        UserActive
+    --    )
+    --    SELECT
+    --        @EmpId,
+    --        DeptId,
+    --        0,
+    --        UserName,
+    --        UserName,
+    --        'brisk',
+    --        UserActive
+
+    --    FROM OPENJSON(@Emp, '$.Employee')
+    --    WITH
+    --    (
+    --        DeptId int,
+    --        UserName NVARCHAR(50),
+    --        UserPwd NVARCHAR(50),
+    --        UserActive bit
+    --    );
+    --END
+
+    --Select @EmpId
+
+
+	COMMIT TRANSACTION
+END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:

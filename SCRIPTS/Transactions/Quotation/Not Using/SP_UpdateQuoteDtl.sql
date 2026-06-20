@@ -1,0 +1,173 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteDtl]    Script Date: 27/06/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateQuoteDtl]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteDtl]    Script Date: 27/06/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_UpdateQuoteDtl]
+(
+    @QuoteDtlId int,
+	@QuoteDtl nvarchar(max)
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	BEGIN TRANSACTION
+    	
+        UPDATE Q
+        SET
+            Q.AMCValue = J.AMCValue,
+            Q.QuoteQty = J.QuoteQty,
+            Q.QuoteRate = J.QuoteRate,
+            Q.QuoteProductAmount = J.QuoteProductAmount,
+            Q.QuoteTax = J.QuoteTax,
+            Q.QuoteTotalAmount = J.QuoteTotalAmount,
+
+            Q.TaxableValue = J.TaxableValue,
+            Q.IncreaseAmount = J.IncreaseAmount,
+            Q.DiscountAmount = J.DiscountAmount,
+            Q.GrandTotalAmount = J.GrandTotalAmount
+
+        FROM dbo.QuoteDtl Q
+
+        INNER JOIN OPENJSON(@QuoteDtl, '$.QuoteDtl')
+        WITH
+        (
+            QuoteDtlId INT,
+
+            AMCValue DECIMAL(18,2),
+            QuoteQty DECIMAL(18,2),
+            QuoteRate DECIMAL(18,2),
+            QuoteProductAmount DECIMAL(18,2),
+            QuoteTax DECIMAL(18,2),
+
+            QuoteTotalAmount DECIMAL(18,2),
+            TaxableValue DECIMAL(18,2),
+            IncreaseAmount DECIMAL(18,2),
+            DiscountAmount DECIMAL(18,2),
+            GrandTotalAmount DECIMAL(18,2)
+
+        ) J
+        ON Q.QuoteDtlId = J.QuoteDtlId;
+
+
+        --UPDATE Q
+        --    SET
+        --        Q.[AMCValue] = J.[AMCValue],
+        --        Q.[QuoteQty] = J.[QuoteQty],
+        --        Q.[QuoteRate] = J.[QuoteRate],
+        --        Q.[QuoteProductAmount] = J.[QuoteProductAmount],
+        --        Q.[QuoteTax] = J.[QuoteTax],
+        --        Q.[QuoteTotalAmount] = J.[QuoteTotalAmount],
+
+        --        Q.[TaxableValue] = J.[TaxableValue],
+        --        Q.[IncreaseAmount] = J.[IncreaseAmount],
+        --        Q.[DiscountAmount] = J.[DiscountAmount],
+        --        Q.[GrandTotalAmount] = J.[GrandTotalAmount]
+
+        --    FROM [dbo].[QuoteDtl] Q
+        --    INNER JOIN OPENJSON(@QuoteDtl)
+
+        --    WITH (
+        --            QuoteDtlId INT,
+        --            AMCValue DECIMAL(18,2),
+        --            QuoteQty DECIMAL(18,2),
+        --            QuoteRate DECIMAL(18,2),
+        --            QuoteProductAmount DECIMAL(18,2),
+        --            QuoteTax DECIMAL(18,2),
+
+        --            QuoteTotalAmount DECIMAL(18,2),
+        --            TaxableValue DECIMAL(18,2),
+        --            IncreaseAmount DECIMAL(18,2),
+        --            DiscountAmount DECIMAL(18,2),
+        --            GrandTotalAmount DECIMAL(18,2)
+        --    ) J
+        --    ON Q.QuoteDtlId = @QuoteDtlId    ---   J.QuoteDtlId
+
+            select @QuoteDtlId
+
+
+	COMMIT TRANSACTION
+END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+  ---- Update statement
+        --UPDATE Q
+        --SET 
+        --    --QuoteDate           = JSON_VALUE(@QuoteHdr, '$.QuoteDate'),
+        --    ProjectName         = JSON_VALUE(@QuoteHdr, '$.ProjectName'),
+        --    ExpectedClosingDate = JSON_VALUE(@QuoteHdr, '$.ExpectedClosingDate'),
+        --    QuotePaymentTerms   = JSON_VALUE(@QuoteHdr, '$.QuotePaymentTerms'),
+        --    QuoteValidity       = JSON_VALUE(@QuoteHdr, '$.QuoteValidity'),
+
+        --    DeliveryBy          = JSON_VALUE(@QuoteHdr, '$.DeliveryBy'),
+        --    ComplementaryAMC    = JSON_VALUE(@QuoteHdr, '$.ComplementaryAMC'),
+        --    GSTExempted         = JSON_VALUE(@QuoteHdr, '$.GSTExempted'),
+        --    ModifiedUserId      = 1,    --JSON_VALUE(@QuoteHdr, '$.ModifiedUserId'),
+        --    ModifiedDate        = JSON_VALUE(@QuoteHdr, '$.ModifiedDate')     --GETDATE()
+
+        --FROM dbo.QuoteHdr Q
+
+        --WHERE Q.QuoteHdrId = @QuoteHdrId;
+
+            --CompanyId = JSON_VALUE(@QuoteHdr, '$.CompanyId'),
+            --BranchId = JSON_VALUE(@QuoteHdr, '$.BranchId'),
+            --EnqHdrId = JSON_VALUE(@QuoteHdr, '$.EnqHdrId'),
+            --QuoteNo = JSON_VALUE(@QuoteHdr, '$.QuoteNo'),
+
+                --QuoteSlNo = JSON_VALUE(@QuoteHdr, '$.QuoteSlNo'),
+            --QuoteAmount = JSON_VALUE(@QuoteHdr, '$.QuoteAmount'),
+            --QuoteTaxAmount = JSON_VALUE(@QuoteHdr, '$.QuoteTaxAmount'),
+            --QuoteTotalAmount = JSON_VALUE(@ QuoteHdr, '$.QuoteTotalAmount'),
+
+            --QuoteSpecialFeatures = JSON_VALUE(@QuoteHdr, '$.QuoteSpecialFeatures'),
+
+             --ModifiedDate = JSON_VALUE(@QuoteHdr, '$.CreatedDate')
+
+
+
+
+
+
+--DECLARE @QuoteHdrId INT;
+
+  --      -- Extract primary key (important for UPDATE)
+  --      SET @QuoteHdrId = JSON_VALUE(@QuoteHdr, '$.QuoteHdrId');
+
+  --      -- Validate
+  --      IF @QuoteHdrId IS NULL
+  --      BEGIN
+  --          RAISERROR('QuoteHdrId is required for update.', 16, 1);
+  --          RETURN;
+  --      END

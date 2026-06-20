@@ -1,0 +1,145 @@
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_UpdateSOHdr]    Script Date: 09/03/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateSOHdr]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateSOHdr]
+GO
+
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_UpdateSOHdr]    Script Date: 09/03/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_UpdateSOHdr]
+(
+	@SOHdrid int,
+	@SOHdr nvarchar(max)
+
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	BEGIN TRANSACTION
+	------------------------------------------------
+	UPDATE E
+    SET
+		E.SOConsultant        = J.SOConsultant,
+        E.SOCustComp		  = J.SOCustComp,
+        E.SOBillingAddr       = J.SOBillingAddr,
+        E.SOContPerson        = J.SOContPerson,
+        E.SOMobileNo		  = J.SOMobileNo,
+
+        E.ProjectName         = J.ProjectName,
+        E.ExpectedClosingDate = J.ExpectedClosingDate,
+		E.SOEmailId           = J.SOEmailId,
+        E.DeliveryBy          = J.DeliveryBy,
+        E.QuoteValidity       = J.QuoteValidity,
+
+        E.ComplementaryAMC    = J.ComplementaryAMC,
+		E.GSTExempted         = J.GSTExempted,
+        E.SOPaymentTerms      = J.SOPaymentTerms,
+        E.ModifiedUserId      = J.ModifiedUserId,   -- 1,           ---'Admin',     ----J.ModifiedBy,
+		E.ModifiedDate        = J.ModifiedDate   --GETDATE()
+
+    FROM SOHdr E
+    CROSS APPLY OPENJSON(@SOHdr)
+    WITH (
+        SOHdrId              INT,
+		
+		SOConsultant		 NVARCHAR(100),
+		SOCustComp		     NVARCHAR(100),
+		SOBillingAddr		 NVARCHAR(100),
+		SOContPerson		 NVARCHAR(100),
+		SOMobileNo		     NVARCHAR(100),
+
+        ProjectName          NVARCHAR(100),
+        ExpectedClosingDate	 date,
+		SOEmailId		     NVARCHAR(100),
+		DeliveryBy		     smallint,
+        QuoteValidity        smallint,      
+
+		ComplementaryAMC     smallint,     
+        GSTExempted          bit,           
+		SOPaymentTerms       NVARCHAR(500),
+        ModifiedUserId       int,          
+		ModifiedDate         date          
+    ) J
+    WHERE E.SOHdrId = @SOHdrid
+
+	Select @SOHdrid
+
+	COMMIT TRANSACTION
+END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+
+--	UPDATE E    --------------- WORKING
+--SET
+--    E.ProjectName         = J.ProjectName,
+--    E.ExpectedClosingDate = J.ExpectedClosingDate,
+--    E.DeliveryBy          = J.DeliveryBy,
+--    E.QuoteValidity       = J.QuoteValidity,
+--    E.ComplementaryAMC    = J.ComplementaryAMC,
+--    E.GSTExempted         = J.GSTExempted,
+--    E.SOPaymentTerms      = J.SOPaymentTerms,
+--    E.ModifiedUserId      = 1,
+--    E.ModifiedDate        = J.ModifiedDate
+
+--	FROM SOHdr E
+--	CROSS APPLY OPENJSON(@SOHdr)
+--	WITH (
+--		SOHdrId              INT,
+--		ProjectName          NVARCHAR(100),
+--		ExpectedClosingDate  DATE,
+--		DeliveryBy           smallint,
+--		QuoteValidity        smallint,
+--		ComplementaryAMC     smallint,
+--		GSTExempted          BIT,
+--		SOPaymentTerms       NVARCHAR(500),
+--		ModifiedDate         DATE
+--	) J
+--	WHERE E.SOHdrId = J.SOHdrId;
+
+
+
+ --SOHdrId              INT,
+
+ --       ProjectName          NVARCHAR(100) '$.ProjectName',
+ --       ExpectedClosingDate	 date          '$.ExpectedClosingDate',
+	--	DeliveryBy		     smallint      '$.DeliveryBy',
+ --       QuoteValidity        smallint      '$.QuoteValidity',
+	--	ComplementaryAMC     smallint      '$.ComplementaryAMC',
+
+ --       GSTExempted          bit           '$.GSTExempted',
+	--	SOPaymentTerms       NVARCHAR(500) '$.SOPaymentTerms',
+ --       --ModifiedUserId       int           '$.ModifiedUserId',
+	--	ModifiedDate         date          '$.ModifiedDate'
+
+
+
+

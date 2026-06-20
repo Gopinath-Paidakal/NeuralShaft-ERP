@@ -1,0 +1,93 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_UpdateOrdRej]    Script Date: 04/04/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateOrdRej]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateOrdRej]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_UpdateOrdRej]    Script Date: 04/04/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_UpdateOrdRej]
+(
+	--@OrdApproveId int,
+	@EnqDtlId int,
+	@OrdApproved nvarchar(30)
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	BEGIN TRANSACTION
+
+	----  First Time Approved
+
+	if (@OrdApproved = Upper('APPROVED-1'))
+	BEGIN
+		--Update OrdApprove set OrdApproved = @OrdRejected where OrdApproveId = @OrdApproveId
+
+		Update EnqDtl set ApprovalStatus1 = @OrdApproved where EnqDtlId = @EnqDtlId
+
+		--select 'Approved'      --@OrdApproveId
+
+	END
+
+
+	---- First Time Rejected
+
+	--if (@OrdRejected = Upper('REJECTED'))
+	--BEGIN
+	--	--Update OrdApprove set OrdApproved = @OrdRejected where OrdApproveId = @OrdApproveId
+
+	--	Update EnqDtl set ApprovalStatus1 = @OrdRejected where EnqDtlId = @EnqDtlId
+
+	--	select 'Rejected'      --@OrdApproveId
+
+	--END
+
+	
+	--- Second Time Approved
+
+	if (@OrdApproved = Upper('APPROVED-2'))
+	BEGIN
+		--Update OrdApprove set OrdApproved = @OrdRejected where OrdApproveId = @OrdApproveId
+
+		Update EnqDtl set ApprovalStatus2 = @OrdApproved where EnqDtlId = @EnqDtlId
+
+		--select 'Approved'      --@OrdApproveId
+
+	END
+
+	select @EnqDtlId
+
+	COMMIT TRANSACTION
+
+END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+--Update OrdApprove set SOGen = 0 where OrdApprove.OrdApproveId = @OrdApproveId

@@ -1,0 +1,174 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetMenus]    Script Date: 13/05/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetMenus]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetMenus]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetMenus]    Script Date: 13/05/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GetMenus]
+(
+	@EmpId int
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	--BEGIN TRANSACTION
+
+	Declare @UserId int
+
+	set @UserId = (Select UserId from Users where EmpId = @EmpId)
+
+	if (@EmpId = 9999)
+	BEGIN
+		SELECT (
+			SELECT [MenuId]
+			  ,[ParentMenuId]
+			  ,[MenuName]
+			  ,[MenuPath]
+			  ,[MenuCode]
+			  ,[MenuUrl]
+
+			  ,[MenuIcon]
+			  ,[DisplayOrder]
+			  ,[IsVisible]
+			  ,[IsActive]
+			  ,[IsNavBar]
+      
+			  ,[CreatedUserId]
+			  ,[CreatedDate]
+			FROM [dbo].[Menus]
+			--Order by [MenuName]
+			FOR JSON PATH, ROOT('Menus')
+		) AS Menus;
+
+	END
+	ELSE
+	BEGIN
+		SELECT (
+
+			SELECT *
+			FROM
+			(
+				SELECT DISTINCT
+    
+					m.MenuId,
+					m.ParentMenuId,
+					m.MenuName,
+					m.MenuPath,
+					m.IsNavBar,
+					
+					m.IsActive,
+					m.IsVisible,
+					m.DisplayOrder,
+
+					rp.UserId,
+					rp.CanView,
+					rp.CanAdd,
+					rp.CanEdit,
+					rp.CanDelete,
+					rp.CanApprove
+
+				FROM Menus m
+
+				LEFT JOIN MenuPermissions rp
+					ON m.MenuId = rp.MenuId
+					AND rp.UserId = @UserId
+
+				WHERE
+
+					EXISTS (
+						SELECT 1
+						FROM MenuPermissions mp
+						WHERE mp.MenuId = m.MenuId
+						  AND mp.UserId = @UserId
+					)
+
+					OR
+
+					m.MenuId IN (
+						SELECT DISTINCT cm.ParentMenuId
+						FROM Menus cm
+						INNER JOIN MenuPermissions mp
+							ON cm.MenuId = mp.MenuId
+						WHERE mp.UserId = @UserId
+						  AND cm.ParentMenuId IS NOT NULL
+					)
+			) x
+			--order by x.MenuName
+
+			--Order by x.DisplayOrder;)
+
+			----ORDER BY 
+			----    ISNULL(x.ParentMenuId, x.MenuId), x.DisplayOrder;)
+
+			FOR JSON PATH, ROOT('Menus')
+
+			--SELECT 
+			--   [Menus].MenuId,
+			--   [Menus].MenuName,
+			--   [Menus].[ParentMenuId],
+			--   [Menus].[MenuPath],
+			--   [Menus].[MenuCode],
+			--   [MenuPermissions].CanView,
+			--   [MenuPermissions].CanAdd,
+			--   [MenuPermissions].CanEdit,
+			--   [MenuPermissions].CanDelete,
+			--   [MenuPermissions].CanApprove,
+			--   [MenuPermissions].CanExport
+
+			--FROM [dbo].[Menus]
+			--inner  join [MenuPermissions] on [MenuPermissions].MenuId = [Menus].MenuId
+			--where [MenuPermissions].UserId = @UserId
+			--FOR JSON PATH, ROOT('Menus')
+
+		) AS Menus;
+	END
+
+	--COMMIT TRANSACTION
+END TRY
+
+	BEGIN CATCH
+		---ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+--SELECT [MenuId]
+--		  ,[ParentMenuId]
+--		  ,[MenuName]
+--		  ,[MenuPath]
+--		  ,[MenuCode]
+--		  ,[MenuUrl]
+
+--		  ,[MenuIcon]
+--		  ,[SortOrder]
+--		  ,[IsVisible]
+--		  ,[IsActive]
+      
+--		  ,[CreatedUserId]
+--		  ,[CreatedDate]
+--		FROM [dbo].[Menus]

@@ -1,0 +1,138 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetMenuPermissionsById]    Script Date: 13/05/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetMenuPermissionsById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetMenuPermissionsById]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetMenuPermissionsById]    Script Date: 13/05/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GetMenuPermissionsById]
+(
+	--@UserId int
+	@EmpId int
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+
+	Declare @UserId int
+	set @UserId = (Select UserId from Users where EmpId = @EmpId)
+
+	if (@EmpId = 9999)
+	BEGIN
+		SELECT (
+			SELECT [PermissionsId]
+			  ,[UserId]
+			  ,[DeptId]
+			  ,[MenuId]
+			  ,[CanView]
+
+			  ,[CanAdd]
+			  ,[CanEdit]
+			  ,[CanDelete]
+			  ,[CanApprove]
+			  ,[CanExport]
+			  
+			  ,[CreatedUserId]
+			  ,[CreatedDate]
+			  --,[ModifiedUserId]
+			  --,[ModifiedDate]
+
+			FROM dbo.AdminMenuPermissions
+
+			FOR JSON PATH, ROOT('AdminMenuPermissions')
+
+		) AS AdminMenuPermissioons;
+	END
+
+	ELSE
+	BEGIN
+		SELECT (
+			SELECT
+				m.MenuId,
+				m.ParentMenuId,
+				m.MenuName,
+				m.MenuPath,
+				m.DisplayOrder,
+				m.IsNavBar,
+
+
+				rp.CanView,
+				rp.CanAdd,
+				rp.CanEdit,
+				rp.CanDelete,
+				rp.CanApprove,
+				rp.CanExport
+
+			FROM Menus m
+			INNER JOIN MenuPermissions rp 
+				ON m.MenuId = rp.MenuId
+				AND rp.UserId = @UserId
+
+			ORDER BY m.ParentMenuId, m.DisplayOrder
+
+			FOR JSON PATH, ROOT('MenuPermissions')
+
+		)AS MenuPermissioons;
+	END
+
+END TRY
+
+	BEGIN CATCH
+
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+----	SELECT 
+	----	PermissionsId,
+	----	UserId,
+	----	RoleId,
+	----	DeptId,
+	----	MenuId,
+
+	----	CanView,
+	----	CanAdd,
+	----	CanEdit,
+	----	CanDelete,
+	----	CanApprove,
+	----	CanExport,
+		
+	----	CreatedUserId,
+	----	CreatedDate
+
+	----FROM dbo.MenuPermissions
+
+	----Where PermissionsId = @PermissionsId
+
+	--FOR JSON PATH, ROOT('Deptment');
+
+
+	
+
+
+
+

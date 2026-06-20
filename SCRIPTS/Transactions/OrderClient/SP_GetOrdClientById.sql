@@ -1,0 +1,96 @@
+USE [NSERPLIVE]
+GO
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetOrdClientById]') AND type IN (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetOrdClientById]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[SP_GetOrdClientById]
+(
+    @OrdClientHdrId INT
+)
+----With Encryption
+AS
+SET NOCOUNT ON;
+DECLARE @OrdClientHdr   NVARCHAR(MAX)
+DECLARE @OrdClientAddr  NVARCHAR(MAX)
+DECLARE @HdrAddr NVARCHAR(MAX)
+BEGIN TRY
+
+    
+    SET @OrdClientHdr = (
+        SELECT
+
+            OrdClientHdrId,
+            ISNULL(OrdConsultant,   '') AS OrdConsultant,
+            ISNULL(OrdClientName,   '') AS OrdClientName,
+            ISNULL(OrdClientTitle,  '') AS OrdClientTitle,
+
+            ISNULL(OrdGstTradeName, '') AS OrdGstTradeName,
+            ISNULL(OrdGstNo,        '') AS OrdGstNo,
+            ISNULL(OrdClientStatus, '') AS OrdClientStatus
+
+        FROM dbo.OrdClientHdr
+        WHERE OrdClientHdrId = @OrdClientHdrId
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    )
+
+    SET @OrdClientAddr = (
+        SELECT
+            ISNULL(OrdClientHdrId,          0) AS OrdClientHdrId,
+            ISNULL(OrdClientAddrId,         0) AS OrdClientAddrId,
+            ISNULL(OrdClientAddr1,         '') AS OrdClientAddr1,
+            ISNULL(OrdClientAddr2,         '') AS OrdClientAddr2,
+            ISNULL(OrdClientPostalCode,    '') AS OrdClientPostalCode,
+            ISNULL(OrdClientState,         '') AS OrdClientState,
+
+            ISNULL(OrdClientCity,          '') AS OrdClientCity,
+            ISNULL(OrdClientPhNo,          '') AS OrdClientPhNo,
+            ISNULL(OrdClientCompanyMailId, '') AS OrdClientCompanyMailId,
+            ISNULL(OrdClientWebsite,       '') AS OrdClientWebsite,
+            ISNULL(OrdClientPan,           '') AS OrdClientPan,
+
+            ISNULL(OrdClientGstNo,         '') AS OrdClientGstNo,
+            ISNULL(OrdClientAdhaarNo,      '') AS OrdClientAdhaarNo,
+            ISNULL(OrdClientAddrType,      '') AS OrdClientAddrType,
+            ISNULL(OrdClientPriContPerson, '') AS OrdClientPriContPerson,
+            ISNULL(OrdClientPriMailId,     '') AS OrdClientPriMailId,
+
+            ISNULL(OrdClientPriMobileNo,   '') AS OrdClientPriMobileNo,
+            ISNULL(OrdClientSecContPerson, '') AS OrdClientSecContPerson,
+            ISNULL(OrdClientSecMailId,     '') AS OrdClientSecMailId,
+            ISNULL(OrdClientSecMobileNo,   '') AS OrdClientSecMobileNo,
+            ISNULL(OrdClientLatitude,      '') AS OrdClientLatitude,
+
+            ISNULL(OrdClientLongitude,     '') AS OrdClientLongitude,
+            ISNULL(OrdClientTravelDistance,'') AS OrdClientTravelDistance,
+            ISNULL(OrdStatus,              '') AS OrdStatus
+
+        FROM dbo.OrdClientAddr
+        WHERE OrdClientHdrId = @OrdClientHdrId
+        FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+    )
+
+    SET @HdrAddr = (
+        SELECT
+            JSON_QUERY(@OrdClientHdr)  AS OrdClientHdr,
+            JSON_QUERY(@OrdClientAddr) AS OrdClientAddr
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    )
+
+    Select @HdrAddr
+
+END TRY
+BEGIN CATCH
+    DECLARE
+        @ErrMsg       VARCHAR(4000),
+        @ErrSeverity  INT,
+        @ErrProcedure VARCHAR(100)
+    SET @ErrMsg       = ERROR_MESSAGE()
+    SET @ErrSeverity  = ERROR_SEVERITY()
+    SET @ErrProcedure = ERROR_PROCEDURE()
+    SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
+    RAISERROR(@ErrMsg, @ErrSeverity, 1)
+END CATCH

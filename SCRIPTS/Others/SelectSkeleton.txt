@@ -1,0 +1,8 @@
+SELECT
+    JSON_QUERY(
+        (
+            
+            WHERE EnqHdrId = @EnqHdrId
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        )
+    ) AS EnqHdr,

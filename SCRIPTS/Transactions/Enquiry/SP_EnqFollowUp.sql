@@ -1,0 +1,78 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_EnqFollowUp]    Script Date: 12/03/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_EnqFollowUp]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_EnqFollowUp]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_EnqFollowUp]    Script Date: 12/03/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_EnqFollowUp]
+--(
+--	@EnquiryId int
+
+--)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	BEGIN TRANSACTION
+
+SELECT
+	(
+		SELECT
+			  [EnqFollowUp].[EnquiryId], 
+			  --[CompanyId],
+			  --[BranchId],
+			  [Enquiry].[EnqNo],
+			  --[EnqSlno],
+			  [Enquiry].[EnqDate],
+			  --[EnqRefDetails],
+			  -- [EnqRemarks],
+			  --[EnqStatus],
+			  --[Latitude],
+			  --[Longitude],
+			  --[CreatedBy],
+			  --[CreatedDate]
+
+			  [EnqClient].EnqConsultant,
+			  [EnqClient].EnqClientName,
+			  [EnqClient].EnqClientMobileNo
+
+		FROM [dbo].[EnqFollowUp]
+		INNER JOIN EnqClient ON EnqFollowUp.EnqFollowUpId = EnqClient.EnqClientId 
+		INNER JOIN Enquiry ON EnqFollowUp.EnquiryId = Enquiry.EnquiryId 
+		--WHERE EnquiryId = @EnquiryId
+		FOR JSON PATH, ROOT('EnquiryFollowUp')  -- ROOT WITHOUT_ARRAY_WRAPPER
+	) AS Enquiry
+
+
+	COMMIT TRANSACTION
+END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:

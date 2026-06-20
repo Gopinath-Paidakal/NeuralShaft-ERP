@@ -1,0 +1,92 @@
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetEnqFollowUp]    Script Date: 30/03/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetEnqFollowUp]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetEnqFollowUp]
+GO
+
+USE [NSHAFTERPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetEnqFollowUp]    Script Date: 30/03/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GetEnqFollowUp]
+(
+	@FromDate nvarchar(20),
+	@ToDate nvarchar(20)
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+	SELECT
+(
+   SELECT
+          [EnqFollowUp].[EnqFollowUpId],
+		  [EnqFollowUp].[EnqHdrId], 
+		  [EnqFollowUp].[EnqClientId], 
+          
+		  [EnqHdr].[EnqNo],
+          --[EnqHdr].[EnqStatus],
+		  --[EnqHdr].[EnqDate]  as [Follow Up Date],
+		  --DATEADD(DAY, 5, [EnqHdr].[EnqDate]) AS [Follow Up Date],
+		  --FORMAT(EnqDate, 'dd-MM-yyyy') + ' ' + FORMAT(EnqDate, 'HH:mm:ss') as EnqDate,
+		  FORMAT([EnqFollowUp].[EnqFollowUpDate], 'dd-MM-yyyy') as [EnqFollowUpDate],
+
+		  [EnqHdr].[QuoteNo],
+
+          [EnqClient].EnqClientName,
+          [EnqClient].EnqClientMobileNo,
+          [EnqClient].EnqConsultant,
+         
+          [EnqFollowUp].[EnqPurpose],
+		  [EnqFollowUp].[EnqLastDiscussion],
+		  [EnqFollowUp].[EnqFollowUpRemarks],
+		  [EnqFollowUp].[EnqFollowUpStatus],
+		  [EnqFollowUp].[CreatedUserId],
+		  [EnqFollowUp].[CreatedDate]
+
+
+    FROM [dbo].[EnqFollowUp]
+	
+	INNER JOIN EnqHdr ON [EnqFollowUp].[EnqHdrId] = [EnqHdr].[EnqHdrId] 
+	INNER JOIN EnqClient ON [EnqFollowUp].[EnqClientId] = [EnqClient].[EnqClientId] 
+
+	WHERE [EnqFollowUp].[EnqFollowUpDate] >= @FromDate AND [EnqFollowUp].[EnqFollowUpDate] < DATEADD(DAY, 1, @ToDate)
+
+	Order by [EnqHdr].[EnqNo]
+    
+	FOR JSON PATH, ROOT('EnqFollowUp')  -- ROOT WITHOUT_ARRAY_WRAPPER
+) AS EnqFollowUp
+
+END TRY
+
+	BEGIN CATCH
+		
+		ROLLBACK TRANSACTION
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+--WHERE [EnqFollowUp].[EnqHdrId] = [EnqHdr].[EnqHdrId] 
+
+	--where [EnqFollowUp].[EnqFollowUpDate] >= @FromDate and [EnqFollowUp].[EnqFollowUpDate] < @ToDate

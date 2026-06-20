@@ -1,0 +1,9 @@
+EXEC SP_GetEnqHdr
+
+
+EXEC SP_InsertSOHdr 29
+
+EXEC SP_GetSOList
+
+EXEC SP_GetSO_ById 30,1
+

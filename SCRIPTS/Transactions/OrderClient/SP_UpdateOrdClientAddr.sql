@@ -1,0 +1,117 @@
+USE [NSERPLIVE]
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateOrdClientAddr]') AND type IN (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateOrdClientAddr]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_UpdateOrdClientAddr]
+(
+    @OrdClientAddr NVARCHAR(MAX)
+)
+----With Encryption
+AS
+
+SET NOCOUNT ON;
+
+BEGIN TRY
+    BEGIN TRANSACTION
+
+    UPDATE T
+    SET
+        T.OrdClientAddr1            = S.OrdClientAddr1,
+        T.OrdClientAddr2            = S.OrdClientAddr2,
+        T.OrdClientPostalCode       = S.OrdClientPostalCode,
+        T.OrdClientState            = S.OrdClientState,
+
+        T.OrdClientCity             = S.OrdClientCity,
+        T.OrdClientPhNo             = S.OrdClientPhNo,
+        T.OrdClientCompanyMailId    = S.OrdClientCompanyMailId,
+        T.OrdClientWebsite          = S.OrdClientWebsite,
+        T.OrdClientPan              = S.OrdClientPan,
+
+        T.OrdClientGstNo            = S.OrdClientGstNo,
+        T.OrdClientAdhaarNo         = S.OrdClientAdhaarNo,
+        T.OrdClientAddrType         = S.OrdClientAddrType,
+        T.OrdClientPriContPerson    = S.OrdClientPriContPerson,
+        T.OrdClientPriMailId        = S.OrdClientPriMailId,
+
+        T.OrdClientPriMobileNo      = S.OrdClientPriMobileNo,
+        T.OrdClientSecContPerson    = S.OrdClientSecContPerson,
+        T.OrdClientSecMailId        = S.OrdClientSecMailId,
+        T.OrdClientSecMobileNo      = S.OrdClientSecMobileNo,
+        T.OrdClientLatitude         = S.OrdClientLatitude,
+
+        T.OrdClientLongitude        = S.OrdClientLongitude,
+        T.OrdClientTravelDistance   = S.OrdClientTravelDistance,
+        T.OrdStatus                 = S.OrdStatus
+
+    FROM dbo.OrdClientAddr T
+    INNER JOIN OPENJSON(@OrdClientAddr, '$.OrdClientAddr')
+    WITH
+    (
+        -- REQUIRED KEY FOR UPDATE
+        OrdClientHdrId INT,
+
+        OrdClientAddr1 NVARCHAR(100),
+        OrdClientAddr2 NVARCHAR(100),
+        OrdClientPostalCode NVARCHAR(100),
+        OrdClientState NVARCHAR(100),
+
+        OrdClientCity NVARCHAR(100),
+        OrdClientPhNo NVARCHAR(100),
+        OrdClientCompanyMailId NVARCHAR(100),
+        OrdClientWebsite NVARCHAR(100),
+        OrdClientPan NVARCHAR(100),
+
+        OrdClientGstNo NVARCHAR(100),
+        OrdClientAdhaarNo NVARCHAR(100),
+        OrdClientAddrType NVARCHAR(100),
+        OrdClientPriContPerson NVARCHAR(100),
+        OrdClientPriMailId NVARCHAR(100),
+
+        OrdClientPriMobileNo NVARCHAR(100),
+        OrdClientSecContPerson NVARCHAR(100),
+        OrdClientSecMailId NVARCHAR(100),
+        OrdClientSecMobileNo NVARCHAR(100),
+        OrdClientLatitude NVARCHAR(100),
+
+        OrdClientLongitude NVARCHAR(100),
+        OrdClientTravelDistance NVARCHAR(100),
+        OrdStatus NVARCHAR(10)
+    ) S
+    ON T.OrdClientHdrId = S.OrdClientHdrId;
+
+    --  Return same ID (fixed field name)
+    SELECT 
+        JSON_VALUE(@OrdClientAddr, '$.OrdClientAddr[0].OrdClientHdrId') AS OrdClientHdrId;
+
+    COMMIT TRANSACTION
+
+END TRY
+
+BEGIN CATCH
+    ROLLBACK TRANSACTION
+
+    DECLARE 
+        @ErrMsg VARCHAR(4000),
+        @ErrSeverity INT,
+        @ErrProcedure VARCHAR(100)
+
+    SET @ErrMsg = ERROR_MESSAGE()
+    SET @ErrSeverity = ERROR_SEVERITY()
+    SET @ErrProcedure = ERROR_PROCEDURE()
+
+    SET @ErrMsg = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
+
+    RAISERROR(@ErrMsg, @ErrSeverity, 1)
+    GOTO End_Prog
+
+END CATCH
+
+End_Prog:

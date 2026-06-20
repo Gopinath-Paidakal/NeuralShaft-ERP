@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../NeuralShaft.Repository/NeuralShaft.Repository.csproj" />
+  <Project Path="../NeuralShaft.Service/NeuralShaft.Service.csproj" />
+  <Project Path="../NeuralShart.Data/NeuralShart.Data.csproj" />
+  <Project Path="NeuralShaft.Server.csproj" />
+</Solution>
