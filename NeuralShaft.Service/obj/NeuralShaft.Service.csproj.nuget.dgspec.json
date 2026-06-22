@@ -402,9 +402,6 @@
             "projectReferences": {
               "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShaft.Repository\\NeuralShaft.Repository.csproj": {
                 "projectPath": "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShaft.Repository\\NeuralShaft.Repository.csproj"
-              },
-              "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShart.Data\\NeuralShaft.Data.csproj": {
-                "projectPath": "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShart.Data\\NeuralShaft.Data.csproj"
               }
             }
           }

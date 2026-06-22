@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NeuralShaft.Repository\NeuralShaft.Repository.csproj" />
-    <ProjectReference Include="..\NeuralShart.Data\NeuralShaft.Data.csproj" />
   </ItemGroup>
 
 </Project>

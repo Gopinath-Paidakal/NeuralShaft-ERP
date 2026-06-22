@@ -5,7 +5,7 @@ using NeuralShaft.Repository.RepoInterfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.Extensions.Configuration;
-using NeuralShart.Data;
+using NeuralShaft.Data;
 using Dapper;
 
 namespace NeuralShaft.Repository.RepoImplementation

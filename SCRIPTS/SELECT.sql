@@ -40,6 +40,14 @@ select * from SoDtl
 select * from SOLandDoor
 select * from SOcarDoor
 
+select * from JobOrderPVR
+select * from JobOrderPVRFloor
+
+select * from JobOrderSVRHdr
+select * from JobOrderSVRDtl
+
+
+
 select DefaultDataName, DefaultDataDesc from defaultdata 
 
 select * from Employee

@@ -12,7 +12,6 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.5",
           "Microsoft.EntityFrameworkCore": "10.0.3",
           "NeuralShaft.Repository": "1.0.0",
-          "NeuralShart.Data": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "8.16.0"
         },
         "runtime": {
@@ -367,27 +366,27 @@
           }
         }
       },
-      "NeuralShaft.Repository/1.0.0": {
+      "NeuralShaft.Data/1.0.0": {
         "dependencies": {
-          "Dapper": "2.1.72",
-          "Microsoft.Data.SqlClient": "6.1.4",
-          "Microsoft.EntityFrameworkCore": "10.0.3",
-          "NeuralShart.Data": "1.0.0",
-          "Newtonsoft.Json": "13.0.4"
+          "Microsoft.Data.SqlClient": "6.1.4"
         },
         "runtime": {
-          "NeuralShaft.Repository.dll": {
+          "NeuralShaft.Data.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
       },
-      "NeuralShart.Data/1.0.0": {
+      "NeuralShaft.Repository/1.0.0": {
         "dependencies": {
-          "Microsoft.Data.SqlClient": "6.1.4"
+          "Dapper": "2.1.72",
+          "Microsoft.Data.SqlClient": "6.1.4",
+          "Microsoft.EntityFrameworkCore": "10.0.3",
+          "NeuralShaft.Data": "1.0.0",
+          "Newtonsoft.Json": "13.0.4"
         },
         "runtime": {
-          "NeuralShart.Data.dll": {
+          "NeuralShaft.Repository.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -590,12 +589,12 @@
       "path": "system.security.cryptography.protecteddata/9.0.11",
       "hashPath": "system.security.cryptography.protecteddata.9.0.11.nupkg.sha512"
     },
-    "NeuralShaft.Repository/1.0.0": {
+    "NeuralShaft.Data/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "NeuralShart.Data/1.0.0": {
+    "NeuralShaft.Repository/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

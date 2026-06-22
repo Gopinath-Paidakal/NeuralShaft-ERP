@@ -60,3 +60,4 @@ D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\refint\NeuralShaft.Repository.dll
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.pdb
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\ref\NeuralShaft.Repository.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.sourcelink.json

@@ -1934,7 +1934,6 @@
       "MailKit >= 4.16.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.5",
       "Microsoft.EntityFrameworkCore >= 10.0.3",
-      "NeuralShaft.Data >= 1.0.0",
       "NeuralShaft.Repository >= 1.0.0",
       "System.IdentityModel.Tokens.Jwt >= 8.16.0"
     ]
@@ -1974,9 +1973,6 @@
           "projectReferences": {
             "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShaft.Repository\\NeuralShaft.Repository.csproj": {
               "projectPath": "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShaft.Repository\\NeuralShaft.Repository.csproj"
-            },
-            "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShart.Data\\NeuralShaft.Data.csproj": {
-              "projectPath": "D:\\NEURALSHAFT\\BackEnd\\NEURAL-SHAFT-ERP\\NeuralShart.Data\\NeuralShaft.Data.csproj"
             }
           }
         }

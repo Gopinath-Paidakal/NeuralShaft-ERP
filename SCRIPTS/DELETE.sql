@@ -14,25 +14,24 @@ delete from QuoteHdr
 delete from OrdClientHdr
 delete from OrdClientAddr
 
+delete from OrdApprove
+delete from SoDtl
+
 delete from SOHdr
 delete from SoDtl
 delete from SOLandDoor
 delete from SOCarDoor
 
+Delete from JobOrder
+Delete from JobOrderDoc
+
 Delete from JobOrderPVR
 Delete from JobOrderPVRFloor
 
+Delete from JobOrderSVRHdr
+Delete from JobOrderSVRDtl
 
-
-
-
-
-
-
-
-
-
-
+Delete from filepath
 
 
 

@@ -1,0 +1,13 @@
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.RunTime\Debug\net10.0\NeuralShaft.Data.deps.json
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.RunTime\Debug\net10.0\NeuralShaft.Data.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.RunTime\Debug\net10.0\NeuralShaft.Data.pdb
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.csproj.AssemblyReference.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.AssemblyInfoInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.AssemblyInfo.cs
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.csproj.CoreCompileInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.sourcelink.json
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\refint\NeuralShaft.Data.dll
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\NeuralShaft.Data.pdb
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShart.Data\obj\Debug\net10.0\ref\NeuralShaft.Data.dll
