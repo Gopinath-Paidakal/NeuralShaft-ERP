@@ -7,6 +7,7 @@ using NeuralShaft.Service.ServiceInterfaces.Masters;
 using NeuralShaft.Service.ServiceInterfaces.Upload;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Security;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
+        private readonly string fileName;
 
         public UploadService(IJsonRepository repoJson, IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IFile fileService)
         {
@@ -40,11 +42,14 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
             try
             {
                 var uploadedFiles = new List<string>();
+                
 
                 if (attachments == null || attachments.Count == 0)
                     return uploadedFiles;
 
                 /// --------- Local path
+                /// "/var/www/" - in appsettings.json file
+                /// 
                 string uploadPath = _configuration["FileSettings:UploadPath"];
                 uploadPath = uploadPath + path;
 
@@ -58,9 +63,17 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
 
                 foreach (var file in attachments)
                 {
+                    
                     if (file.Length > 0)
                     {
-                        var fileName = Id + "_" + file.FileName;
+                        //if (Id > 0)
+                        //{ 
+                        //    var fileName = Id + "_" + file.FileName;
+                        //}
+                        //else
+                        //{
+                            var fileName = file.FileName;
+                        //}
 
                         var filePath = Path.Combine(uploadPath, fileName);
 
@@ -68,7 +81,9 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
                         {
                             await file.CopyToAsync(stream);
                         }
-                        Console.WriteLine(fileName.ToString());
+
+                        //Console.WriteLine(fileName.ToString());
+
                         uploadedFiles.Add(fileName);
                     }
                 }
@@ -115,6 +130,11 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
                 //// ========= Get the path and files from db
                 /// ==============================================
                 var baseFullUrl = new List<string>();
+
+
+                ////"DownloadPath" : "https://neuralshaft.com"
+                ///  in appsettings.json file
+                ///  
 
                 string baseUrl = _configuration["FileSettings:DownloadPath"];
                 //baseUrl = baseUrl + path;
@@ -193,6 +213,99 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
                 // log error
                 Console.WriteLine(ex.Message);
                 throw; // rethrow to controller
+            }
+        }
+
+
+        public async Task<bool> DeleteFileAsync(string path, string fileName)
+        {
+            try
+            {
+                /// "/var/www/" - in appsettings.json file
+                
+                string uploadPath = _configuration["FileSettings:UploadPath"];
+
+                //string fullPath = Path.Combine(uploadPath, path, fileName);
+
+                string fullPath = Path.Combine(
+                            uploadPath,
+                                path.TrimStart('/', '\\'),
+                                fileName
+                            );
+
+                if (File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<List<string>> UploadFilesAsyncWithIds(List<IFormFile> attachments, string path, string ids)
+        {
+            try
+            {
+                var uploadedFiles = new List<string>();
+
+                if (attachments == null || attachments.Count == 0)
+                    return uploadedFiles;
+
+                string uploadPath = _configuration["FileSettings:UploadPath"];
+                uploadPath = Path.Combine(uploadPath, path);
+
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                // split ids
+                var idArray = ids.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                if (idArray.Length != attachments.Count)
+                    throw new Exception("IDs count and attachments count must match.");
+
+                for (int i = 0; i < attachments.Count; i++)
+                {
+                    var file = attachments[i];
+                    var id = idArray[i].Trim();
+
+                    if (file.Length > 0)
+                    {
+                        var fileName = $"{id}_{file.FileName}";
+                        var filePath = Path.Combine(uploadPath, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        uploadedFiles.Add(fileName);
+
+                        // Save DB (one-to-one mapping)
+                        var fileJson = new
+                        {
+                            DocFileId = Convert.ToInt32(id),
+                            DocPath = uploadPath,
+                            DocFileName = fileName
+                        };
+
+                        string insertFileJson = JsonConvert.SerializeObject(fileJson);
+
+                        await _fileService.InsertFile(insertFileJson);
+                    }
+                }
+
+                return uploadedFiles;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
     }

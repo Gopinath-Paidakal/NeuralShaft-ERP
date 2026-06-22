@@ -1,19 +1,19 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetJobOrderSVR]    Script Date: 20/06/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetJobOrderSVR]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_GetJobOrderSVR]
+/****** Object:  StoredProcedure [dbo].[SP_GetJOSVR_ById]    Script Date: 20/06/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetJOSVR_ById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetJOSVR_ById]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetJobOrderSVR]    Script Date: 20/06/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetJOSVR_ById]    Script Date: 20/06/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_GetJobOrderSVR]
+CREATE PROCEDURE [dbo].[SP_GetJOSVR_ById]
 (
 	@SODtlId int = 0
   

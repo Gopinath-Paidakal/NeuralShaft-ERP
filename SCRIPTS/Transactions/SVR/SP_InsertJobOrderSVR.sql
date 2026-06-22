@@ -26,6 +26,7 @@ BEGIN TRY
     BEGIN TRANSACTION
 
     Declare @JobOrderSVRHdrId int
+    Declare @JobOrderSVRDtlId int
 
     INSERT INTO JobOrderSVRHdr
         (
@@ -135,6 +136,20 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+
+
+ --set @JobOrderSVRDtlId = SCOPE_IDENTITY()
+
+        -------===============================================
+        ------ Updating [SVRDocName] with id, path, filename
+        --------===============================================
+        --Update [JobOrderSVRDtl] set [JobOrderSVRDtl].SVRDocName = 
+        --                            Convert(nvarchar(10),[JobOrderSVRDtl].JobOrderSVRDtlId) + '_' +
+        --                            Convert(nvarchar(50),[JobOrderSVRDtl].SVRDocPath) + 
+        --                            Convert(nvarchar(100),[JobOrderSVRDtl].SVRDocName)
+
+        --Where [JobOrderSVRDtl].JobOrderSVRDtlId = @JobOrderSVRDtlId
 
 
 

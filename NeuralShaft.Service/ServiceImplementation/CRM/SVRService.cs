@@ -21,11 +21,18 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             _SVRJSon = repoJson;
         }
 
-        public async Task<string> GetSVR(int soDtlId)
+        public async Task<string> GetSVR(string fromDate, string toDate)
         {
-            string svr = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJobOrderSVR",
-                                        new { @SODtlId = soDtlId });
+            string svr = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJOSVR",
+                                new { @FromDate = fromDate, @ToDate = toDate });
             return svr;
+        }
+
+        public async Task<string> GetSVRById(int soDtlId)
+        {
+            string svrById = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJobOrderSVR",
+                                        new { @SODtlId = soDtlId });
+            return svrById;
         }
 
         public async Task<string> InsertSVR(object SVR)
@@ -33,6 +40,25 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             string addJobOrderPVR = await _SVRJSon.ExecuteJsonSPWithParameter("SP_InsertJobOrderSVR",
                                   new { @JobOrderSVR = SVR.ToString() });
             return (addJobOrderPVR);
+        }
+
+        public async Task<string> UpdateJOSVRHdr(int jobOrderSVRHdrId, object JobOrderSVRHdr)
+        {
+            return await _SVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSVRHdrDtl",
+                                    new { @JobOrderSVRHdrId = jobOrderSVRHdrId, @joSVRHdr = JobOrderSVRHdr.ToString() });
+        }
+
+        public async Task<string> UpdateJOSVRDtl(int jobOrderSVRDtlId, object JobOrderSVRDtl)
+        {
+            var updateEnqDtlId = await _SVRJSon.ExecuteJsonSPWithParameter("Sp_UpdateEnqDtl",
+                                      new { @JobOrderSVRDtlId = jobOrderSVRDtlId, @JobOrderSVRDtl = JobOrderSVRDtl.ToString() });
+            return updateEnqDtlId;
+        }
+
+        public async Task<string> ReplaceFile(int jobOrderSVRDtlId,  string newFile)
+        {
+            return await _SVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSVR_NewFile",
+                                    new { @JobOrderSVRDtlId = jobOrderSVRDtlId, @NewFileName = newFile.ToString() });
         }
     }
 }
