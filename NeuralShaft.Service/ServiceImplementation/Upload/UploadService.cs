@@ -66,14 +66,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
                     
                     if (file.Length > 0)
                     {
-                        //if (Id > 0)
-                        //{ 
-                        //    var fileName = Id + "_" + file.FileName;
-                        //}
-                        //else
-                        //{
-                            var fileName = file.FileName;
-                        //}
+                        var fileName = Id > 0 ? $"{Id}_{file.FileName}" : file.FileName;
 
                         var filePath = Path.Combine(uploadPath, fileName);
 
@@ -312,6 +305,15 @@ namespace NeuralShaft.Service.ServiceImplementation.Upload
       
 }
 
+
+//if (Id > 0)
+//{ 
+//    var fileName = Id + "_" + file.FileName;
+//}
+//else
+//{
+//var fileName = file.FileName;
+//}
 
 /////var Request = _httpContextAccessor.HttpContext.Request;
 

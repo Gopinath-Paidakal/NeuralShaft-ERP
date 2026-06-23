@@ -61,9 +61,9 @@ namespace NeuralShaft.Server.Controllers.CRM
         }
 
         [HttpPost("UpdateJOSVRHdrDtl/{JobOrderSVRHdrId}")]
-        public async Task<IActionResult> UpdateJOSVRHdr(int JobOrderSVRHdrId, [FromBody] string JobOrderSVRHdr)  ///  , [FromForm] List<IFormFile> attachments)
+        public async Task<IActionResult> UpdateJOSVRHdr(int JobOrderSVRHdrId, [FromBody] object JobOrderSVRHdr)  ///  , [FromForm] List<IFormFile> attachments)
         {
-            var svrUpdateHdrId = await _svrService.UpdateJOSVRHdr(JobOrderSVRHdrId, JobOrderSVRHdr);
+            var svrUpdateHdrId = await _svrService.UpdateJOSVRHdrDtl(JobOrderSVRHdrId, JobOrderSVRHdr);
 
             //////================= Add Images in Edit  as per discussion only add
             //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(enqHdrId.ToString()));

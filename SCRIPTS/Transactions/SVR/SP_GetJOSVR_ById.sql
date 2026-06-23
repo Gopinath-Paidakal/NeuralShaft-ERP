@@ -42,7 +42,8 @@ DECLARE @TotJobOrderSVR NVARCHAR(MAX)
           ,[Progress]
           ,[Lattitude]
           ,[Longitude]
-          ,[CreateUserId]
+
+          ,[CreatedUserId]
           ,[CreatedDate]
        FROM [dbo].[JobOrderSVRHdr]
        where SodtlId = @SODtlId
@@ -56,7 +57,7 @@ DECLARE @TotJobOrderSVR NVARCHAR(MAX)
 
     SET @JobOrderSVRDtl = (
        SELECT [JobOrderSVRDtlId]
-          ,[JobOrderSVRHdrId]
+          --,[JobOrderSVRHdrId]
           ,[Description]
           ,[Status]
           ,[Remarks]
@@ -64,8 +65,7 @@ DECLARE @TotJobOrderSVR NVARCHAR(MAX)
           ,[FFLMarking]
           ,[SVRDocPath]
           ,[SVRDocName]
-          ,[CreatedUserId]
-          ,[CreatedDate]
+        
 
         FROM [dbo].[JobOrderSVRDtl]
         where JobOrderSVRHdrId = @JobOrderSVRHdrId

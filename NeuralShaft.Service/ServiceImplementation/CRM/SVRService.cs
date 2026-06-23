@@ -30,7 +30,7 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
 
         public async Task<string> GetSVRById(int soDtlId)
         {
-            string svrById = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJobOrderSVR",
+            string svrById = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJOSVR_ById",
                                         new { @SODtlId = soDtlId });
             return svrById;
         }
@@ -42,19 +42,12 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             return (addJobOrderPVR);
         }
 
-        public async Task<string> UpdateJOSVRHdr(int jobOrderSVRHdrId, object JobOrderSVRHdr)
+        public async Task<string> UpdateJOSVRHdrDtl(int jobOrderSVRHdrId, object JobOrderSVRHdr)
         {
             return await _SVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSVRHdrDtl",
-                                    new { @JobOrderSVRHdrId = jobOrderSVRHdrId, @joSVRHdr = JobOrderSVRHdr.ToString() });
+                                    new { @JobOrderSVRHdrId = jobOrderSVRHdrId, @JobOrderSVRHdr = JobOrderSVRHdr.ToString() });
         }
-
-        public async Task<string> UpdateJOSVRDtl(int jobOrderSVRDtlId, object JobOrderSVRDtl)
-        {
-            var updateEnqDtlId = await _SVRJSon.ExecuteJsonSPWithParameter("Sp_UpdateEnqDtl",
-                                      new { @JobOrderSVRDtlId = jobOrderSVRDtlId, @JobOrderSVRDtl = JobOrderSVRDtl.ToString() });
-            return updateEnqDtlId;
-        }
-
+        
         public async Task<string> ReplaceFile(int jobOrderSVRDtlId,  string newFile)
         {
             return await _SVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSVR_NewFile",
@@ -62,3 +55,11 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
         }
     }
 }
+
+
+//public async Task<string> UpdateJOSVRDtl(int jobOrderSVRDtlId, object JobOrderSVRDtl)
+//{
+//    var updateEnqDtlId = await _SVRJSon.ExecuteJsonSPWithParameter("Sp_UpdateEnqDtl",
+//                              new { @JobOrderSVRDtlId = jobOrderSVRDtlId, @JobOrderSVRDtl = JobOrderSVRDtl.ToString() });
+//    return updateEnqDtlId;
+//}

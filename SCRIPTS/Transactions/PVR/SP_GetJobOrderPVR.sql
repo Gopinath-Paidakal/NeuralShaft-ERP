@@ -31,7 +31,7 @@ DECLARE @TotJobOrderPVR NVARCHAR(MAX)
 
  SET @JobOrderPVR = (
        
-        SELECT [JobOorderPVRId]
+        SELECT [JobOrderPVRId]
               ,[JobOrderId]
               ,[SODtlId]
               ,[ShaftType]
@@ -58,6 +58,10 @@ DECLARE @TotJobOrderPVR NVARCHAR(MAX)
               ,[OverHeadHeight]
               ,[ControlRoomPlacement]
               ,[MotorAreaDetails]
+
+              ,[PVRDocPath]
+              ,[PVRDocName]
+
               ,[CreatedUserId]
               ,[CreatedDate]
 
@@ -69,11 +73,11 @@ DECLARE @TotJobOrderPVR NVARCHAR(MAX)
 
     Declare @JobOorderPVRId int = 0
 
-    set @JobOorderPVRId = (Select JobOorderPVRId from JobOrderPVR where SODtlId = @SoDtlId)
+    set @JobOorderPVRId = (Select JobOrderPVRId from JobOrderPVR where SODtlId = @SoDtlId)
 
     SET @JobOrderPVRFloor = (
        SELECT [JobOrderPVRFloorId]
-              ,[JobOorderPVRId]
+              --,[JobOorderPVRId]
               ,[FloorNo]
               ,[FloorWidth]
               ,[FloorDepth]

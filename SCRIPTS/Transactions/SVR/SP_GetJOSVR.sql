@@ -35,6 +35,7 @@ DECLARE @JobOrderSVR   NVARCHAR(MAX)
         JobOrder.JobOrderMobileNo,
         JobOrderSVRHdr.CreatedDate AS SVRCreatedDate
     FROM dbo.JobOrder
+
     INNER JOIN dbo.JobOrderSVRHdr
         ON dbo.JobOrderSVRHdr.JobOrderId = dbo.JobOrder.JobOrderId
     WHERE dbo.JobOrderSVRHdr.JobOrderId = JobOrder.JobOrderId

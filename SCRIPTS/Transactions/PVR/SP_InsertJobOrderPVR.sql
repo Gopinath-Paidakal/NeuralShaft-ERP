@@ -55,6 +55,9 @@ BEGIN TRY
         ControlRoomPlacement,
         MotorAreaDetails,
         
+        PVRDocPath,
+        PVRDocName,
+
         CreatedUserId,
         CreatedDate
     )
@@ -84,6 +87,10 @@ BEGIN TRY
         ControlRoomPlacement,
 
         MotorAreaDetails,
+
+        '/uploads/pvr/',
+        PVRDocName,
+
         CreatedUserId,
         CreatedDate
 
@@ -114,7 +121,9 @@ BEGIN TRY
         OverheadHeight INT,
         ControlRoomPlacement NVARCHAR(100),
 
-        MotorAreaDetails NVARCHAR(MAX),
+        MotorAreaDetails NVARCHAR(100),
+        PVRDocName NVARCHAR(100),
+
         CreatedUserId INT,
         CreatedDate DATETIME
     );

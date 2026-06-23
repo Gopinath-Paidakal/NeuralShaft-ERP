@@ -1,22 +1,22 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateJOSVRHdrDtl]    Script Date: 24/03/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateJOSVRHdrDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateJOSVRHdrDtl]
+/****** Object:  StoredProcedure [dbo].[SP_UpdateJOPVR_NewFile]    Script Date: 23/06/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateJOPVR_NewFile]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateJOPVR_NewFile]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateJOSVRHdrDtl]    Script Date: /03/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_UpdateJOPVR_NewFile]    Script Date: 23/06/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_UpdateJOSVRHdrDtl]
+CREATE PROCEDURE [dbo].[SP_UpdateJOPVR_NewFile]
 (
-	@JobOrderSVRHdrId int,	
-	@JobOrderSVRHdr nvarchar(Max)
+	@JobOrderPVRId int,	
+	@NewFileName nvarchar(100)
 
 )
 ----With Encryption
@@ -26,78 +26,10 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 	BEGIN TRANSACTION
-	
-	------------------------------------------------
-    -- UPDATE SRV
-    ------------------------------------------------
-	  UPDATE H
-        SET
-            JobOrderId      = J.JobOrderId,
-            SODtlId         = J.SODtlId,
-            DrgSubmittedTo  = J.DrgSubmittedTo,
-            PhoneNumber     = J.PhoneNumber,
-            DrgStatus       = J.DrgStatus,
-
-            NextDate        = J.NextDate,
-            Progress        = J.Progress,
-            Lattitude       = J.Lattitude,
-            Longitude       = J.Longitude,
-
-            ModifiedUserId    = J.ModifiedUserId,
-            ModifiedDate     = J.ModifiedDate
-
-        FROM JobOrderSVRHdr H
-        CROSS APPLY OPENJSON(@JobOrderSVRHdr,'$.JobOrderSVRHdr')
-        WITH
-        (
-            JobOrderId INT,
-            SODtlId INT,
-            DrgSubmittedTo NVARCHAR(100),
-            PhoneNumber NVARCHAR(100),
-            DrgStatus NVARCHAR(100),
-            
-			NextDate DATE,
-            Progress NVARCHAR(100),
-            Lattitude NVARCHAR(50),
-            Longitude NVARCHAR(50),
-            
-			ModifiedUserId int,
-			ModifiedDate datetime
-        ) J
-        WHERE H.JobOrderSVRHdrId = @JobOrderSVRHdrId;
-	
-		---------------------------------------------------------
-		--- UPdating Detail JobOrderSVRDtl
-		-----====================================================
-
-		UPDATE D
-			SET
-				D.[Description] = J.[Description],
-				D.[Status] = J.[Status],
-				D.Remarks = J.Remarks,
-				D.FFLMarking = J.FFLMarking
-
-				--D.ModifiedUserId = J.ModifiedUserId,
-				--D.ModifiedDate = J.ModifiedDate
-
-			FROM JobOrderSVRDtl D
-			INNER JOIN OPENJSON(@JobOrderSVRHdr, '$.JobOrderSVRDtl')
-			WITH
-			(
-				JobOrderSVRDtlId INT,
-
-				[Description] NVARCHAR(100),
-				[Status] NVARCHAR(100),
-				Remarks NVARCHAR(200),
-				FFLMarking NVARCHAR(50)
-
-				--ModifiedUserId int,
-				--ModifiedDate datetime
-			) J
-			ON D.JobOrderSVRDtlId = J.JobOrderSVRDtlId;
 		
+		Update JobOrderPVR set PVRDocName = @NewFileName where JobOrderPVRId = @JobOrderPVRId
 
-		Select @JobOrderSVRHdrId
+		Select @JobOrderPVRId
 					   
 	COMMIT TRANSACTION
 END TRY

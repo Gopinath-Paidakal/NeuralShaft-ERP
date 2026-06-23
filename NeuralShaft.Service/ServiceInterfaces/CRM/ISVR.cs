@@ -9,10 +9,11 @@ namespace NeuralShaft.Service.ServiceInterfaces.CRM
         Task<string> GetSVR(string fromDate, string toDate);
         Task<string> GetSVRById(int soDtlId);
         Task<string> InsertSVR(object PVR);
-        Task<string> UpdateJOSVRHdr(int jobOrderSVRHdrId, object JobOrderSVRHdr);
-        Task<string> UpdateJOSVRDtl(int jobOrderSVRDtlId, object @JobOrderSVRDtl);
+        Task<string> UpdateJOSVRHdrDtl(int jobOrderSVRHdrId, object JobOrderSVRHdr);        
 
         Task<string> ReplaceFile(int jobOrderSVRDtlId,  string NewFile);
 
     }
 }
+
+//Task<string> UpdateJOSVRDtl(int jobOrderSVRDtlId, object @JobOrderSVRDtl);

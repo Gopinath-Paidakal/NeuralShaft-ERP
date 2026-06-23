@@ -40,7 +40,7 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
-            CreateUserId,
+            CreatedUserId,
             CreatedDate
         )
         SELECT
@@ -54,7 +54,7 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
-            CreateUserId,
+            CreatedUserId,
             CreatedDate
 
         FROM OPENJSON(@JobOrderSVR,'$.JobOrderSVR')
@@ -69,7 +69,7 @@ BEGIN TRY
             Progress NVARCHAR(100),
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
-            CreateUserId INT,
+            CreatedUserId INT,
             CreatedDate DATETIME
         );
     
@@ -83,9 +83,8 @@ BEGIN TRY
             Remarks,
             FFLMarking,
             SVRDocPath,
-            SVRDocName,
-            CreatedUserId,
-            CreatedDate
+            SVRDocName
+            
         )
         SELECT
             @JobOrderSVRHdrId,
@@ -94,10 +93,8 @@ BEGIN TRY
             Remarks,
             FFLMarking,
             '/uploads/svr/',
-            SVRDocName,
+            SVRDocName
 
-            CreatedUserId,
-            CreatedDate
         FROM OPENJSON(@JobOrderSVR,'$.SVRDetails')
         WITH
         (

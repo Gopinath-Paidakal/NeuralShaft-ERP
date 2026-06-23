@@ -31,5 +31,17 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             return (addJobOrderPVR);
 
         }
+
+        public async Task<string> UpdateJOPVRHdrDtl(int jobOorderPVRId, object jobOrderPVR)
+        {
+            return await _PVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOPVRHdrDtl",
+                                    new { @JobOrderPVRId = jobOorderPVRId, @JobOrderPVR = jobOrderPVR.ToString() });
+        }
+
+        public async Task<string> ReplaceFile(int jobOrderPVRId, string newFile)
+        {
+            return await _PVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOPVR_NewFile",
+                                    new { @JobOrderPVRId = jobOrderPVRId, @NewFileName = newFile.ToString() });
+        }
     }
 }

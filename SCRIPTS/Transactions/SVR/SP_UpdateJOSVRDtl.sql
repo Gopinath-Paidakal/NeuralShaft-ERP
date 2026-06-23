@@ -32,9 +32,8 @@ BEGIN TRY
 			D.Description   = J.Description,
 			D.Status        = J.Status,
 			D.Remarks       = J.Remarks,
-			D.FFLMarking    = J.FFLMarking,
-			D.CreatedUserId = J.CreatedUserId,
-			D.CreatedDate   = GETDATE()
+			D.FFLMarking    = J.FFLMarking
+			
 		FROM JobOrderSVRDtl D
 		INNER JOIN
 		(
@@ -43,11 +42,11 @@ BEGIN TRY
 			WITH
 			(
 				JobOrderSVRDtlId INT,
-				Description NVARCHAR(MAX),
+				Description NVARCHAR(100),
 				Status NVARCHAR(100),
-				Remarks NVARCHAR(MAX),
-				FFLMarking NVARCHAR(50),
-				CreatedUserId INT
+				Remarks NVARCHAR(200),
+				FFLMarking NVARCHAR(50)
+				
 			)
 		) J
 		ON D.JobOrderSVRDtlId =  @JobOrderSVRDtlId    --  J.JobOrderSVRDtlId;

@@ -65,14 +65,44 @@ select * from Users
 select * from MenuPermissions
 select * from Menus
 
-
 select * from BOM
-
 select * from filepath
 
+select * from DefaultDataDocs where DefaultDataDocType = 'CRM'
+select * from DefaultDataDocs where DefaultDataDocType = 'DESIGN'
 
-select * from docs where doctype = 'CRM'
-select * from docs where doctype = 'DESIGN'
+select * from JobOrderDoc
+
+select * from JobOrderPVR
+select * from JobOrderPVRFloor
+
+select * from JobOrderSVRHdr
+select * from JobOrderSVRDtl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 --select * from Stock_ImportToSql
   
