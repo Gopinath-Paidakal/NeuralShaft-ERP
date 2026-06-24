@@ -111,6 +111,7 @@ builder.Services.AddScoped<IDefaultDataDocs, DefaultDataDocsService>();
 builder.Services.AddScoped<ICRMDocs, CRMDocsService>();
 builder.Services.AddScoped<IPVR, PVRService>();
 builder.Services.AddScoped<ISVR, SVRService>();
+builder.Services.AddScoped<ISCR, SCRService>();
 
 //----- SMTP Setting for email services
 builder.Services.Configure<SmtpSettings>(
@@ -157,7 +158,7 @@ builder.Services.AddControllers()
 builder.Services.AddCors(options =>
 {
 options.AddPolicy("AllowAll",
-    policy => policy.WithOrigins("http://192.168.1.0:5173", "http://192.168.1.123:5173", "http://192.168.1.53:5173",
+    policy => policy.WithOrigins("http://192.168.1.0:5173", "http://192.168.1.123:5173", "http://192.168.1.126:5173", "http://192.168.1.53:5173",
                                  "http://localhost:5173","http://192.168.1.45:5173")  //45-Gopi //43-Jeevitha //, "https://neuralshaft.com")
                     .AllowAnyMethod()
                     .AllowAnyHeader());

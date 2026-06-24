@@ -32,22 +32,27 @@ SELECT
         (
 
         SELECT 
-            [JobOrderId]
-            ,[SOHdrId]
-            ,[SODtlId]
-            ,[SONo]
-            ,[JobOrderNo]
+            [JobOrder].[JobOrderId]
+            ,[JobOrder].[SOHdrId]
+            ,[JobOrder].[SODtlId]
+            ,[JobOrder].[SONo]
+            ,[JobOrder].[JobOrderNo]
             ,FORMAT([JobOrderDate], 'dd-MM-yyyy') as [JobOrderDate]  
-            ,[ProjectName]
-            ,[SOConsultant]
+            ,[JobOrder].[ProjectName]
+            ,[JobOrder].[SOConsultant]
 
-            ,[JobOrderCustComp]
-            ,[JobOrderContPerson]
-            ,[JobOrderMobileNo]
-            ,[CreatedUserId]
-            ,[CreatedDate]
+            ,[JobOrder].[JobOrderCustComp]
+            ,[JobOrder].[JobOrderContPerson]
+            ,[JobOrder].[JobOrderMobileNo]
+
+            ,[JobOrderSVRHdr].SiteReady
+
+            ,[JobOrder].[CreatedUserId]
+            ,[JobOrder].[CreatedDate]
+
+
          FROM [dbo].[JobOrder]
-           
+         INNER JOIN [JobOrderSVRHdr] ON [JobOrderSVRHdr].JobOrderId = [JobOrder].JobOrderId
           
           WHERE [JobOrder].[JobOrderDate] >= @FromDate AND [JobOrder].[JobOrderDate] < DATEADD(DAY, 1, @ToDate)          
 

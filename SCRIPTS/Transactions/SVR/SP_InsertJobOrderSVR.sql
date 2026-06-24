@@ -40,6 +40,8 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
+            SiteReady,
+
             CreatedUserId,
             CreatedDate
         )
@@ -54,21 +56,27 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
+            SiteReady,
+
             CreatedUserId,
             CreatedDate
 
-        FROM OPENJSON(@JobOrderSVR,'$.JobOrderSVR')
+        FROM OPENJSON(@JobOrderSVR,'$.JobOrderSVRHdr')
         WITH
         (
             JobOrderId INT,
             SODtlId INT,
+
             DrgSubmittedTo NVARCHAR(200),
             PhoneNumber NVARCHAR(50),
             DrgStatus NVARCHAR(100),
             NextDate DATETIME,
             Progress NVARCHAR(100),
+            
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
+            SiteReady NVARCHAR(50),
+            
             CreatedUserId INT,
             CreatedDate DATETIME
         );
@@ -95,7 +103,7 @@ BEGIN TRY
             '/uploads/svr/',
             SVRDocName
 
-        FROM OPENJSON(@JobOrderSVR,'$.SVRDetails')
+        FROM OPENJSON(@JobOrderSVR,'$.JobOrderSVRDtl')
         WITH
         (
             Description NVARCHAR(MAX),

@@ -137,14 +137,16 @@ BEGIN TRY
         FloorNo,
         FloorWidth,
         FloorDepth,
-        FloorHeight
+        FloorHeight,
+        WaterProtection
     )
     SELECT
         @JobOorderPVRId,
         FloorNo,
         FloorWidth,
         FloorDepth,
-        FloorHeight
+        FloorHeight,
+        WaterProtection
 
     FROM OPENJSON(@JobOrderPVR, '$.JobOrderPVR.FloorDetails')
     WITH
@@ -152,7 +154,8 @@ BEGIN TRY
         FloorNo VARCHAR(10),
         FloorWidth INT,
         FloorDepth INT,
-        FloorHeight INT
+        FloorHeight INT,
+        WaterProtection nvarchar(50)
     );
 
     select @JobOorderPVRId

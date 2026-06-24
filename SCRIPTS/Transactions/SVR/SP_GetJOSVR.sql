@@ -30,10 +30,14 @@ DECLARE @JobOrderSVR   NVARCHAR(MAX)
         JobOrder.JobOrderId,
         JobOrder.SODtlId,
         JobOrder.JobOrderNo,
+        
         JobOrder.JobOrderCustComp,
         JobOrder.JobOrderContPerson,
         JobOrder.JobOrderMobileNo,
-        JobOrderSVRHdr.CreatedDate AS SVRCreatedDate
+        
+        JobOrderSVRHdr.CreatedDate AS SVRCreatedDate,
+        JobOrderSVRHdr.SiteReady
+
     FROM dbo.JobOrder
 
     INNER JOIN dbo.JobOrderSVRHdr

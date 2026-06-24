@@ -31,8 +31,8 @@ BEGIN TRY
 		SET
 			D.Description   = J.Description,
 			D.Status        = J.Status,
-			D.Remarks       = J.Remarks,
-			D.FFLMarking    = J.FFLMarking
+			D.Remarks       = J.Remarks
+			--D.FFLMarking    = J.FFLMarking
 			
 		FROM JobOrderSVRDtl D
 		INNER JOIN
@@ -42,10 +42,10 @@ BEGIN TRY
 			WITH
 			(
 				JobOrderSVRDtlId INT,
-				Description NVARCHAR(100),
-				Status NVARCHAR(100),
-				Remarks NVARCHAR(200),
-				FFLMarking NVARCHAR(50)
+				[Description] NVARCHAR(100),
+				[Status] NVARCHAR(100),
+				Remarks NVARCHAR(200)
+				--FFLMarking NVARCHAR(50)
 				
 			)
 		) J

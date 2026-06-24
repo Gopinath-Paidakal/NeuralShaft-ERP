@@ -39,6 +39,7 @@ BEGIN TRANSACTION
 
 	Declare @EnqProductAmount numeric(18,2) = 0
 	Declare @TaxableValue numeric(18,2) = 100.00
+	Declare @TaxableAmount numeric(18,2) = 0
 	Declare @TaxAmount  numeric(18,2) = 0
 	Declare @TotalAmount numeric(18,2) = 0
 
@@ -230,8 +231,8 @@ BEGIN TRANSACTION
 			set @EnqProductAmount = (@ProductAmount + @FloorNameAmount + @DoorTypeAmount + @CarDoorTypeAmount + @DoorFinishAmount
 								 + @CabinTypeAmount + @FlooringTypeAmount + @AddnlFeatureAmount + @PassengerAmount)
 
-			--set @TaxAmount = (@EnqProductAmount * 18.00/100)
-			set @TaxAmount = (@EnqProductAmount * @TaxableValue/100)
+			set @TaxableAmount = (@EnqProductAmount * @TaxableValue/100)
+			set @TaxAmount = (@TaxableAmount * 18.00/100)
 
 			set @TotalAmount = @EnqProductAmount + @TaxAmount
 

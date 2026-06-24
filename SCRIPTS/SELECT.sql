@@ -73,11 +73,16 @@ select * from DefaultDataDocs where DefaultDataDocType = 'DESIGN'
 
 select * from JobOrderDoc
 
+select * from JobOrder
 select * from JobOrderPVR
 select * from JobOrderPVRFloor
 
+
+select * from JobOrder
 select * from JobOrderSVRHdr
 select * from JobOrderSVRDtl
+
+
 
 
 

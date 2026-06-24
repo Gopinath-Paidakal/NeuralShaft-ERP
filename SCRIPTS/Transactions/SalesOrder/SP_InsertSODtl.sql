@@ -36,11 +36,12 @@ BEGIN TRY
     Declare @FlooringTypeAmount numeric(18,2)
     Declare @AddnlFeatureAmount numeric(18,2)
 
-	Declare @TaxableValue numeric(18,2) = 100.00
-    Declare @PassengerAmount numeric(18,2)
-
 	Declare @SOProductAmount numeric(18,2)
-	Declare @TaxAmount  numeric(18,2)
+	Declare @TaxableValue numeric(18,2) = 100.00
+	Declare @TaxableAmount numeric(18,2) = 0
+	Declare @TaxAmount  numeric(18,2) = 0
+	
+	Declare @PassengerAmount numeric(18,2)
 	Declare @TotalAmount numeric(18,2)
 
 	Declare @NoOfPassengers int = 0
@@ -227,8 +228,8 @@ BEGIN TRY
 			set @SOProductAmount = (@ProductAmount + @FloorNameAmount + @DoorTypeAmount + @CarDoorTypeAmount + @DoorFinishAmount
 								 + @CabinTypeAmount + @FlooringTypeAmount + @AddnlFeatureAmount)
 
-			--set @TaxAmount = (@SOProductAmount * 18.00/100)
-			set @TaxAmount = (@SOProductAmount * @TaxableValue/100)
+			set @TaxableAmount = (@SOProductAmount * @TaxableValue/100)
+			set @TaxAmount = (@TaxableAmount * 18.00/100)
 
 			set @TotalAmount = @SOProductAmount + @TaxAmount
 

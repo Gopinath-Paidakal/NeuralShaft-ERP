@@ -113,7 +113,8 @@ BEGIN TRY
 				F.FloorNo = J.FloorNo,
 				F.FloorWidth = J.FloorWidth,
 				F.FloorDepth = J.FloorDepth,
-				F.FloorHeight = J.FloorHeight
+				F.FloorHeight = J.FloorHeight,
+				F.WaterProtection = J.WaterProtection
 
 			FROM JobOrderPVRFloor F
 
@@ -126,7 +127,8 @@ BEGIN TRY
 
 				FloorWidth INT,
 				FloorDepth INT,
-				FloorHeight INT
+				FloorHeight INT,
+				WaterProtection nvarchar(50)
 			) J
 
 			ON F.JobOrderPVRFloorId = J.JobOrderPVRFloorId

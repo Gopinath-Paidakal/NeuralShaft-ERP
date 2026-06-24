@@ -62,7 +62,7 @@ DECLARE @TotJobOrderSVR NVARCHAR(MAX)
           ,[Status]
           ,[Remarks]
 
-          ,[FFLMarking]
+          --,[FFLMarking]
           ,[SVRDocPath]
           ,[SVRDocName]
         

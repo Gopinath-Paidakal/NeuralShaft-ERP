@@ -33,7 +33,8 @@ Delete from JobOrderSVRDtl
 
 Delete from filepath
 
-
+delete from JobOrderSVRHdr
+delete from JobOrderSVRDtl
 
 --delete from Employee
 --delete From EmpAcademic

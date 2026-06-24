@@ -42,6 +42,7 @@ BEGIN TRY
             Progress        = J.Progress,
             Lattitude       = J.Lattitude,
             Longitude       = J.Longitude,
+			SiteReady       = J.SiteReady,
 
             ModifiedUserId    = J.ModifiedUserId,
             ModifiedDate     = J.ModifiedDate
@@ -60,6 +61,7 @@ BEGIN TRY
             Progress NVARCHAR(100),
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
+			SiteReady NVARCHAR(50),
             
 			ModifiedUserId int,
 			ModifiedDate datetime
@@ -74,8 +76,8 @@ BEGIN TRY
 			SET
 				D.[Description] = J.[Description],
 				D.[Status] = J.[Status],
-				D.Remarks = J.Remarks,
-				D.FFLMarking = J.FFLMarking
+				D.Remarks = J.Remarks
+				--D.FFLMarking = J.FFLMarking
 
 				--D.ModifiedUserId = J.ModifiedUserId,
 				--D.ModifiedDate = J.ModifiedDate
@@ -88,8 +90,8 @@ BEGIN TRY
 
 				[Description] NVARCHAR(100),
 				[Status] NVARCHAR(100),
-				Remarks NVARCHAR(200),
-				FFLMarking NVARCHAR(50)
+				Remarks NVARCHAR(200)
+				--FFLMarking NVARCHAR(50)
 
 				--ModifiedUserId int,
 				--ModifiedDate datetime

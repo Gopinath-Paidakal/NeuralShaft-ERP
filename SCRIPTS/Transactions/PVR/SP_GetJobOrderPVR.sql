@@ -82,6 +82,8 @@ DECLARE @TotJobOrderPVR NVARCHAR(MAX)
               ,[FloorWidth]
               ,[FloorDepth]
               ,[FloorHeight]
+              ,[WaterProtection]
+
         FROM [dbo].[JobOrderPVRFloor]
         where JobOorderPVRId = @JobOorderPVRId
 
