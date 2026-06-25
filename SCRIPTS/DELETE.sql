@@ -36,6 +36,17 @@ Delete from filepath
 delete from JobOrderSVRHdr
 delete from JobOrderSVRDtl
 
+delete from JobOrderSCRDtl
+delete from [dbo].[JobOrderSCRDtlFloor]
+
+delete from JobOrderSVRHdr
+delete from JobOrderSVRDtl
+
+delete from JobOrderSCRDtl
+delete from JobOrderSCRDtlFloor
+delete from JobOrderPTCDtl
+
+
 --delete from Employee
 --delete From EmpAcademic
 --delete From EmpPastEmployment

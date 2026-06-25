@@ -1,13 +1,13 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderSVR]    Script Date: 19/06/2026 ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderSVR]    Script Date: 25/06/2026 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertJobOrderSVR]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_InsertJobOrderSVR]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderSVR]    Script Date: 19/06/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderSVR]    Script Date: 25/06/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -89,7 +89,7 @@ BEGIN TRY
             [Description],
             [Status],
             Remarks,
-            FFLMarking,
+            
             SVRDocPath,
             SVRDocName
             
@@ -99,7 +99,7 @@ BEGIN TRY
             [Description],
             [Status],
             Remarks,
-            FFLMarking,
+            
             '/uploads/svr/',
             SVRDocName
 
@@ -109,7 +109,7 @@ BEGIN TRY
             Description NVARCHAR(MAX),
             Status NVARCHAR(100),
             Remarks NVARCHAR(MAX),
-            FFLMarking NVARCHAR(50),
+           
             SVRDocName NVARCHAR(100),
             CreatedUserId INT,
             CreatedDate DATETIME

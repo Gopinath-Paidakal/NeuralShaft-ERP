@@ -25,30 +25,30 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
         //    throw new NotImplementedException();
         //}
 
-        public async Task<string> GetSCRById(int jobOrderSCRDtlId)
+        public async Task<string> GetSCRById(int jobOrderSCRHdrId)
         {
             string scrById = await _SCRJSon.ExecuteJsonSPWithParameter("SP_GetJOSCR_ById",
-                                       new { @SODtlId = jobOrderSCRDtlId });
+                                       new { @JobOrderSCRHdrId = jobOrderSCRHdrId });
             return scrById;
         }
 
-        public async Task<string> InsertSCR(object jobOrderSCRDtl)
+        public async Task<string> InsertJobOrderSCRHdr(object jobOrderSCRHdr)
         {
             string addJobOrderSCR = await _SCRJSon.ExecuteJsonSPWithParameter("SP_InsertJobOrderSCR",
-                                  new { @JobOrderSCRDtl = jobOrderSCRDtl.ToString() });
+                                  new { @JobOrderSCRHdr = jobOrderSCRHdr.ToString() });
             return (addJobOrderSCR);
         }
 
-        public async Task<string> UpdateJOSCRDtl(int jobOrderSCRDtlId, object jobOrderSCRDtl)
+        public async Task<string> UpdateJobOrderSCRHdr(int jobOrderSCRHdrId, object jobOrderSCRHdr)
         {
-            return await _SCRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSCRHdrDtl",
-                                    new { @JjobOrderSCRDtlId = jobOrderSCRDtlId, @JobOrderSCRHdr = jobOrderSCRDtl.ToString() });
+            return await _SCRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSCRHdr",
+                                    new { @JobOrderSCRHdrId = jobOrderSCRHdrId, @JobOrderSCRHdr = jobOrderSCRHdr.ToString() });
         }
 
-        public async Task<string> ReplaceFile(int jobOrderSCRDtlId, string newFile)
+        public async Task<string> ReplaceFile(int jobOrderSCRHdrId, string newFile)
         {
             return await _SCRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSCR_NewFile",
-                                    new { @JobOrderSCRDtlId = jobOrderSCRDtlId, @NewFileName = newFile.ToString() });
+                                    new { @JobOrderSCRHdrId = jobOrderSCRHdrId, @NewFileName = newFile.ToString() });
         }
     }
 }

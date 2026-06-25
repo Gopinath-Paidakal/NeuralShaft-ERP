@@ -21,37 +21,37 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             _ptcJSon = repoJson;
         }
 
-        public async Task<string> GetPTC(string fromDate, string toDate)
-        {
-            string PTC = await _ptcJSon.ExecuteJsonSPWithParameter("SP_GetJOPTC",
-                               new { @FromDate = fromDate, @ToDate = toDate });
-            return PTC;
-        }
+        //public async Task<string> GetPTC(string fromDate, string toDate)
+        //{
+        //    string PTC = await _ptcJSon.ExecuteJsonSPWithParameter("SP_GetJOPTC",
+        //                       new { @FromDate = fromDate, @ToDate = toDate });
+        //    return PTC;
+        //}
 
-        public async Task<string> GetPTCById(int soDtlId)
+        public async Task<string> GetPTCById(int jobOrderPTCDtlId)
         {
             string PTCById = await _ptcJSon.ExecuteJsonSPWithParameter("SP_GetJOPTC_ById",
-                                         new { @SODtlId = soDtlId });
+                                         new { @JobOrderPTCDtlId = jobOrderPTCDtlId });
             return PTCById;
         }
 
-        public async Task<string> InsertPTC(object PTC)
+        public async Task<string> InsertJobOrderPTCDtl(object JobOrderPTCDtl)
         {
-            string addJobOrderPTC = await _ptcJSon.ExecuteJsonSPWithParameter("SP_InsertJobOrderPTC",
-                                new { @JobOrderPTC = PTC.ToString() });
+            string addJobOrderPTC = await _ptcJSon.ExecuteJsonSPWithParameter("SP_InsertJobOrderPTCDtl",
+                                new { @JobOrderPTCDtl = JobOrderPTCDtl.ToString() });
             return (addJobOrderPTC);
         }
 
 
-        public async Task<string> UpdateJOPTCHdrDtl(int jobOrderPTCHdrId, object JobOrderPTCHdr)
+        public async Task<string> UpdateJobOrderPTCDtl(int jobOrderPTCDtlId, object JobOrderPTCDtl)
         {
-            return await _ptcJSon.ExecuteJsonSPWithParameter("SP_UpdateJOPTCHdrDtl",
-                                    new { @JobOrderPTCHdrId = jobOrderPTCHdrId, @JobOrderPTCHdr = JobOrderPTCHdr.ToString() });
+            return await _ptcJSon.ExecuteJsonSPWithParameter("SP_UpdateJOPTCDtl",
+                                    new { @JobOrderPTCDtlId = jobOrderPTCDtlId, @JobOrderPTCDtl = JobOrderPTCDtl.ToString() });
         }
 
-        public async Task<string> ReplaceFile(int jobOrderPTCDtlId, string NewFile)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<string> ReplaceFile(int jobOrderPTCDtlId, string NewFile)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

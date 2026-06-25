@@ -37,37 +37,37 @@ namespace NeuralShaft.Server.Controllers.CRM
         //}
 
 
-        [HttpGet("GetPTCById/{soDtlId}")]
-        public async Task<ActionResult> GetPTCById(int soDtlId)
+        [HttpGet("GetPTCById/{JobOrderPTCDtlId}")]
+        public async Task<ActionResult> GetPTCById(int JobOrderPTCDtlId)
         {
-            string getPTCById = await _ptcService.GetPTCById(soDtlId);
+            string getPTCById = await _ptcService.GetPTCById(JobOrderPTCDtlId);
             return Content(getPTCById, "application/json");
         }
 
 
-        [HttpPost("InsertPTC/{soDtlId}")]
-        public async Task<IActionResult> InsertPTC([FromForm] string PTC, [FromForm] List<IFormFile> attachments, int soDtlId)
+        [HttpPost("InsertJobOrderPTCDtl")]
+        public async Task<IActionResult> InsertPTC([FromBody] object jobOrderPTCDtl)     //, [FromForm] List<IFormFile> attachments, int jobOrderPTCDtlId)
         {
 
-            var insertPTC = await _ptcService.InsertPTC(PTC);
+            var insertJobOrderPTCDtl = await _ptcService.InsertJobOrderPTCDtl(jobOrderPTCDtl);
 
-            if (attachments.Count > 0)
-            {
-                var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, soDtlId);
-            }
+            //if (attachments.Count > 0)
+            //{
+            //    var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, jobOrderPTCDtlId);
+            //}
 
-            return Ok(insertPTC);
+            return Ok(insertJobOrderPTCDtl);
         }
 
-        [HttpPost("UpdateJOPTCHdrDtl/{JobOrderPTCHdrId}")]
-        public async Task<IActionResult> UpdateJOPTCHdr(int JobOrderPTCHdrId, [FromBody] object JobOrderPTCHdr)  ///  , [FromForm] List<IFormFile> attachments)
+        [HttpPost("UpdateJobOrderPTCDtl/{jobOrderPTCDtlId}")]
+        public async Task<IActionResult> UpdateJOPTCDtlDtl(int jobOrderPTCDtlId, [FromBody] object jobOrderPTCDtl)  ///  , [FromForm] List<IFormFile> attachments)
         {
-            var PTCUpdateHdrId = await _ptcService.UpdateJOPTCHdrDtl(JobOrderPTCHdrId, JobOrderPTCHdr);
+            var PTCUpdateDtlId = await _ptcService.UpdateJobOrderPTCDtl(jobOrderPTCDtlId, jobOrderPTCDtl);
 
             //////================= Add Images in Edit  as per discussion only add
-            //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(enqHdrId.ToString()));
+            //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(enqDtlId.ToString()));
             ////// ==============================
-            return Ok(PTCUpdateHdrId);
+            return Ok(PTCUpdateDtlId);
         }
 
         //[HttpPost("UpdateJOPTCDtl/{JobOrderPTCDtlId}")]

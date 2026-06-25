@@ -38,40 +38,38 @@ namespace NeuralShaft.Server.Controllers.CRM
         //}
 
 
-        [HttpGet("GetSCRById/{soDtlId}")]
-        public async Task<ActionResult> GetSCRById(int soDtlId)
+        [HttpGet("GetJobOrderSCRHdrById/{JobOrderSCRHdrId}")]
+        public async Task<ActionResult> GetSCRById(int JobOrderSCRHdrId)
         {
-            string getSCRById = await _scrService.GetSCRById(soDtlId);
+            string getSCRById = await _scrService.GetSCRById(JobOrderSCRHdrId);
             return Content(getSCRById, "application/json");
         }
 
 
-        [HttpPost("InsertSCR/{soDtlId}")]
-        public async Task<IActionResult> InsertSCR([FromForm] string SCR, [FromForm] List<IFormFile> attachments, int soDtlId)
+        [HttpPost("InsertJobOrderSCRHdr/{jobOrderSCRHdrId}")]
+        public async Task<IActionResult> InsertJobOrderSCRHdr([FromForm] string jobOrderSCRHdr, [FromForm] List<IFormFile> attachments, int JobOrderSCRDtlId)
         {
 
-            var insertSCR = await _scrService.InsertSCR(SCR);
+            var insertSCR = await _scrService.InsertJobOrderSCRHdr(jobOrderSCRHdr);
 
             if (attachments.Count > 0)
             {
-                var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, soDtlId);
+                var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, JobOrderSCRDtlId);
             }
 
             return Ok(insertSCR);
         }
 
-        [HttpPost("UpdateJOSCRHdrDtl/{JobOrderSCRHdrId}")]
-        public async Task<IActionResult> UpdateJOSCRHdr(int JobOrderSCRHdrId, [FromBody] object JobOrderSCRHdr)  ///  , [FromForm] List<IFormFile> attachments)
+        [HttpPost("UpdateJobOrderSCRHdr/{jobOrderSCRHdrId}")]
+        public async Task<IActionResult> UpdateJobOrderSCRHdr(int jobOrderSCRHdrId, [FromBody] object JobOrderSCRHdr)  ///  , [FromForm] List<IFormFile> attachments)
         {
-            var SCRUpdateHdrId = await _scrService.UpdateJOSCRDtl(JobOrderSCRHdrId, JobOrderSCRHdr);
+            var SCRUpdateHdrId = await _scrService.UpdateJobOrderSCRHdr(jobOrderSCRHdrId, JobOrderSCRHdr);
 
             //////================= Add Images in Edit  as per discussion only add
             //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(enqHdrId.ToString()));
             ////// ==============================
             return Ok(SCRUpdateHdrId);
         }
-
-       
 
         [HttpPost("ReplaceFile")]
         public async Task<IActionResult> ReplaceFile([FromForm] string replaceFile, [FromForm] List<IFormFile> attachments)
@@ -80,7 +78,7 @@ namespace NeuralShaft.Server.Controllers.CRM
             JObject obj = JObject.Parse(replaceFile);
 
             string oldFile = (string)obj["OldFileName"];
-            int jobOrderSCRDtlId = (int)obj["JobOrderSCRDtlId"];
+            int jobOrderSCRDtlId = (int)obj["JobOrderSCRHdrId"];
 
             ///-----------  1.Replace or update the file name in the db table
             var SCRUpdateDtlId = await _scrService.ReplaceFile(jobOrderSCRDtlId, attachments[0].FileName);

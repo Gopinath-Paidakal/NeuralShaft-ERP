@@ -82,6 +82,16 @@ select * from JobOrder
 select * from JobOrderSVRHdr
 select * from JobOrderSVRDtl
 
+select * from JobOrderSCRHdr
+select * from JobOrderSCRDtl
+select * from JobOrderPTCDtl
+
+
+
+
+
+
+
 
 
 

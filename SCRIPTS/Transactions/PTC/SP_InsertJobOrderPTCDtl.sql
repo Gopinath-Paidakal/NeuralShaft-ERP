@@ -1,22 +1,21 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetJobOrder]    Script Date: 04/04/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetJobOrder]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_GetJobOrder]
+/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderPTCDtl]    Script Date: 25/06/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertJobOrderPTCDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_InsertJobOrderPTCDtl]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetJobOrder]    Script Date: 04/04/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderPTCDtl]    Script Date: 25/06/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_GetJobOrder]
+CREATE PROCEDURE [dbo].[SP_InsertJobOrderPTCDtl]
 (
-	@FromDate nvarchar(20),
-	@ToDate nvarchar(20) 
+    @JobOrderPTCDtl NVARCHAR(MAX)
 )
 ----With Encryption
 AS
@@ -25,56 +24,82 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 
-    Declare @SOTotalAmt numeric(18,2)
+    BEGIN TRANSACTION
 
-SELECT
-    JSON_QUERY(
+    Declare @JobOrderPTCDtlId int
+
+    INSERT INTO dbo.JobOrderPTCDtl
         (
+            JobOrderId,
+            Width,
+            Depth,
+            Pit,
+            Ovehead,
 
-        SELECT 
-            [JobOrder].[JobOrderId]
-            ,[JobOrder].[SOHdrId]
-            ,[JobOrder].[SODtlId]
-            ,[JobOrder].[SONo]
-            ,[JobOrder].[JobOrderNo]
-            ,FORMAT([JobOrderDate], 'dd-MM-yyyy') as [JobOrderDate]  
-            ,[JobOrder].[ProjectName]
-            ,[JobOrder].[SOConsultant]
+            TravelHeight,
+            MRP,
+            CarDbg,
+            CounterDbf,
+            GuiderailCar,
 
-            ,[JobOrder].[JobOrderCustComp]
-            ,[JobOrder].[JobOrderContPerson]
-            ,[JobOrder].[JobOrderMobileNo]
-
-            ,[JobOrderSVRHdr].SiteReady
-            ,[JobOrderSVRHdr].JobOrderSVRHdrId
-
-            ,[JobOrderSCRHdr].JobOrderSCRHdrId
-
-            ,[JobOrderPTCDtl].JobOrderPTCDtlId
-
-            ,[JobOrder].[CreatedUserId]
-            ,[JobOrder].[CreatedDate]
-
-
-         FROM [dbo].[JobOrder]
-         INNER JOIN [JobOrderSVRHdr] ON [JobOrderSVRHdr].JobOrderId = [JobOrder].JobOrderId
-         INNER JOIN [JobOrderSCRHdr] ON [JobOrderSCRHdr].JobOrderId = [JobOrder].JobOrderId
-         INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderId = [JobOrder].JobOrderId
-          
-          WHERE [JobOrder].[JobOrderDate] >= @FromDate AND [JobOrder].[JobOrderDate] < DATEADD(DAY, 1, @ToDate)          
-
-          Order by [JobOrder].[JobOrderNo]
-      
-		  FOR JSON PATH
+            GuiderailCounter,
+            CarTop,
+            CarBottom,
+            CouterTop,
+            CounterBottom
         )
-    ) AS JobOrder
-    FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+        SELECT
+            JobOrderId,
+            Width,
+            Depth,
+            Pit,
+            Ovehead,
 
+            TravelHeight,
+            MRP,
+            CarDbg,
+            CounterDbf,
+            GuiderailCar,
+        
+            GuiderailCounter,
+            CarTop,
+            CarBottom,
+            CouterTop,
+            CounterBottom
+
+        FROM OPENJSON(@JobOrderPTCDtl, '$.JobOrderPTCDtl')
+        WITH
+        (
+            JobOrderId INT,
+            Width INT,
+            Depth INT,
+            Pit INT,
+            Ovehead INT,
+
+            TravelHeight INT,
+            MRP NVARCHAR(50),
+            CarDbg NVARCHAR(150),
+            CounterDbf NVARCHAR(150),
+            GuiderailCar NVARCHAR(150),
+        
+            GuiderailCounter NVARCHAR(150),
+            CarTop NVARCHAR(150),
+            CarBottom NVARCHAR(150),
+            CouterTop NVARCHAR(150),
+            CounterBottom NVARCHAR(150)
+        );
+    
+    
+    set @JobOrderPTCDtlId = SCOPE_IDENTITY()
+
+    select @JobOrderPTCDtlId
+
+    COMMIT TRANSACTION
 END TRY
 
 	BEGIN CATCH
 		
-		--ROLLBACK TRANSACTION
+		ROLLBACK TRANSACTION
 		Declare 
 		@ErrMsg varchar(4000),
 		@ErrSeverity int,
@@ -91,6 +116,20 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+
+
+ --set @JobOrderPTCDtlId = SCOPE_IDENTITY()
+
+        -------===============================================
+        ------ Updating [SVRDocName] with id, path, filename
+        --------===============================================
+        --Update [JobOrderSVRDtl] set [JobOrderSVRDtl].SVRDocName = 
+        --                            Convert(nvarchar(10),[JobOrderSVRDtl].JobOrderSVRDtlId) + '_' +
+        --                            Convert(nvarchar(50),[JobOrderSVRDtl].SVRDocPath) + 
+        --                            Convert(nvarchar(100),[JobOrderSVRDtl].SVRDocName)
+
+        --Where [JobOrderSVRDtl].JobOrderSVRDtlId = @JobOrderSVRDtlId
 
 
 

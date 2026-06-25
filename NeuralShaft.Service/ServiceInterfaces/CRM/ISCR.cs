@@ -7,10 +7,10 @@ namespace NeuralShaft.Service.ServiceInterfaces.CRM
     public interface ISCR
     {
         //Task<string> GetSCR(string fromDate, string toDate);
-        Task<string> GetSCRById(int jobOrderSCRDtlId);
-        Task<string> InsertSCR(object jobOrderSCRDtl);
-        Task<string> UpdateJOSCRDtl(int jobOrderSCRDtlId, object JobOrderSCRDtl);
+        Task<string> GetSCRById(int jobOrderSCRHdrId);
+        Task<string> InsertJobOrderSCRHdr(object jobOrderSCRHdr);
+        Task<string> UpdateJobOrderSCRHdr(int jobOrderSCRHdrId, object JobOrderSCRHdr);
 
-        Task<string> ReplaceFile(int jobOrderSCRDtlId, string newFile);
+        Task<string> ReplaceFile(int jobOrderSCRHdrId, string newFile);
     }
 }
