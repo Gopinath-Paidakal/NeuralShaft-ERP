@@ -28,6 +28,7 @@ DECLARE @JobOrderSVR   NVARCHAR(MAX)
  SET @JobOrderSVR = (
     SELECT
         JobOrder.JobOrderId,
+
         JobOrder.SODtlId,
         JobOrder.JobOrderNo,
         
@@ -36,7 +37,8 @@ DECLARE @JobOrderSVR   NVARCHAR(MAX)
         JobOrder.JobOrderMobileNo,
         
         JobOrderSVRHdr.CreatedDate AS SVRCreatedDate,
-        JobOrderSVRHdr.SiteReady
+        --JobOrderSVRHdr.SiteReady,
+        JobOrderSVRHdr.JobOrderSVRHdrId
 
     FROM dbo.JobOrder
 

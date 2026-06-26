@@ -55,9 +55,9 @@ D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.AssemblyInfoInputs.cache
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.AssemblyInfo.cs
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.csproj.CoreCompileInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.sourcelink.json
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralSh.CDE16CB2.Up2Date
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.dll
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\refint\NeuralShaft.Repository.dll
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.pdb
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\ref\NeuralShaft.Repository.dll
-D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Repository\obj\Debug\net10.0\NeuralShaft.Repository.sourcelink.json

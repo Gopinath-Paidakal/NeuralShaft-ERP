@@ -38,10 +38,10 @@ namespace NeuralShaft.Server.Controllers.CRM
         }
 
 
-        [HttpGet("GetSVRById/{soDtlId}")]
-        public async Task<ActionResult> GetSVRById(int soDtlId)
+        [HttpGet("GetSVRById/{jobOrderSVRHdrId}")]
+        public async Task<ActionResult> GetSVRById(int jobOrderSVRHdrId)
         {
-            string getSVRById = await _svrService.GetSVRById(soDtlId);
+            string getSVRById = await _svrService.GetSVRById(jobOrderSVRHdrId);
             return Content(getSVRById, "application/json");
         }
 

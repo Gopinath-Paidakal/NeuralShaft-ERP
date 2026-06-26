@@ -42,7 +42,7 @@ BEGIN TRY
             Progress        = J.Progress,
             Lattitude       = J.Lattitude,
             Longitude       = J.Longitude,
-			SiteReady       = J.SiteReady,
+			--SiteReady       = J.SiteReady,
 
             ModifiedUserId    = J.ModifiedUserId,
             ModifiedDate     = J.ModifiedDate
@@ -61,7 +61,7 @@ BEGIN TRY
             Progress NVARCHAR(100),
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
-			SiteReady NVARCHAR(50),
+			--SiteReady NVARCHAR(50),
             
 			ModifiedUserId int,
 			ModifiedDate datetime

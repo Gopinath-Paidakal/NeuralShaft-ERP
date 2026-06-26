@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeuralShaft.Repository")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36f9fe61db139cc075c5ef6ca54be507e1c1a4a1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8eff362257dda81f0fb11547abcb0de46037268e")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeuralShaft.Repository")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeuralShaft.Repository")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

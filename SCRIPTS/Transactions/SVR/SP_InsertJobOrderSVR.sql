@@ -15,7 +15,7 @@ GO
 
 CREATE PROCEDURE [dbo].[SP_InsertJobOrderSVR]
 (
-    @JobOrderSVR NVARCHAR(MAX)
+    @JobOrderSVRHdr NVARCHAR(MAX)
 )
 ----With Encryption
 AS
@@ -27,6 +27,11 @@ BEGIN TRY
 
     Declare @JobOrderSVRHdrId int
     Declare @JobOrderSVRDtlId int
+    Declare @JobOrderId int
+    Declare @SiteReady nvarchar(50)
+
+    SET @JobOrderId = JSON_VALUE(@JobOrderSVRHdr, '$.JobOrderSVRHdr.JobOrderId');
+    SET @SiteReady  = JSON_VALUE(@JobOrderSVRHdr, '$.JobOrderSVRHdr.SiteReady');
 
     INSERT INTO JobOrderSVRHdr
         (
@@ -40,7 +45,7 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
-            SiteReady,
+            --SiteReady,
 
             CreatedUserId,
             CreatedDate
@@ -56,12 +61,12 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
-            SiteReady,
+            --SiteReady,
 
             CreatedUserId,
             CreatedDate
 
-        FROM OPENJSON(@JobOrderSVR,'$.JobOrderSVRHdr')
+        FROM OPENJSON(@JobOrderSVRHdr,'$.JobOrderSVRHdr')
         WITH
         (
             JobOrderId INT,
@@ -75,7 +80,7 @@ BEGIN TRY
             
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
-            SiteReady NVARCHAR(50),
+            --SiteReady NVARCHAR(50),
             
             CreatedUserId INT,
             CreatedDate DATETIME
@@ -85,6 +90,7 @@ BEGIN TRY
 
     INSERT INTO JobOrderSVRDtl
         (
+            JobOrderId,
             JobOrderSVRHdrId,
             [Description],
             [Status],
@@ -95,6 +101,7 @@ BEGIN TRY
             
         )
         SELECT
+            @JobOrderId,
             @JobOrderSVRHdrId,
             [Description],
             [Status],
@@ -103,7 +110,7 @@ BEGIN TRY
             '/uploads/svr/',
             SVRDocName
 
-        FROM OPENJSON(@JobOrderSVR,'$.JobOrderSVRDtl')
+        FROM OPENJSON(@JobOrderSVRHdr,'$.JobOrderSVRDtl')
         WITH
         (
             Description NVARCHAR(MAX),
@@ -114,6 +121,12 @@ BEGIN TRY
             CreatedUserId INT,
             CreatedDate DATETIME
         );
+
+    ------------------------------------------------
+    --  Update Job Order for Site Ready
+    ------------------------------------------------
+    Update JobOrder set SiteReady = @SiteReady where JobOrderId = @JobOrderId
+    -------------------------------------------
 
     select @JobOrderSVRHdrId
 

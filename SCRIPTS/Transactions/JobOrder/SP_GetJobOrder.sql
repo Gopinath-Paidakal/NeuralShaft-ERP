@@ -45,21 +45,21 @@ SELECT
             ,[JobOrder].[JobOrderContPerson]
             ,[JobOrder].[JobOrderMobileNo]
 
-            ,[JobOrderSVRHdr].SiteReady
-            ,[JobOrderSVRHdr].JobOrderSVRHdrId
+            ,[JobOrder].[SiteReady]
+            --,[JobOrderSVRHdr].JobOrderSVRHdrId
 
-            ,[JobOrderSCRHdr].JobOrderSCRHdrId
+            --,[JobOrderSCRHdr].JobOrderSCRHdrId
 
-            ,[JobOrderPTCDtl].JobOrderPTCDtlId
+            --,[JobOrderPTCDtl].JobOrderPTCDtlId
 
             ,[JobOrder].[CreatedUserId]
             ,[JobOrder].[CreatedDate]
 
 
          FROM [dbo].[JobOrder]
-         INNER JOIN [JobOrderSVRHdr] ON [JobOrderSVRHdr].JobOrderId = [JobOrder].JobOrderId
-         INNER JOIN [JobOrderSCRHdr] ON [JobOrderSCRHdr].JobOrderId = [JobOrder].JobOrderId
-         INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderId = [JobOrder].JobOrderId
+         --INNER JOIN [JobOrderSVRHdr] ON [JobOrderSVRHdr].JobOrderId = [JobOrder].JobOrderId
+         --INNER JOIN [JobOrderSCRHdr] ON [JobOrderSCRHdr].JobOrderId = [JobOrder].JobOrderId
+         --INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderId = [JobOrder].JobOrderId
           
           WHERE [JobOrder].[JobOrderDate] >= @FromDate AND [JobOrder].[JobOrderDate] < DATEADD(DAY, 1, @ToDate)          
 

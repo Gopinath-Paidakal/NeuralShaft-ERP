@@ -43,6 +43,7 @@ select * from SOcarDoor
 select * from JobOrderPVR
 select * from JobOrderPVRFloor
 
+select * from JobOrder
 select * from JobOrderSVRHdr
 select * from JobOrderSVRDtl
 

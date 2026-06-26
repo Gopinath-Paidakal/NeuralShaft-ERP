@@ -15,7 +15,7 @@ GO
 
 CREATE PROCEDURE [dbo].[SP_GetJOSVR_ById]
 (
-	@SODtlId int = 0
+	@JobOrderSVRHdrId int = 0
   
 )
 With Encryption
@@ -25,9 +25,13 @@ SET NOCOUNT ON;
 BEGIN TRY
 DECLARE @JobOrderSVRHdr   NVARCHAR(MAX)
 DECLARE @JobOrderSVRDtl NVARCHAR(MAX)
+DECLARE @JobOrderPending NVARCHAR(MAX)
+DECLARE @TotJobOrderPending NVARCHAR(MAX)
 
 DECLARE @TotJobOrderSVR NVARCHAR(MAX)
+DECLARE @JobOrderId int
 
+set @JobOrderId = (select JobOrderId from JobOrderSVRHdr where JobOrderSVRHdrId = @JobOrderSVRHdrId)
 
  SET @JobOrderSVRHdr = (
        
@@ -46,16 +50,13 @@ DECLARE @TotJobOrderSVR NVARCHAR(MAX)
           ,[CreatedUserId]
           ,[CreatedDate]
        FROM [dbo].[JobOrderSVRHdr]
-       where SodtlId = @SODtlId
+       where JobOrderSVRHdrId = @JobOrderSVRHdrId
 
         FOR JSON PATH   
     )
 
-    Declare @JobOrderSVRHdrId int = 0
-
-    set @JobOrderSVRHdrId = (Select JobOrderSVRHdrId from JobOrderSVRHdr where SODtlId = @SoDtlId)
-
     SET @JobOrderSVRDtl = (
+  
        SELECT [JobOrderSVRDtlId]
           --,[JobOrderSVRHdrId]
           ,[Description]
@@ -70,17 +71,29 @@ DECLARE @TotJobOrderSVR NVARCHAR(MAX)
         FROM [dbo].[JobOrderSVRDtl]
         where JobOrderSVRHdrId = @JobOrderSVRHdrId
 
-        FOR JSON PATH    
-    )
+        FOR JSON PATH   
+        )
 
-    SET @TotJobOrderSVR = (
+        SET @JobOrderPending = (
+
+            SELECT Description,
+               Status
+            FROM JobOrderSVRDtl
+            WHERE JobOrderId = @JobOrderId
+              AND Status = 'Completed'
+            GROUP BY Description, Status
+        FOR JSON PATH    
+        )
+
+    SET @TotJobOrderPending = (
         SELECT
             JSON_QUERY(@JobOrderSVRHdr)  AS JobOrderSVRHdr,
-            JSON_QUERY(@JobOrderSVRDtl) AS JobOrderSVRDtl
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+            JSON_QUERY(@JobOrderSVRDtl) AS JobOrderSVRDtl,
+            JSON_QUERY(@JobOrderPending) AS JobOrderPending
+        FOR JSON PATH,  WITHOUT_ARRAY_WRAPPER
     )
 
-   Select @TotJobOrderSVR
+   Select @TotJobOrderPending
 
 END TRY
 

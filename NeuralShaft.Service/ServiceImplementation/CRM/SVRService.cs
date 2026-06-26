@@ -28,24 +28,24 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             return svr;
         }
 
-        public async Task<string> GetSVRById(int soDtlId)
+        public async Task<string> GetSVRById(int jobOrderSVRHdrId)
         {
             string svrById = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJOSVR_ById",
-                                        new { @SODtlId = soDtlId });
+                                        new { @jobOrderSVRHdrId = jobOrderSVRHdrId });
             return svrById;
         }
 
         public async Task<string> InsertSVR(object SVR)
         {
             string addJobOrderPVR = await _SVRJSon.ExecuteJsonSPWithParameter("SP_InsertJobOrderSVR",
-                                  new { @JobOrderSVR = SVR.ToString() });
+                                  new { @JobOrderSVRHdr = SVR.ToString() });
             return (addJobOrderPVR);
         }
 
-        public async Task<string> UpdateJOSVRHdrDtl(int jobOrderSVRHdrId, object JobOrderSVRHdr)
+        public async Task<string> UpdateJOSVRHdrDtl(int jobOrderSVRHdrId, object jobOrderSVRHdr)
         {
             return await _SVRJSon.ExecuteJsonSPWithParameter("SP_UpdateJOSVRHdrDtl",
-                                    new { @JobOrderSVRHdrId = jobOrderSVRHdrId, @JobOrderSVRHdr = JobOrderSVRHdr.ToString() });
+                                    new { @JobOrderSVRHdrId = jobOrderSVRHdrId, @JobOrderSVRHdr = jobOrderSVRHdr.ToString() });
         }
         
         public async Task<string> ReplaceFile(int jobOrderSVRDtlId,  string newFile)

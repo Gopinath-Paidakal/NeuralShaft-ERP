@@ -55,9 +55,9 @@ D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\Ne
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.AssemblyInfoInputs.cache
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.AssemblyInfo.cs
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.csproj.CoreCompileInputs.cache
+D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.sourcelink.json
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralSh.3B218749.Up2Date
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.dll
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\refint\NeuralShaft.Service.dll
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.pdb
 D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\ref\NeuralShaft.Service.dll
-D:\NEURALSHAFT\BackEnd\NEURAL-SHAFT-ERP\NeuralShaft.Service\obj\Debug\net10.0\NeuralShaft.Service.sourcelink.json
