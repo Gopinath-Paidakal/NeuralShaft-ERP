@@ -37,7 +37,7 @@ DECLARE @JobOrderSVR   NVARCHAR(MAX)
         JobOrder.JobOrderMobileNo,
         
         JobOrderSVRHdr.CreatedDate AS SVRCreatedDate,
-        --JobOrderSVRHdr.SiteReady,
+        JobOrderSVRHdr.SiteReady,
         JobOrderSVRHdr.JobOrderSVRHdrId
 
     FROM dbo.JobOrder

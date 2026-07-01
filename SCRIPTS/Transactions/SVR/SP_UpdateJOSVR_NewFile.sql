@@ -25,6 +25,7 @@ AS
 SET NOCOUNT ON;
 
 BEGIN TRY
+
 	BEGIN TRANSACTION
 		
 		Update JobOrderSVRDtl set SVRDocName = @NewFileName where JobOrderSVRDtlId = @JobOrderSVRDtlId
@@ -32,6 +33,7 @@ BEGIN TRY
 		Select @JobOrderSVRDtlId
 					   
 	COMMIT TRANSACTION
+
 END TRY
 
 	BEGIN CATCH

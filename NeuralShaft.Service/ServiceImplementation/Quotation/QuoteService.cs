@@ -39,6 +39,25 @@ namespace NeuralShaft.Service.ServiceImplementation.Quotation
             }
         }
 
+
+        public async Task<string> GetQuoteItem(string fromDate, string toDate)
+        {
+            try
+            {
+                string quoteItemData = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetQuoteItemHdr",
+                                  new { @FromDate = fromDate, @ToDate = toDate });
+                return quoteItemData;
+            }
+            catch (Exception ex)
+            {
+                // log error
+
+                Console.WriteLine(ex.Message);
+                throw; // 
+            }
+        }
+
+
         public async Task<string> InsertQuoteHdr(int enqHdrId)
         {
             try
@@ -52,6 +71,25 @@ namespace NeuralShaft.Service.ServiceImplementation.Quotation
                 throw; // rethrow to controller
             }
         }
+
+
+        public async Task<string> InsertQuoteItemHdr(object QuoteHdrItem)
+        {
+            try
+            {
+           string insertQuoteHdrItem = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertQuoteItemHdr", new { @QuoteHdrItem = QuoteHdrItem.ToString() });
+                return (insertQuoteHdrItem);
+
+            }
+            catch (Exception ex)
+            {
+                // log error
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+
 
         public async Task<string> UpdateQuoteHdr(int quoteHdrId,  object QuoteHdr)
         {
@@ -68,11 +106,12 @@ namespace NeuralShaft.Service.ServiceImplementation.Quotation
         }
 
         //===== Adde on 26-05-2026
-        public async Task<string> UpdateQuoteDtl(int QuoteDtlId, object QuoteDtl)
+        public async Task<string> UpdateQuoteItemDtl(int QuoteItemHdrId, object QuoteItemHdrDtl)
         {
             try
             {
-                return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteDtl", new { @QuoteDtlId = QuoteDtlId, @QuoteDtl = QuoteDtl.ToString() });
+                //return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteItemDtl", new { @QuoteItemHdrId = QuoteItemHdrId, @QuoteItemHdrDtl = QuoteItemHdrDtl.ToString() });
+                return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteItemHdrDtl", new { @QuoteItemHdrId = QuoteItemHdrId, @QuoteItemHdrDtl = QuoteItemHdrDtl.ToString() });
             }
             catch (Exception ex)
             {
@@ -99,5 +138,25 @@ namespace NeuralShaft.Service.ServiceImplementation.Quotation
                 throw; // rethrow to controller
             }
         }
+
+        public async Task<string> GetQuoteItemDtlById(int quoteItemHdrId)
+        {
+            try
+            {
+                var QuoteItemGetById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetQuoteItemDtl_ById",
+                                    new { @QuoteItemHdrId = quoteItemHdrId });
+                return QuoteItemGetById;
+
+
+            }
+            catch (Exception ex)
+            {
+                // log error
+                Console.WriteLine(ex.Message);
+                throw; // rethrow to controller
+            }
+        }
     }
+
+
 }

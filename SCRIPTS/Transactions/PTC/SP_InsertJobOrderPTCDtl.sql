@@ -37,7 +37,7 @@ BEGIN TRY
             Ovehead,
 
             TravelHeight,
-            MRP,
+            Stage,
             CarDbg,
             CounterDbf,
             GuiderailCar,
@@ -56,7 +56,7 @@ BEGIN TRY
             Ovehead,
 
             TravelHeight,
-            MRP,
+            Stage,
             CarDbg,
             CounterDbf,
             GuiderailCar,
@@ -77,7 +77,7 @@ BEGIN TRY
             Ovehead INT,
 
             TravelHeight INT,
-            MRP NVARCHAR(50),
+            Stage NVARCHAR(50),
             CarDbg NVARCHAR(150),
             CounterDbf NVARCHAR(150),
             GuiderailCar NVARCHAR(150),

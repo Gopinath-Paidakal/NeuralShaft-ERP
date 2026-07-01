@@ -45,7 +45,7 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
-            --SiteReady,
+            SiteReady,
 
             CreatedUserId,
             CreatedDate
@@ -61,7 +61,7 @@ BEGIN TRY
             Progress,
             Lattitude,
             Longitude,
-            --SiteReady,
+            SiteReady,
 
             CreatedUserId,
             CreatedDate
@@ -80,7 +80,7 @@ BEGIN TRY
             
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
-            --SiteReady NVARCHAR(50),
+            SiteReady NVARCHAR(10),
             
             CreatedUserId INT,
             CreatedDate DATETIME

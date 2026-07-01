@@ -64,7 +64,7 @@ set @JobOrderId = (select JobOrderId from JobOrderSVRHdr where JobOrderSVRHdrId 
           ,[Remarks]
 
           --,[FFLMarking]
-          ,[SVRDocPath]
+          , [SVRDocPath]
           ,[SVRDocName]
         
 

@@ -28,12 +28,24 @@ namespace NeuralShaft.Service.ServiceImplementation.CRM
             return svr;
         }
 
+
+        public async Task<string> GetSVRStaByJobId(int jobOrderId)
+        {
+            string svrstaByJobId = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetSVR_Stat_ByJobId",
+                                        new { jobOrderId = jobOrderId });
+            return svrstaByJobId;
+        }
+
+
+
         public async Task<string> GetSVRById(int jobOrderSVRHdrId)
         {
             string svrById = await _SVRJSon.ExecuteJsonSPWithParameter("SP_GetJOSVR_ById",
                                         new { @jobOrderSVRHdrId = jobOrderSVRHdrId });
             return svrById;
         }
+
+
 
         public async Task<string> InsertSVR(object SVR)
         {

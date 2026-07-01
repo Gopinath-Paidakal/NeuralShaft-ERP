@@ -1,0 +1,188 @@
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetSVR_Stat_ByJobId]    Script Date: 20/06/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetSVR_Stat_ByJobId]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetSVR_Stat_ByJobId]
+GO
+
+USE [NSERPLIVE]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_GetSVR_Stat_ByJobId]    Script Date: 20/06/2026  ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GetSVR_Stat_ByJobId]
+(
+	@JobOrderId int = 0
+  
+)
+With Encryption
+AS
+
+SET NOCOUNT ON;
+BEGIN TRY
+--DECLARE @JobOrderSVRHdr   NVARCHAR(MAX)
+--DECLARE @JobOrderSVRDtl NVARCHAR(MAX)
+DECLARE @JobOrderPending NVARCHAR(MAX)
+DECLARE @TotJobOrderPending NVARCHAR(MAX)
+
+DECLARE @TotJobOrderSVR NVARCHAR(MAX)
+--DECLARE @JobOrderId int
+
+--set @JobOrderId = (select JobOrderId from JobOrderSVRDtl where JobOrderId = @JobOrderId)
+
+ --SET @JobOrderSVRHdr = (
+       
+ --      SELECT [JobOrderSVRHdrId]
+ --         ,[JobOrderId]
+ --         ,[SODtlId]
+ --         ,[DrgSubmittedTo]
+ --         ,[PhoneNumber]
+ --         ,[DrgStatus]
+ --         ,[NextDate]
+
+ --         ,[Progress]
+ --         ,[Lattitude]
+ --         ,[Longitude]
+
+ --         ,[CreatedUserId]
+ --         ,[CreatedDate]
+ --      FROM [dbo].[JobOrderSVRHdr]
+ --      where JobOrderSVRHdrId = @JobOrderSVRHdrId
+
+ --       FOR JSON PATH   
+ --   )
+
+    --SET @JobOrderSVRDtl = (
+  
+    --   SELECT [JobOrderSVRDtlId]
+    --      --,[JobOrderSVRHdrId]
+    --      ,[Description]
+    --      ,[Status]
+    --      ,[Remarks]
+
+    --      --,[FFLMarking]
+    --      ,[SVRDocPath]
+    --      ,[SVRDocName]
+        
+
+    --    FROM [dbo].[JobOrderSVRDtl]
+    --    where JobOrderSVRHdrId = @JobOrderSVRHdrId
+
+    --    FOR JSON PATH   
+    --    )
+
+        SET @JobOrderPending = (
+
+            SELECT Description,
+               Status
+            FROM JobOrderSVRDtl
+            WHERE JobOrderId = @JobOrderId
+              AND Status = 'Completed'
+
+            GROUP BY Description, Status
+        FOR JSON PATH    
+        )
+
+    SET @TotJobOrderPending = (
+        SELECT
+           -- JSON_QUERY(@JobOrderSVRHdr)  AS JobOrderSVRHdr,
+          --  JSON_QUERY(@JobOrderSVRDtl) AS JobOrderSVRDtl,
+            JSON_QUERY(@JobOrderPending) AS JobOrderPending
+        FOR JSON PATH,  WITHOUT_ARRAY_WRAPPER
+    )
+
+   Select @TotJobOrderPending
+
+END TRY
+
+	BEGIN CATCH
+
+		Declare 
+		@ErrMsg varchar(4000),
+		@ErrSeverity int,
+		@ErrProcedure varchar(100)
+
+		SET @ErrMsg = (Select Error_Message())
+		SET @ErrSeverity = (Select Error_Severity())
+		SET @ErrProcedure = (Select Error_Procedure())
+
+		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+		Raiserror(@ErrMsg,@ErrSeverity,1)
+		GOTO End_Prog
+
+	END CATCH
+
+End_Prog:
+
+
+
+--SELECT ISNULL(@DefaultData, '{"DefaultData":[]}') AS DefaultData;
+--END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

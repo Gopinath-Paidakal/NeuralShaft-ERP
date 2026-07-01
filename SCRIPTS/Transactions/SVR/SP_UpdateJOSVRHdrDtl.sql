@@ -26,6 +26,13 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 	BEGIN TRANSACTION
+
+	Declare @JobOrderId int
+    Declare @SiteReady nvarchar(50)
+
+    SET @JobOrderId = JSON_VALUE(@JobOrderSVRHdr, '$.JobOrderSVRHdr.JobOrderId');
+    SET @SiteReady  = JSON_VALUE(@JobOrderSVRHdr, '$.JobOrderSVRHdr.SiteReady');
+
 	
 	------------------------------------------------
     -- UPDATE SRV
@@ -42,7 +49,7 @@ BEGIN TRY
             Progress        = J.Progress,
             Lattitude       = J.Lattitude,
             Longitude       = J.Longitude,
-			--SiteReady       = J.SiteReady,
+			SiteReady       = J.SiteReady,
 
             ModifiedUserId    = J.ModifiedUserId,
             ModifiedDate     = J.ModifiedDate
@@ -61,7 +68,7 @@ BEGIN TRY
             Progress NVARCHAR(100),
             Lattitude NVARCHAR(50),
             Longitude NVARCHAR(50),
-			--SiteReady NVARCHAR(50),
+			SiteReady NVARCHAR(50),
             
 			ModifiedUserId int,
 			ModifiedDate datetime
@@ -97,6 +104,12 @@ BEGIN TRY
 				--ModifiedDate datetime
 			) J
 			ON D.JobOrderSVRDtlId = J.JobOrderSVRDtlId;
+
+			  ------------------------------------------------
+    --  Update Job Order for Site Ready
+    ------------------------------------------------
+    Update JobOrder set SiteReady = @SiteReady where JobOrderId = @JobOrderId
+    -------------------------------------------
 		
 
 		Select @JobOrderSVRHdrId

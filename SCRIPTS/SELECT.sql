@@ -88,6 +88,12 @@ select * from JobOrderSCRDtl
 select * from JobOrderPTCDtl
 
 
+Select * from QuoteHdrItem
+Select * from QuoteDtlItem
+
+
+
+
 
 
 

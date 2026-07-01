@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NeuralShaft.Service.ServiceImplementation.Masters;
 using NeuralShaft.Service.ServiceImplementation.Previlege;
 
 using NeuralShaft.Service.ServiceImplementation.Upload;
@@ -28,11 +29,29 @@ namespace NeuralShaft.Server.Controllers.Quotation
             return Content(quote, "application/json");
         }
 
+
+        [HttpGet("GetQuoteItem/{fromDate}/{toDate}")]
+        public async Task<ActionResult> GetQuoteItem(string fromDate, string toDate)
+        {
+            string quoteitem = await _QuoteService.GetQuoteItem(fromDate, toDate);
+            return Content(quoteitem, "application/json");
+        }
+
+
         [HttpGet("GetQuoteDtlById/{quoteHdrId}")]
         public async Task<ActionResult> GetQuoteDtlById(int quoteHdrId)
         {
             var quoteById = await _QuoteService.GetQuoteDtlById(quoteHdrId);
             return Content(quoteById, "application/json");
+            //return Ok(quoteById);            
+        }
+
+
+        [HttpGet("GetQuoteItemDtlById/{quoteItemHdrId}")]
+        public async Task<ActionResult> GetQuoteItemDtlById(int quoteItemHdrId)
+        {
+            var quoteItemById = await _QuoteService.GetQuoteItemDtlById(quoteItemHdrId);
+            return Content(quoteItemById, "application/json");
             //return Ok(quoteById);            
         }
 
@@ -46,6 +65,17 @@ namespace NeuralShaft.Server.Controllers.Quotation
 
         }
 
+        [HttpPost("InsertQuoteItemHdr")]
+        public async Task<IActionResult> InsertQuoteItemHdr([FromBody] object QuoteHdrItem)
+        {
+            //await _service.InsertEnquiry(data);
+            //return Ok();
+            var insertQuoteHdrItem = await _QuoteService.InsertQuoteItemHdr(QuoteHdrItem);
+            return Ok(insertQuoteHdrItem);
+
+        }
+
+
         [HttpPost("UpdateQuoteHdr/{quoteHdrId}")]
         public async Task<IActionResult> UpdateQuoteHdr(int quoteHdrId, [FromBody] object quoteHdr)
         {
@@ -54,12 +84,12 @@ namespace NeuralShaft.Server.Controllers.Quotation
 
         }
 
-        //===== Adde on 26-05-2026
-        [HttpPost("UpdateQuoteDtl/{quoteDtlId}")]
-        public async Task<IActionResult> UpdateQuoteDtl(int quoteDtlId, [FromBody] object quoteDtl)
+        //===== Adde on 26-05-2026 // Chnaged by Pavan
+        [HttpPost("UpdateQuoteItemDtl/{quoteItemHdrId}")] 
+        public async Task<IActionResult> UpdateQuoteItemDtl(int quoteItemHdrId, [FromBody] object quoteItemHdrDtl)
         {
-            var quoteUpdateDtlId = await _QuoteService.UpdateQuoteHdr(quoteDtlId, quoteDtl);
-            return Ok(quoteUpdateDtlId);
+            var quoteItemUpdateDtlId = await _QuoteService.UpdateQuoteItemDtl(quoteItemHdrId, quoteItemHdrDtl);
+            return Ok(quoteItemUpdateDtlId);
 
         }
     }

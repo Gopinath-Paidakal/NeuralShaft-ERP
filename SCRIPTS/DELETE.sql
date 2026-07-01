@@ -37,14 +37,19 @@ delete from JobOrderSVRHdr
 delete from JobOrderSVRDtl
 
 delete from JobOrderSCRDtl
-delete from [dbo].[JobOrderSCRDtlFloor]
 
 delete from JobOrderSVRHdr
 delete from JobOrderSVRDtl
 
 delete from JobOrderSCRDtl
-delete from JobOrderSCRDtlFloor
+
 delete from JobOrderPTCDtl
+
+delete from QuoteHdr_Item
+delete from QuoteDtl_Item
+
+Delete from QuoteHdrItem
+Delete from QuoteDtlItem
 
 
 --delete from Employee

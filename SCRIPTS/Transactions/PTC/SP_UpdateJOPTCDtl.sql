@@ -36,7 +36,7 @@ BEGIN TRY
 			T.Ovehead = J.Ovehead,
 
 			T.TravelHeight = J.TravelHeight,
-			T.MRP = J.MRP,
+			T.Stage = J.Stage,
 			T.CarDbg = J.CarDbg,
 			T.CounterDbf = J.CounterDbf,
 			T.GuiderailCar = J.GuiderailCar,
@@ -59,7 +59,7 @@ BEGIN TRY
             Ovehead INT,
 
             TravelHeight INT,
-            MRP NVARCHAR(50),
+            Stage NVARCHAR(50),
             CarDbg NVARCHAR(150),
             CounterDbf NVARCHAR(150),
             GuiderailCar NVARCHAR(150),

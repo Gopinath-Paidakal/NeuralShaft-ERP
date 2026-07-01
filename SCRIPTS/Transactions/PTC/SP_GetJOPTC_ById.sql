@@ -37,7 +37,7 @@ DECLARE @JobOrderPTCDtl NVARCHAR(MAX)
 
       ,[Ovehead]
       ,[TravelHeight]
-      ,[MRP]
+      ,[Stage]
       ,[CarDbg]
       ,[CounterDbf]
 
