@@ -27,6 +27,9 @@ BEGIN TRY
     BEGIN TRANSACTION
 
     Declare @JobOrderPTCDtlId int
+    Declare @JobOrderId  int
+
+    set @JobOrderId = JSON_VALUE(@JobOrderPTCDtl, '$JobOrderPTCDtl.JobOrderId')
 
     INSERT INTO dbo.JobOrderPTCDtl
         (
@@ -39,7 +42,7 @@ BEGIN TRY
             TravelHeight,
             Stage,
             CarDbg,
-            CounterDbf,
+            CounterDbg,
             GuiderailCar,
 
             GuiderailCounter,
@@ -58,7 +61,7 @@ BEGIN TRY
             TravelHeight,
             Stage,
             CarDbg,
-            CounterDbf,
+            CounterDbg,
             GuiderailCar,
         
             GuiderailCounter,
@@ -79,7 +82,7 @@ BEGIN TRY
             TravelHeight INT,
             Stage NVARCHAR(50),
             CarDbg NVARCHAR(150),
-            CounterDbf NVARCHAR(150),
+            CounterDbg NVARCHAR(150),
             GuiderailCar NVARCHAR(150),
         
             GuiderailCounter NVARCHAR(150),
@@ -92,9 +95,17 @@ BEGIN TRY
     
     set @JobOrderPTCDtlId = SCOPE_IDENTITY()
 
+    ---==================================================
+    --- Updating the JobOrder
+    --====================================================
+    Update JobOrder set JobOrderPTCDtlId = @JobOrderPTCDtlId where JobOrder.JobOrderId = @JobOrderId
+    -----=================================================
+
     select @JobOrderPTCDtlId
 
     COMMIT TRANSACTION
+
+
 END TRY
 
 	BEGIN CATCH

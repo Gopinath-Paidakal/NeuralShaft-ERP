@@ -28,7 +28,12 @@ BEGIN TRY
     Declare @JobOrderSCRHdrId int
     Declare @JobOrderSCRDtlId int
 
-       INSERT INTO JobOrderSCRHdr
+    Declare @JobOrderId  int
+
+    set @JobOrderId = JSON_VALUE(@JobOrderSCRHdr, '$JobOrderSCRHdr.JobOrderId')
+
+
+    INSERT INTO JobOrderSCRHdr
         (
             JobOrderId, 
             --JobOrderSVRHdrId,
@@ -97,6 +102,12 @@ BEGIN TRY
             [FFLMarking] NVARCHAR(50)
           
         );
+
+    ---==================================================
+    --- Updating the JobOrder
+    --====================================================
+    Update JobOrder set JobOrderSCRHdrId = @JobOrderSCRHdrId where JobOrder.JobOrderId = @JobOrderId
+    -----=================================================
 
     select @JobOrderSCRDtlId
 

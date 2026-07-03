@@ -28,30 +28,22 @@ BEGIN TRY
 
 SELECT
 (
-	SELECT 
-      B.BOMId,
-      B.ParentItemId,
-	  P1.ItemType AS ParentItemType,
-      P1.ItemName AS ParentItemName,
-	  --B.ItemQty,
-   
+	SELECT
+    [BOMMst].ProductId,
+    [DefaultData].DefaultDataName AS Product
+		FROM dbo.BOMMst AS [BOMMst]
 
-      B.ChildItemId,
-	  
-	  P2.ItemType AS ChildItemType,
-      P2.ItemName AS ChildItemName,
+		INNER JOIN dbo.DefaultData AS [DefaultData]
+			ON [DefaultData].DefaultDataId = [BOMMst].ProductId
 
-      --B.ItemType,
-      B.UOM
+		GROUP BY
+			[BOMMst].ProductId,
+			[DefaultData].DefaultDataName
 
-	FROM dbo.BOM B
+		FOR JSON PATH, ROOT('BOMList')
 
-	INNER JOIN [Item] P1 ON P1.ItemId = B.ParentItemId
-	INNER JOIN [Item] P2 ON P2.ItemId = B.ChildItemId
 
-	FOR JSON PATH, ROOT('BOM')
-
-)BOM
+)BOMList
 
 	--COMMIT TRANSACTION
 END TRY
@@ -74,6 +66,37 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+--,[AssemblyHdrId]
+      --,[ItemId]
+      --,[ItemQty]
+      --,[CreatedUserId]
+      --,[CreatedDate]
+
+
+--SELECT 
+ --     B.BOMId,
+ --     B.ParentItemId,
+	--  P1.ItemType AS ParentItemType,
+ --     P1.ItemName AS ParentItemName,
+	--  --B.ItemQty,
+   
+
+ --     B.ChildItemId,
+	  
+	--  P2.ItemType AS ChildItemType,
+ --     P2.ItemName AS ChildItemName,
+
+ --     --B.ItemType,
+ --     B.UOM
+
+	--FROM dbo.BOM B
+
+	--INNER JOIN [Item] P1 ON P1.ItemId = B.ParentItemId
+	--INNER JOIN [Item] P2 ON P2.ItemId = B.ChildItemId
+
+	--FOR JSON PATH, ROOT('BOM')
+
 
 --SELECT 
 	--  [BOM].[BOMId]

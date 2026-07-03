@@ -19,6 +19,8 @@ select * from DefaultData
 
 select * from Enqhdr
 select * from EnqDtl
+select * from EnqLandDoor
+select * from EnqCarDoor 
 select * from EnqClient
 select * from EnqFollowUp
 
@@ -90,6 +92,9 @@ select * from JobOrderPTCDtl
 
 Select * from QuoteHdrItem
 Select * from QuoteDtlItem
+
+Select * from AssemblyHdr
+Select * from AssemblyItem
 
 
 

@@ -47,7 +47,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
             }
         }
 
-        public async Task<string> InsertItem(string itemType,object item)
+        public async Task<string> InsertItem(string itemType, string item)
         {
             try
             {
@@ -62,5 +62,14 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
                 throw; // rethrow to controller
             }
         }
+
+        //public async Task<string> InsertAssembly(string itemType, object item)
+        //{
+        //    string insertAssy = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertItem", new { @ItemType = itemType, @Item = item.ToString() });
+        //    return (insertAssy);
+
+        //}
+
+      
     }
 }

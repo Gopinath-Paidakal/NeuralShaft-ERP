@@ -433,7 +433,7 @@ BEGIN TRY
 
 		SELECT 
 			--[EnqLandDoorId]
-			 [EnqDtlId]
+			 @SODtlId              --[EnqDtlId]
 			,[LandFloorType]
 			,[LandDoorType]
 			,[LandDoorFinishType]
@@ -469,7 +469,7 @@ BEGIN TRY
 
 		Select 
 			   --[EnqCarDoorId]
-			   [EnqDtlId]
+			   @SODtlId          ---[EnqDtlId]
 			  ,[CarFloorType]
 			  ,[CarDoorType]
 			  ,[CarDoorFinishType]

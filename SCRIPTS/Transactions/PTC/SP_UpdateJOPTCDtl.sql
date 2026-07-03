@@ -38,7 +38,7 @@ BEGIN TRY
 			T.TravelHeight = J.TravelHeight,
 			T.Stage = J.Stage,
 			T.CarDbg = J.CarDbg,
-			T.CounterDbf = J.CounterDbf,
+			T.CounterDbg = J.CounterDbg,
 			T.GuiderailCar = J.GuiderailCar,
         
 			T.GuiderailCounter = J.GuiderailCounter,
@@ -61,7 +61,7 @@ BEGIN TRY
             TravelHeight INT,
             Stage NVARCHAR(50),
             CarDbg NVARCHAR(150),
-            CounterDbf NVARCHAR(150),
+            CounterDbg NVARCHAR(150),
             GuiderailCar NVARCHAR(150),
         
             GuiderailCounter NVARCHAR(150),

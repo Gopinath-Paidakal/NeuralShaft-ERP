@@ -35,6 +35,11 @@ SELECT
             [JobOrder].[JobOrderId]
             ,[JobOrder].[SOHdrId]
             ,[JobOrder].[SODtlId]
+
+            ,[JobOrder].[JobOrderPTCDtlId]
+            ,[JobOrder].[JobOrderPVRId]
+            ,[JobOrder].[JobOrderSCRHdrId]
+            
             ,[JobOrder].[SONo]
             ,[JobOrder].[JobOrderNo]
             ,FORMAT([JobOrderDate], 'dd-MM-yyyy') as [JobOrderDate]  

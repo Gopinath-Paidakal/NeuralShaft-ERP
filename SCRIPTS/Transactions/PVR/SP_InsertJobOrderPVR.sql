@@ -25,8 +25,11 @@ SET NOCOUNT ON;
 BEGIN TRY
     BEGIN TRANSACTION
 
-    Declare @JobOorderPVRId int
+    Declare @JobOrderPVRId int
 
+    Declare @JobOrderId  int
+
+    set @JobOrderId = JSON_VALUE(@JobOrderPVR, '$JobOrderPVR.JobOrderId')
 
     INSERT INTO JobOrderPVR
     (
@@ -128,7 +131,7 @@ BEGIN TRY
         CreatedDate DATETIME
     );
 
-    set @JobOorderPVRId = SCOPE_IDENTITY()
+    set @JobOrderPVRId = SCOPE_IDENTITY()
 
     -- Insert Floor Details
     INSERT INTO JobOrderPVRFloor
@@ -141,7 +144,7 @@ BEGIN TRY
         WaterProtection
     )
     SELECT
-        @JobOorderPVRId,
+        @JobOrderPVRId,
         FloorNo,
         FloorWidth,
         FloorDepth,
@@ -158,7 +161,13 @@ BEGIN TRY
         WaterProtection nvarchar(50)
     );
 
-    select @JobOorderPVRId
+     ---==================================================
+    --- Updating the JobOrder
+    --====================================================
+    Update JobOrder set JobOrderPVRId = @JobOrderPVRId where JobOrder.JobOrderId = @JobOrderId
+    --======================================================
+
+    select @JobOrderPVRId
 
     COMMIT TRANSACTION
   

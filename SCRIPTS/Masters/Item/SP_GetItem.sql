@@ -42,7 +42,7 @@ BEGIN TRY
               ,[TaxId]
               ,[ItemType]
               ,[ItemCode]
-              ,[HSNCode]
+              ,[Item].[HSNCode]
               ,[ItemName]
               ,[SuppItemName]
               ,[ItemDesc]
@@ -67,11 +67,26 @@ BEGIN TRY
               ,[Weight]
               ,[ParentItemId]
               ,[ChildItemId]
-              ,[CreatedBy]
-              ,[CreatedDate]
 
+              ,[ItemWeight]
+              ,[ItemSpeed]
+              ,[ItemTravelHeight]
+              ,[ItemHeight]
+              ,[ItemWidth]
+              ,[ItemDepth]
+              ,[ItemCapacity]
+              ,[ItemFinish]
+              ,[ItemOpeningType]
+              ,[ItemDBG]
+              ,[ItemSubType]
+
+              ,[DefaultData].[DefaultDataName] as 'UOM'
+
+              ,[CreatedBy]
+              ,[Item].[CreatedDate]
 
             FROM [dbo].[Item]
+            INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
 
             WHERE ItemType = upper('Item')
 
@@ -86,50 +101,65 @@ BEGIN TRY
 
       SELECT (
         SELECT 
-                --[ItemId],
-                --ISNULL([ItemType], '') AS [ItemType],
-                --ISNULL([ItemCode], '') AS [ItemCode],
-                --ISNULL([ItemName], '') AS [ItemName],
-                --ISNULL([HSNCode], '') AS [HSNCode]
-
+               
                [ItemId]
               ,[CatgId]
               ,[ItemGrpId]
               ,[UomId]
               ,[WareHouseId]
+
               ,[TaxId]
               ,[ItemType]
               ,[ItemCode]
               ,[HSNCode]
               ,[ItemName]
+              
               ,[SuppItemName]
               ,[ItemDesc]
               ,[ItemRemarks]
               ,[ItemStockQty]
               ,[ItemMinQty]
+              
               ,[ItemMaxQty]
               ,[ItemReOrderQty]
               ,[ItemOrdPriority]
               ,[ItemLocation]
               ,[ItemIsActive]
+              
               ,[ItemSellingPrice]
               ,[ItemStage]
               ,[LevelNo]
               ,[Height]
               ,[Width]
+              
               ,[Depth]
               ,[Speed]
               ,[TravelHeight]
               ,[Finish]
               ,[OpeningType]
+              
               ,[Weight]
               ,[ParentItemId]
               ,[ChildItemId]
+
+              ,[ItemWeight]
+              ,[ItemSpeed]
+              ,[ItemTravelHeight]
+              ,[ItemHeight]
+              ,[ItemWidth]
+
+              ,[ItemDepth]
+              ,[ItemCapacity]
+              ,[ItemFinish]
+              ,[ItemOpeningType]
+              ,[ItemDBG]
+              ,[ItemSubType]
+
               ,[CreatedBy]
               ,[CreatedDate]
 
             FROM [dbo].[Item]
-            WHERE ItemType = upper('RAW-MATERIAL')
+            --WHERE ItemType = upper('RAW-MATERIAL')
 
             Order By ItemType
             FOR JSON PATH, ROOT('Raw-Material')
@@ -142,13 +172,8 @@ BEGIN TRY
 
       SELECT (
         SELECT 
-                --[ItemId],
-                --ISNULL([ItemType], '') AS [ItemType],
-                --ISNULL([ItemCode], '') AS [ItemCode],
-                --ISNULL([ItemName], '') AS [ItemName],
-                --ISNULL([HSNCode], '') AS [HSNCode]
-
-                [ItemId]
+                
+               [ItemId]
               ,[CatgId]
               ,[ItemGrpId]
               ,[UomId]
@@ -214,7 +239,19 @@ END TRY
 End_Prog:
 
 
-	
+ --[ItemId],
+                --ISNULL([ItemType], '') AS [ItemType],
+                --ISNULL([ItemCode], '') AS [ItemCode],
+                --ISNULL([ItemName], '') AS [ItemName],
+                --ISNULL([HSNCode], '') AS [HSNCode]
+
+
+	--[ItemId],
+                --ISNULL([ItemType], '') AS [ItemType],
+                --ISNULL([ItemCode], '') AS [ItemCode],
+                --ISNULL([ItemName], '') AS [ItemName],
+                --ISNULL([HSNCode], '') AS [HSNCode]
+
 
 
     

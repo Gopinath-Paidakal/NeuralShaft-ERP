@@ -67,18 +67,21 @@ builder.Services.AddScoped<IBranch, BranchService>();
 builder.Services.AddScoped<IEmployee, EmployeeService>();
 builder.Services.AddScoped<IDefaultData, DefaltDataService>();
 builder.Services.AddScoped<IEmployee, EmployeeService>();
+
 builder.Services.AddScoped<IOrdClient, OrdClientService>();
 builder.Services.AddScoped<IItem, ItemService>();
 builder.Services.AddScoped<IBOM, BOMService>();
 builder.Services.AddScoped<IFile, FileService>();
-
 builder.Services.AddScoped<IDepartment, DepartmentService>();
+
 builder.Services.AddScoped<IDesignation, DesignationService>();
 builder.Services.AddScoped<IGrade, GradeService>();
 builder.Services.AddScoped<IHoliday, HolidayService>();
 builder.Services.AddScoped<IMenus, MenuService>();
 builder.Services.AddScoped<IMenuPermissions, MenuPermissionService>();
+
 builder.Services.AddScoped<IContact, ContactService>();
+builder.Services.AddScoped<IAssembly, AssemblyService>();
 
 // -------- Upload Files
 builder.Services.AddScoped<IUpload, UploadService>();

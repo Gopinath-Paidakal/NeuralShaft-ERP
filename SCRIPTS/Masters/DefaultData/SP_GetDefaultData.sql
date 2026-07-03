@@ -28,8 +28,8 @@ DECLARE @Passenger  NVARCHAR(MAX)
 DECLARE @ProductSpeed NVARCHAR(MAX)
 DECLARE @TotDefaultData NVARCHAR(MAX)
 
-if (@FormType = upper('All'))
-BEGIN
+--if (@FormType = upper('All'))
+--BEGIN
 
  SET @DefaultData = (
         SELECT 
@@ -111,6 +111,9 @@ BEGIN
         ISNULL([EnquirySource], 0) AS [EnquirySource]
 
         from DefaultData
+        --where DefaultData.FormType = @FormType
+        --WHERE (@FormType IS NULL OR DefaultData.FormType = @FormType)
+
         FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
     )
     SET @Passenger = (
@@ -140,352 +143,352 @@ BEGIN
     )
 
    Select @TotDefaultData
-END
+--END
 
-if upper(@FormType) = 'ENQUIRY'     
-BEGIN
+--if upper(@FormType) = 'ENQUIRY'     
+--BEGIN
     
-  SET @DefaultData = (
-        SELECT 
-        [DefaultDataId],
-        ISNULL([FormType], '') AS [FormType],
-        ISNULL([DefaultDataType], '') AS [DefaultDataType],
-        ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
-        ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
+--  SET @DefaultData = (
+--        SELECT 
+--        [DefaultDataId],
+--        ISNULL([FormType], '') AS [FormType],
+--        ISNULL([DefaultDataType], '') AS [DefaultDataType],
+--        ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
+--        ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
         
-        ISNULL([DefaultDataName], '') AS [DefaultDataName],
-        ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
-        ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
-        ISNULL([Price], 0) AS [Price],
+--        ISNULL([DefaultDataName], '') AS [DefaultDataName],
+--        ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
+--        ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
+--        ISNULL([Price], 0) AS [Price],
         
-        ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
-        ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
-        ISNULL([DefaultWeight], 0) AS [DefaultWeight],
-        ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
-        ISNULL([DouEntType], '') AS [DouEntType],
+--        ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
+--        ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
+--        ISNULL([DefaultWeight], 0) AS [DefaultWeight],
+--        ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
+--        ISNULL([DouEntType], '') AS [DouEntType],
 
-        ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
-        ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
-        ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
-        ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
-        ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
+--        ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
+--        ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
+--        ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
+--        ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
+--        ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
         
-        ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
-        ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
-        ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
-        ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
-        ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
+--        ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
+--        ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
+--        ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
+--        ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
+--        ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
         
-        ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
-        ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
-        ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
-        ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
-        ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
+--        ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
+--        ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
+--        ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
+--        ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
+--        ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
         
-        ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
-        ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
-        ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
-        ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
-        ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
+--        ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
+--        ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
+--        ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
+--        ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
+--        ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
         
-        ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
-        ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
-        ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
-        ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
-        ISNULL([DefaultPowerSupply], '') AS [DefaultPowerSupply],
+--        ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
+--        ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
+--        ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
+--        ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
+--        ISNULL([DefaultPowerSupply], '') AS [DefaultPowerSupply],
         
-        ISNULL([DefaultMachine], '') AS [DefaultMachine],
-        ISNULL([DefaultDrive], '') AS [DefaultDrive],
-        ISNULL([DefaultController], '') AS [DefaultController],
-        ISNULL([DefaultOperation], '') AS [DefaultOperation],
-        ISNULL([DefaultGuideRails], '') AS [DefaultGuideRails],
+--        ISNULL([DefaultMachine], '') AS [DefaultMachine],
+--        ISNULL([DefaultDrive], '') AS [DefaultDrive],
+--        ISNULL([DefaultController], '') AS [DefaultController],
+--        ISNULL([DefaultOperation], '') AS [DefaultOperation],
+--        ISNULL([DefaultGuideRails], '') AS [DefaultGuideRails],
         
-        ISNULL([DefaultRope], '') AS [DefaultRope],
-        ISNULL([DefaultSpecialFeatures], '') AS [DefaultSpecialFeatures],
-        ISNULL([DoorFormulaMultiply], 0) AS [DoorFormulaMultiply],
-        ISNULL([DoorFormulaAdd], 0) AS [DoorFormulaAdd],
-        ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
+--        ISNULL([DefaultRope], '') AS [DefaultRope],
+--        ISNULL([DefaultSpecialFeatures], '') AS [DefaultSpecialFeatures],
+--        ISNULL([DoorFormulaMultiply], 0) AS [DoorFormulaMultiply],
+--        ISNULL([DoorFormulaAdd], 0) AS [DoorFormulaAdd],
+--        ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
         
-        ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
-        ISNULL([GST], 0) AS [GST],
-        ISNULL([HSNCode], '') AS [HSNCode],
-        ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],
-        ISNULL([CabinRightPanel], '') AS [CabinRightPanel],
+--        ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
+--        ISNULL([GST], 0) AS [GST],
+--        ISNULL([HSNCode], '') AS [HSNCode],
+--        ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],
+--        ISNULL([CabinRightPanel], '') AS [CabinRightPanel],
         
-        ISNULL([CabinFrontPanel], '') AS [CabinFrontPanel],
-        ISNULL([CabinRarePanel], '') AS [CabinRarePanel],
-        ISNULL([TentativeDuration1], 0) AS [TentativeDuration1],
-        ISNULL([TentativeDuration2], 0) AS [TentativeDuration2],
-        ISNULL([TentativeDuration3], 0) AS [TentativeDuration3],
+--        ISNULL([CabinFrontPanel], '') AS [CabinFrontPanel],
+--        ISNULL([CabinRarePanel], '') AS [CabinRarePanel],
+--        ISNULL([TentativeDuration1], 0) AS [TentativeDuration1],
+--        ISNULL([TentativeDuration2], 0) AS [TentativeDuration2],
+--        ISNULL([TentativeDuration3], 0) AS [TentativeDuration3],
         
-        ISNULL([TentativeDuration4], 0) AS [TentativeDuration4],
-        ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
-        ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
-        ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
-        ISNULL([EnquirySource], 0) AS [EnquirySource]
+--        ISNULL([TentativeDuration4], 0) AS [TentativeDuration4],
+--        ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
+--        ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
+--        ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
+--        ISNULL([EnquirySource], 0) AS [EnquirySource]
 
-        from DefaultData
-        Where FormType = 'ENQUIRY'
-        FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
-    )
-    --SET @Passenger = (
-    --     SELECT
-    --    [NoOfPassengers],
-    --    [PassengerAmount]
-    --     FROM [dbo].[Passenger] 
+--        from DefaultData
+--        Where FormType = 'ENQUIRY'
+--        FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
+--    )
+--    --SET @Passenger = (
+--    --     SELECT
+--    --    [NoOfPassengers],
+--    --    [PassengerAmount]
+--    --     FROM [dbo].[Passenger] 
            
-    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    --)
+--    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+--    --)
 
-    --SET @ProductSpeed = (
-    --   SELECT 
-    --        [ProductSpeed]
-    --       ,[ProductAmount]
-    --  FROM [dbo].[ProductSpeed]
+--    --SET @ProductSpeed = (
+--    --   SELECT 
+--    --        [ProductSpeed]
+--    --       ,[ProductAmount]
+--    --  FROM [dbo].[ProductSpeed]
 
-    --  FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    --)
+--    --  FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+--    --)
 
-    SET @TotDefaultData = (
-        SELECT
-            JSON_QUERY(@DefaultData)  AS DefaultData
-            --JSON_QUERY(@Passenger) AS Passenger,
-            --JSON_QUERY(@ProductSpeed) AS ProductSpeed
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    )
+--    SET @TotDefaultData = (
+--        SELECT
+--            JSON_QUERY(@DefaultData)  AS DefaultData
+--            --JSON_QUERY(@Passenger) AS Passenger,
+--            --JSON_QUERY(@ProductSpeed) AS ProductSpeed
+--        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+--    )
 
-   Select @TotDefaultData
-END
+--   Select @TotDefaultData
+--END
 
-if upper(@FormType) = 'QUOTATION' 
-BEGIN
+--if upper(@FormType) = 'QUOTATION' 
+--BEGIN
     
-  SET @DefaultData = (
-        SELECT 
-        [DefaultDataId],
-        ISNULL([FormType], '') AS [FormType],
-        ISNULL([DefaultDataType], '') AS [DefaultDataType],
-        ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
-        ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
+--  SET @DefaultData = (
+--        SELECT 
+--        [DefaultDataId],
+--        ISNULL([FormType], '') AS [FormType],
+--        ISNULL([DefaultDataType], '') AS [DefaultDataType],
+--        ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
+--        ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
         
-        ISNULL([DefaultDataName], '') AS [DefaultDataName],
-        ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
-        ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
-        ISNULL([Price], 0) AS [Price],
+--        ISNULL([DefaultDataName], '') AS [DefaultDataName],
+--        ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
+--        ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
+--        ISNULL([Price], 0) AS [Price],
         
-        ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
-        ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
-        ISNULL([DefaultWeight], 0) AS [DefaultWeight],
-        ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
-        ISNULL([DouEntType], '') AS [DouEntType],
+--        ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
+--        ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
+--        ISNULL([DefaultWeight], 0) AS [DefaultWeight],
+--        ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
+--        ISNULL([DouEntType], '') AS [DouEntType],
 
-        ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
-        ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
-        ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
-        ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
-        ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
+--        ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
+--        ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
+--        ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
+--        ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
+--        ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
         
-        ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
-        ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
-        ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
-        ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
-        ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
+--        ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
+--        ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
+--        ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
+--        ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
+--        ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
         
-        ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
-        ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
-        ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
-        ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
-        ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
+--        ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
+--        ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
+--        ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
+--        ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
+--        ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
         
-        ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
-        ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
-        ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
-        ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
-        ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
+--        ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
+--        ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
+--        ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
+--        ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
+--        ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
         
-        ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
-        ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
-        ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
-        ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
-        ISNULL([DefaultPowerSupply], '') AS [DefaultPowerSupply],
+--        ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
+--        ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
+--        ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
+--        ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
+--        ISNULL([DefaultPowerSupply], '') AS [DefaultPowerSupply],
         
-        ISNULL([DefaultMachine], '') AS [DefaultMachine],
-        ISNULL([DefaultDrive], '') AS [DefaultDrive],
-        ISNULL([DefaultController], '') AS [DefaultController],
-        ISNULL([DefaultOperation], '') AS [DefaultOperation],
-        ISNULL([DefaultGuideRails], '') AS [DefaultGuideRails],
+--        ISNULL([DefaultMachine], '') AS [DefaultMachine],
+--        ISNULL([DefaultDrive], '') AS [DefaultDrive],
+--        ISNULL([DefaultController], '') AS [DefaultController],
+--        ISNULL([DefaultOperation], '') AS [DefaultOperation],
+--        ISNULL([DefaultGuideRails], '') AS [DefaultGuideRails],
         
-        ISNULL([DefaultRope], '') AS [DefaultRope],
-        ISNULL([DefaultSpecialFeatures], '') AS [DefaultSpecialFeatures],
-        ISNULL([DoorFormulaMultiply], 0) AS [DoorFormulaMultiply],
-        ISNULL([DoorFormulaAdd], 0) AS [DoorFormulaAdd],
-        ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
+--        ISNULL([DefaultRope], '') AS [DefaultRope],
+--        ISNULL([DefaultSpecialFeatures], '') AS [DefaultSpecialFeatures],
+--        ISNULL([DoorFormulaMultiply], 0) AS [DoorFormulaMultiply],
+--        ISNULL([DoorFormulaAdd], 0) AS [DoorFormulaAdd],
+--        ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
         
-        ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
-        ISNULL([GST], 0) AS [GST],
-        ISNULL([HSNCode], '') AS [HSNCode],
-        ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],
-        ISNULL([CabinRightPanel], '') AS [CabinRightPanel],
+--        ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
+--        ISNULL([GST], 0) AS [GST],
+--        ISNULL([HSNCode], '') AS [HSNCode],
+--        ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],
+--        ISNULL([CabinRightPanel], '') AS [CabinRightPanel],
         
-        ISNULL([CabinFrontPanel], '') AS [CabinFrontPanel],
-        ISNULL([CabinRarePanel], '') AS [CabinRarePanel],
-        ISNULL([TentativeDuration1], 0) AS [TentativeDuration1],
-        ISNULL([TentativeDuration2], 0) AS [TentativeDuration2],
-        ISNULL([TentativeDuration3], 0) AS [TentativeDuration3],
+--        ISNULL([CabinFrontPanel], '') AS [CabinFrontPanel],
+--        ISNULL([CabinRarePanel], '') AS [CabinRarePanel],
+--        ISNULL([TentativeDuration1], 0) AS [TentativeDuration1],
+--        ISNULL([TentativeDuration2], 0) AS [TentativeDuration2],
+--        ISNULL([TentativeDuration3], 0) AS [TentativeDuration3],
         
-        ISNULL([TentativeDuration4], 0) AS [TentativeDuration4],
-        ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
-        ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
-        ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
-        ISNULL([EnquirySource], 0) AS [EnquirySource]
+--        ISNULL([TentativeDuration4], 0) AS [TentativeDuration4],
+--        ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
+--        ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
+--        ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
+--        ISNULL([EnquirySource], 0) AS [EnquirySource]
 
-        from DefaultData
-        Where FormType = 'ENQUIRY'
-        FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
-    )
-    --SET @Passenger = (
-    --     SELECT
-    --    [NoOfPassengers],
-    --    [PassengerAmount]
-    --     FROM [dbo].[Passenger] 
+--        from DefaultData
+--        Where FormType = 'ENQUIRY'
+--        FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
+--    )
+--    --SET @Passenger = (
+--    --     SELECT
+--    --    [NoOfPassengers],
+--    --    [PassengerAmount]
+--    --     FROM [dbo].[Passenger] 
            
-    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    --)
+--    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+--    --)
 
-    --SET @ProductSpeed = (
-    --   SELECT 
-    --        [ProductSpeed]
-    --       ,[ProductAmount]
-    --  FROM [dbo].[ProductSpeed]
+--    --SET @ProductSpeed = (
+--    --   SELECT 
+--    --        [ProductSpeed]
+--    --       ,[ProductAmount]
+--    --  FROM [dbo].[ProductSpeed]
 
-    --  FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    --)
+--    --  FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+--    --)
 
-    SET @TotDefaultData = (
-        SELECT
-            JSON_QUERY(@DefaultData)  AS DefaultData
-            --JSON_QUERY(@Passenger) AS Passenger,
-            --JSON_QUERY(@ProductSpeed) AS ProductSpeed
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    )
+--    SET @TotDefaultData = (
+--        SELECT
+--            JSON_QUERY(@DefaultData)  AS DefaultData
+--            --JSON_QUERY(@Passenger) AS Passenger,
+--            --JSON_QUERY(@ProductSpeed) AS ProductSpeed
+--        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+--    )
 
-   Select @TotDefaultData
-END
+--   Select @TotDefaultData
+--END
 
-if upper(@FormType) = 'SALES ORDER'
-BEGIN
+--if upper(@FormType) = 'SALES ORDER'
+--BEGIN
     
-  SET @DefaultData = (
-        SELECT 
-        [DefaultDataId],
-        ISNULL([FormType], '') AS [FormType],
-        ISNULL([DefaultDataType], '') AS [DefaultDataType],
-        ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
-        ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
+--  SET @DefaultData = (
+--        SELECT 
+--        [DefaultDataId],
+--        ISNULL([FormType], '') AS [FormType],
+--        ISNULL([DefaultDataType], '') AS [DefaultDataType],
+--        ISNULL([DefaultProductWidth], 0) AS [DefaultProductWidth],
+--        ISNULL([DefaultProductDepth], 0) AS [DefaultProductDepth],
         
-        ISNULL([DefaultDataName], '') AS [DefaultDataName],
-        ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
-        ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
-        ISNULL([Price], 0) AS [Price],
+--        ISNULL([DefaultDataName], '') AS [DefaultDataName],
+--        ISNULL([DefaultDataDesc], '') AS [DefaultDataDesc],
+--        ISNULL([DefaultDataStatus], '') AS [DefaultDataStatus],
+--        ISNULL([Price], 0) AS [Price],
         
-        ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
-        ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
-        ISNULL([DefaultWeight], 0) AS [DefaultWeight],
-        ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
-        ISNULL([DouEntType], '') AS [DouEntType],
+--        ISNULL([DefaultTotalStops], 0) AS [faultTotalStops],
+--        ISNULL([DefaultCapacity], 0) AS [DefaultCapacity],
+--        ISNULL([DefaultWeight], 0) AS [DefaultWeight],
+--        ISNULL([DefaultNoStopPrice], 0) AS [DefaultNoStopPrice],
+--        ISNULL([DouEntType], '') AS [DouEntType],
 
-        ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
-        ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
-        ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
-        ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
-        ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
+--        ISNULL([DouEntPrice901st], 0) AS [DouEntPrice901st],
+--        ISNULL([DouEntPrice902nd], 0) AS [DouEntPrice902nd],
+--        ISNULL([DouEntPrice1801st], 0) AS [DouEntPrice1801st],
+--        ISNULL([DouEntPrice1802nd], 0) AS [DouEntPrice1802nd],
+--        ISNULL([DouEntPrice1803rd], 0) AS [DouEntPrice1803rd],
         
-        ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
-        ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
-        ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
-        ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
-        ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
+--        ISNULL([DefaultCabinWidth], 0) AS [DefaultCabinWidth],
+--        ISNULL([DefaultCabinDepth], 0) AS [DefaultCabinDepth],
+--        ISNULL([DefaultCabinHeight], 0) AS [DefaultCabinHeight],
+--        ISNULL([ShaftTypeWidth], 0) AS [ShaftTypeWidth],
+--        ISNULL([ShaftTypeDepth], 0) AS [ShaftTypeDepth],
         
-        ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
-        ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
-        ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
-        ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
-        ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
+--        ISNULL([ElevatorSpeed], 0) AS [ElevatorSpeed],
+--        ISNULL([DefaultOverheadHeight], 0) AS [DefaultOverheadHeight],
+--        ISNULL([DefaultElevatorPit], 0) AS [DefaultElevatorPit],
+--        ISNULL([DefaultMaxFloors], 0) AS [DefaultMaxFloors],
+--        ISNULL([DefaultMinWidthSingle], 0) AS [DefaultMinWidthSingle],
         
-        ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
-        ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
-        ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
-        ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
-        ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
+--        ISNULL([DefaultMinDepthSingle], 0) AS [DefaultMinDepthSingle],
+--        ISNULL([DefaultMinWidthDouble], 0) AS [DefaultMinWidthDouble],
+--        ISNULL([DefaultMinDepthDouble], 0) AS [DefaultMinDepthDouble],
+--        ISNULL([DefaultMinWidthTriple], 0) AS [DefaultMinWidthTriple],
+--        ISNULL([DefaultMinDepthTriple], 0) AS [DefaultMinDepthTriple],
         
-        ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
-        ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
-        ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
-        ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
-        ISNULL([DefaultPowerSupply], '') AS [DefaultPowerSupply],
+--        ISNULL([DefaultDoorHeight], 0) AS [DefaultDoorHeight],
+--        ISNULL([DefaultDoorWidth], 0) AS [DefaultDoorWidth],
+--        ISNULL([DefaultDoorMinShaftWidth], 0) AS [DefaultDoorMinShaftWidth],
+--        ISNULL([DefaultDataOrderBy], 0) AS [DefaultDataOrderBy],
+--        ISNULL([DefaultPowerSupply], '') AS [DefaultPowerSupply],
         
-        ISNULL([DefaultMachine], '') AS [DefaultMachine],
-        ISNULL([DefaultDrive], '') AS [DefaultDrive],
-        ISNULL([DefaultController], '') AS [DefaultController],
-        ISNULL([DefaultOperation], '') AS [DefaultOperation],
-        ISNULL([DefaultGuideRails], '') AS [DefaultGuideRails],
+--        ISNULL([DefaultMachine], '') AS [DefaultMachine],
+--        ISNULL([DefaultDrive], '') AS [DefaultDrive],
+--        ISNULL([DefaultController], '') AS [DefaultController],
+--        ISNULL([DefaultOperation], '') AS [DefaultOperation],
+--        ISNULL([DefaultGuideRails], '') AS [DefaultGuideRails],
         
-        ISNULL([DefaultRope], '') AS [DefaultRope],
-        ISNULL([DefaultSpecialFeatures], '') AS [DefaultSpecialFeatures],
-        ISNULL([DoorFormulaMultiply], 0) AS [DoorFormulaMultiply],
-        ISNULL([DoorFormulaAdd], 0) AS [DoorFormulaAdd],
-        ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
+--        ISNULL([DefaultRope], '') AS [DefaultRope],
+--        ISNULL([DefaultSpecialFeatures], '') AS [DefaultSpecialFeatures],
+--        ISNULL([DoorFormulaMultiply], 0) AS [DoorFormulaMultiply],
+--        ISNULL([DoorFormulaAdd], 0) AS [DoorFormulaAdd],
+--        ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
         
-        ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
-        ISNULL([GST], 0) AS [GST],
-        ISNULL([HSNCode], '') AS [HSNCode],
-        ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],
-        ISNULL([CabinRightPanel], '') AS [CabinRightPanel],
+--        ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
+--        ISNULL([GST], 0) AS [GST],
+--        ISNULL([HSNCode], '') AS [HSNCode],
+--        ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],
+--        ISNULL([CabinRightPanel], '') AS [CabinRightPanel],
         
-        ISNULL([CabinFrontPanel], '') AS [CabinFrontPanel],
-        ISNULL([CabinRarePanel], '') AS [CabinRarePanel],
-        ISNULL([TentativeDuration1], 0) AS [TentativeDuration1],
-        ISNULL([TentativeDuration2], 0) AS [TentativeDuration2],
-        ISNULL([TentativeDuration3], 0) AS [TentativeDuration3],
+--        ISNULL([CabinFrontPanel], '') AS [CabinFrontPanel],
+--        ISNULL([CabinRarePanel], '') AS [CabinRarePanel],
+--        ISNULL([TentativeDuration1], 0) AS [TentativeDuration1],
+--        ISNULL([TentativeDuration2], 0) AS [TentativeDuration2],
+--        ISNULL([TentativeDuration3], 0) AS [TentativeDuration3],
         
-        ISNULL([TentativeDuration4], 0) AS [TentativeDuration4],
-        ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
-        ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
-        ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
-        ISNULL([EnquirySource], 0) AS [EnquirySource]
+--        ISNULL([TentativeDuration4], 0) AS [TentativeDuration4],
+--        ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
+--        ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
+--        ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
+--        ISNULL([EnquirySource], 0) AS [EnquirySource]
 
-        from DefaultData
-        Where FormType = 'ENQUIRY'
-        FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
-    )
-    --SET @Passenger = (
-    --     SELECT
-    --    [NoOfPassengers],
-    --    [PassengerAmount]
-    --     FROM [dbo].[Passenger] 
+--        from DefaultData
+--        Where FormType = 'ENQUIRY'
+--        FOR JSON PATH    --, WITHOUT_ARRAY_WRAPPER
+--    )
+--    --SET @Passenger = (
+--    --     SELECT
+--    --    [NoOfPassengers],
+--    --    [PassengerAmount]
+--    --     FROM [dbo].[Passenger] 
            
-    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    --)
+--    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+--    --)
 
-    --SET @ProductSpeed = (
-    --   SELECT 
-    --        [ProductSpeed]
-    --       ,[ProductAmount]
-    --  FROM [dbo].[ProductSpeed]
+--    --SET @ProductSpeed = (
+--    --   SELECT 
+--    --        [ProductSpeed]
+--    --       ,[ProductAmount]
+--    --  FROM [dbo].[ProductSpeed]
 
-    --  FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    --)
+--    --  FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+--    --)
 
-    SET @TotDefaultData = (
-        SELECT
-            JSON_QUERY(@DefaultData)  AS DefaultData
-            --JSON_QUERY(@Passenger) AS Passenger,
-            --JSON_QUERY(@ProductSpeed) AS ProductSpeed
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    )
+--    SET @TotDefaultData = (
+--        SELECT
+--            JSON_QUERY(@DefaultData)  AS DefaultData
+--            --JSON_QUERY(@Passenger) AS Passenger,
+--            --JSON_QUERY(@ProductSpeed) AS ProductSpeed
+--        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+--    )
 
-   Select @TotDefaultData
-END
+--   Select @TotDefaultData
+--END
 
 
 

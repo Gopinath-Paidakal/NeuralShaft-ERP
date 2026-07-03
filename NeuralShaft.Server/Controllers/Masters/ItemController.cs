@@ -5,6 +5,8 @@ using NeuralShaft.Service.ServiceImplementation.Masters;
 //using NeuralShaft.Model;
 using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.Masters;
+using NeuralShaft.Service.ServiceInterfaces.Upload;
+using System.Net.Mail;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -15,10 +17,16 @@ namespace NeuralShaft.Server.Controllers.Masters
     public class ItemController : Controller
     {
         private readonly IItem _itemService;
+        private readonly IWebHostEnvironment _env;
+        private readonly IUpload _uploadService;
 
-        public ItemController(IItem service)
+        string savePath = "/uploads/item/";
+
+        public ItemController(IItem service, IWebHostEnvironment env, IUpload upload)
         {
             _itemService = service;
+            _env = env;
+            _uploadService = upload;
         }
 
         //[Authorize(Roles = "admin")]
@@ -39,14 +47,26 @@ namespace NeuralShaft.Server.Controllers.Masters
         }
 
         [HttpPost("InsertItem/{itemType}")]
-        public async Task<IActionResult> InsertItem(string itemType, [FromBody] object item)
+        public async Task<IActionResult> InsertItem(string itemType, [FromForm] string item, [FromForm] List<IFormFile> attachments)
         {
-            //await _service.InsertEnquiry(data);
-            //return Ok();
-            var insertItem = await _itemService.InsertItem(itemType, item);
-            return Ok(insertItem);
+            var itemId = await _itemService.InsertItem(itemType, item);
+
+            var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(itemId.ToString()));
+
+            return Ok(itemId);
 
         }
+
+        //[HttpPost("InsertAssy/{itemType}")]
+        //public async Task<IActionResult> InsertAssembly(string itemType, [FromBody] object item)    //, [FromForm] List<IFormFile> attachments)
+        //{
+        //    var itemAssyId = await _itemService.InsertAssembly(itemType, item);
+
+        //    //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(itemId.ToString()));
+
+        //    return Ok(itemAssyId);
+
+        //}
 
     }
 }

@@ -39,7 +39,7 @@ DECLARE @JobOrderPTCDtl NVARCHAR(MAX)
       ,[TravelHeight]
       ,[Stage]
       ,[CarDbg]
-      ,[CounterDbf]
+      ,[CounterDbg]
 
       ,[GuiderailCar]
       ,[GuiderailCounter]

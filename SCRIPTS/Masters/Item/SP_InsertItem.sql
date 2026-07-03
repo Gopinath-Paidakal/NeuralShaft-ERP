@@ -98,18 +98,21 @@ BEGIN TRY
 
 	    INSERT INTO dbo.Item
         (
-            CatgId, ProdGrpId, UomId, WareHouseId, TaxId,
+            CatgId, ItemGrpId, UomId, WareHouseId, TaxId,
             ItemType, ItemCode, HSNCode, ItemName, SuppItemName, ItemDesc, ItemRemarks,
             ItemStockQty, ItemMinQty, ItemMaxQty, ItemReOrderQty,
             ItemOrdPriority, ItemLocation, ItemIsActive, ItemSellingPrice,
-            ItemStage, LevelNo, ParentProdId, ChildProdId, CreatedBy, CreatedDate
+            ItemStage, LevelNo, ParentItemId, ChildItemId, 
+            ItemWeight, ItemSpeed, ItemTravelHeight, ItemHeight, ItemWidth, ItemDepth,     -- Added on 2/7/2026
+            ItemCapacity, ItemFinish, ItemOpeningType, ItemDBG, ItemSubType,
+            CreatedBy, CreatedDate
         )
         SELECT *
         FROM OPENJSON(@Item, '$.Raw_Material')
         WITH
         (
             CatgId INT,
-            ProdGrpId INT,
+            ItemGrpId INT,
             UomId INT,
             WareHouseId INT,
             TaxId INT,
@@ -135,8 +138,21 @@ BEGIN TRY
     
             LevelNo SMALLINT,
 
-            ParentProdId INT,
-            ChildProdId INT,
+            ParentItemId INT,
+            ChildItemId INT,
+
+            ItemWeight INT,
+            ItemSpeed INT,
+            ItemTravelHeight INT,
+            ItemHeight INT,
+            ItemWidth INT,
+
+            ItemDepth INT,
+            ItemCapacity INT,
+            ItemFinish NVARCHAR(100),
+            ItemOpeningType NVARCHAR(100),
+            ItemDBG NVARCHAR(100),
+            ItemSubType NVARCHAR(100),
 
             CreatedBy NVARCHAR(20),
             CreatedDate DATETIME

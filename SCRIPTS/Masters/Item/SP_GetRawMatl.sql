@@ -37,7 +37,7 @@ BEGIN TRY
                 --ISNULL([HSNCode], '') AS [HSNCode]
                    [ItemId]
               ,[CatgId]
-              ,[ProdGrpId]
+              ,[ItemGrpId]
               ,[UomId]
               ,[WareHouseId]
               ,[TaxId]
@@ -65,8 +65,22 @@ BEGIN TRY
               ,[TravelHeight]
               ,[Finish]
               ,[OpeningType]
-              ,[ParentProdId]
-              ,[ChildProdId]
+              ,[ParentItemId]
+              ,[ChildItemId]
+
+              ,[ItemWeight]
+              ,[ItemSpeed]
+              ,[ItemTravelHeight]
+              ,[ItemHeight]
+              ,[ItemWidth]
+
+              ,[ItemDepth]
+              ,[ItemCapacity]
+              ,[ItemFinish]
+              ,[ItemOpeningType]
+              ,[ItemDBG]
+              ,[ItemSubType]
+
               ,[CreatedBy]
               ,[CreatedDate]
 
@@ -94,41 +108,60 @@ BEGIN TRY
 
                [ItemId]
               ,[CatgId]
-              ,[ProdGrpId]
+              ,[ItemGrpId]
               ,[UomId]
               ,[WareHouseId]
+
               ,[TaxId]
               ,[ItemType]
               ,[ItemCode]
               ,[HSNCode]
               ,[ItemName]
+              
               ,[SuppItemName]
               ,[ItemDesc]
               ,[ItemRemarks]
               ,[ItemStockQty]
               ,[ItemMinQty]
+              
               ,[ItemMaxQty]
               ,[ItemReOrderQty]
               ,[ItemOrdPriority]
               ,[ItemLocation]
               ,[ItemIsActive]
+              
               ,[ItemSellingPrice]
               ,[ItemStage]
               ,[LevelNo]
               ,[Height]
               ,[Width]
               ,[Depth]
+              
               ,[Speed]
               ,[TravelHeight]
               ,[Finish]
               ,[OpeningType]
-              ,[ParentProdId]
-              ,[ChildProdId]
+              ,[ParentItemId]
+              ,[ChildItemId]
+
+              ,[ItemWeight]
+              ,[ItemSpeed]
+              ,[ItemTravelHeight]
+              ,[ItemHeight]
+              ,[ItemWidth]
+
+              ,[ItemDepth]
+              ,[ItemCapacity]
+              ,[ItemFinish]
+              ,[ItemOpeningType]
+              ,[ItemDBG]
+              ,[ItemSubType]
+
               ,[CreatedBy]
               ,[CreatedDate]
 
             FROM [dbo].[Item]
-            WHERE ItemType = upper('RAW-MATERIAL') and ParentProdId = @ItemId
+            WHERE ItemType = upper('RAW-MATERIAL') and ParentItemId = @ItemId
 
             Order By ItemType
             FOR JSON PATH, ROOT('Raw-Material')
@@ -149,7 +182,7 @@ BEGIN TRY
 
                 [ItemId]
               ,[CatgId]
-              ,[ProdGrpId]
+              ,[ItemGrpId]
               ,[UomId]
               ,[WareHouseId]
               ,[TaxId]
@@ -177,8 +210,8 @@ BEGIN TRY
               ,[TravelHeight]
               ,[Finish]
               ,[OpeningType]
-              ,[ParentProdId]
-              ,[ChildProdId]
+              ,[ParentItemId]
+              ,[ChildItemId]
               ,[CreatedBy]
               ,[CreatedDate]
 

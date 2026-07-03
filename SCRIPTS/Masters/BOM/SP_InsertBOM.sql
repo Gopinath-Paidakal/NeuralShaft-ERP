@@ -41,22 +41,21 @@ BEGIN TRY
 
 	--- ============= Enquiry
 
-	INSERT INTO [dbo].[BOM]
-           ([ParentProdId]
-		   ,[ChildProdId]
-           ,[ProdQty]
-		   ,[ProdType]
-		   ,[UOM]
+	INSERT INTO [dbo].[BOMMst]
+           ([ProductId]
+		   ,[AssemblyHdrId]
+		   ,[ItemId]
+		   ,[ItemQty]
 
            ,[CreatedUserId]
 		   ,[CreatedDate]
            )
 	select
-			[ParentProdId],
-			[ChildProdId],
-			[ProdQty],
-		    [ProdType],
-		    [UOM],
+			[ProductId],
+			[AssemblyHdrId],
+			
+			[ItemId],
+			[ItemQty],
 			
 			[CreatedUserId],
 			[CreatedDate]
@@ -64,12 +63,11 @@ BEGIN TRY
 	FROM OPENJSON(@BOM, '$.BOM')
 	WITH
 	(
-		   [ParentProdId] int,
-		   [ChildProdId] int, 
-           [ProdQty] numeric(18,2),
-		   [ProdType] nvarchar(20),
-	   	   [UOM] nvarchar(20),
-
+		   [ProductId] int,
+		   [AssemblyHdrId] int, 
+		   [ItemId] int, 
+           [ItemQty] numeric(18,2),
+		 
            CreatedUserId int,         
            CreatedDate nvarchar(20)
 	)
