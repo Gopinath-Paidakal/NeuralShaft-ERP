@@ -49,5 +49,13 @@ namespace NeuralShaft.Server.Controllers.Masters
             return Ok(itemAssyId);
 
         }
+
+        [HttpPost("DeleteAssyItem/{assemblyItemId}")]
+        public async Task<IActionResult> DeleteAssyItem(int assemblyItemId)
+        {
+            var DelItemAssyId = await _assyService.DeleteAssyItem(assemblyItemId);
+            return Ok(DelItemAssyId);
+
+        }
     }
 }

@@ -51,6 +51,9 @@ delete from QuoteDtl_Item
 Delete from QuoteHdrItem
 Delete from QuoteDtlItem
 
+Delete from AssemblyHdr
+Delete from AssemblyItem
+Delete from BOMMst
 
 --delete from Employee
 --delete From EmpAcademic

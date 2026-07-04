@@ -9,5 +9,7 @@ namespace NeuralShaft.Service.ServiceInterfaces.Masters
         Task<string> GetAssemblyHdr();
         Task<string> GetAssemblyById(int AssemblyHdrId);
         Task<string> InsertAssembly(object Assy);
+
+        Task<string> DeleteAssyItem(int assemblyItemId);
     }
 }

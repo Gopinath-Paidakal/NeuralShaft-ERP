@@ -93,8 +93,12 @@ select * from JobOrderPTCDtl
 Select * from QuoteHdrItem
 Select * from QuoteDtlItem
 
-Select * from AssemblyHdr
+Select * from item
+Select * from AssemblyHdr  
 Select * from AssemblyItem
+
+Select * from BOMMst
+
 
 
 

@@ -1,21 +1,21 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertBOM]    Script Date: 20/03/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertBOM]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_InsertBOM]
+/****** Object:  StoredProcedure [dbo].[SP_InsertBOMMst]    Script Date: 20/03/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertBOMMst]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_InsertBOMMst]
 GO
 
 --USE [NSERPLIVE]
 --GO
---/****** Object:  StoredProcedure [dbo].[SP_InsertBOM]    Script Date: 20/03/2026  ******/
+--/****** Object:  StoredProcedure [dbo].[SP_InsertBOMMst]    Script Date: 20/03/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_InsertBOM]
+CREATE PROCEDURE [dbo].[SP_InsertBOMMst]
 (
-	@BOM nvarchar(Max)
+	@BOMMst nvarchar(Max)
 
 )
 ----With Encryption
@@ -44,9 +44,11 @@ BEGIN TRY
 	INSERT INTO [dbo].[BOMMst]
            ([ProductId]
 		   ,[AssemblyHdrId]
+
 		   ,[ItemId]
 		   ,[ItemQty]
 
+		   --,[BOMMstType]
            ,[CreatedUserId]
 		   ,[CreatedDate]
            )
@@ -57,17 +59,20 @@ BEGIN TRY
 			[ItemId],
 			[ItemQty],
 			
+			--[BOMMstType],
 			[CreatedUserId],
 			[CreatedDate]
 
-	FROM OPENJSON(@BOM, '$.BOM')
+	FROM OPENJSON(@BOMMst, '$.BOM')
 	WITH
 	(
 		   [ProductId] int,
 		   [AssemblyHdrId] int, 
+
 		   [ItemId] int, 
            [ItemQty] numeric(18,2),
-		 
+		   
+		   --[BOMMstType] nvarchar(50),
            CreatedUserId int,         
            CreatedDate nvarchar(20)
 	)

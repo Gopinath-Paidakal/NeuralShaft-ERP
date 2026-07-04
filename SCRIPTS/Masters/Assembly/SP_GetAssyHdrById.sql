@@ -25,7 +25,7 @@ SET NOCOUNT ON;
 BEGIN TRY
 
 	DECLARE @AssemblyHdr   NVARCHAR(MAX)
-	--DECLARE @AssemblyItem NVARCHAR(MAX)
+	DECLARE @AssemblyItem NVARCHAR(MAX)
 	DECLARE @TotAssembly NVARCHAR(MAX)
 	
 	 SET @AssemblyHdr = (
@@ -43,30 +43,30 @@ BEGIN TRY
         FOR JSON PATH   
     )
 
-  --  SET @AssemblyItem = (
+    SET @AssemblyItem = (
   
-  --    SELECT [AssemblyItemId]
-		--	  ,[AssemblyHdrId]
-		--	  ,[Item].[ItemId]
-		--	  ,[Item].[ItemName]
-		--	  ,[DefaultData].[DefaultDataName] as 'UOM'
-		--	  ,[ItemQty]
-		--	  --,[CreatedUserId]
-		--	  --,[CreatedDate]
+      SELECT [AssemblyItemId]
+			  ,[AssemblyHdrId]
+			  ,[Item].[ItemId]
+			  ,[Item].[ItemName]
+			  ,[DefaultData].[DefaultDataName] as 'UOM'
+			  ,[ItemQty]
+			  --,[CreatedUserId]
+			  --,[CreatedDate]
 
-		--FROM [dbo].[AssemblyItem]
-		--INNER JOIN [Item] On [Item].[ItemId] = [AssemblyItem].[ItemId]
-		--INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+		FROM [dbo].[AssemblyItem]
+		INNER JOIN [Item] On [Item].[ItemId] = [AssemblyItem].[ItemId]
+		INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
 
-  --      where AssemblyHdrId = @AssemblyHdrId
+        where AssemblyHdrId = @AssemblyHdrId
 
-  --      FOR JSON PATH   
-  --      )
+        FOR JSON PATH   
+        )
 
 	 SET @TotAssembly = (
         SELECT
-            JSON_QUERY(@AssemblyHdr)  AS AssemblyHdr
-            --JSON_QUERY(@AssemblyItem) AS AssemblyItem
+            JSON_QUERY(@AssemblyHdr)  AS AssemblyHdr,
+            JSON_QUERY(@AssemblyItem) AS AssemblyItem
         FOR JSON PATH,  WITHOUT_ARRAY_WRAPPER
     )
 

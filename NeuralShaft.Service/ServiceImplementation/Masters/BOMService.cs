@@ -15,6 +15,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
             _repoJSon = repoJson;
         }
 
+
         public async Task<string> GetBOM()
         {
             try
@@ -31,11 +32,17 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
             }
         }
 
-        public async Task<string> InsertBOM(object BOM)
+        public async Task<string> GetBOMByProdId(int productId)
+        {
+            string GetBOM = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetBOMListByProdId", new { @ProductId = productId });
+            return GetBOM;
+        }      
+
+        public async Task<string> InsertBOMMst(object BOMMst)
         {
             try
             {
-                string insertBOM = await _repoJSon.ExecuteJsonSPWithParameter("Sp_InsertBOM", new { @BOM = BOM.ToString() });
+                string insertBOM = await _repoJSon.ExecuteJsonSPWithParameter("Sp_InsertBOMMst", new { @BOMMst = BOMMst.ToString() });
                 return (insertBOM);
             }
             catch (Exception ex)
@@ -45,5 +52,12 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
                 throw; // rethrow to controller
             }
         }
+
+        public async Task<string> DeleteBOMById(int bomMstId)
+        {
+            var DelBOMMst = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteBOMMstById", new { @BOMMstId = bomMstId });
+            return DelBOMMst;
+        }
+        
     }
 }

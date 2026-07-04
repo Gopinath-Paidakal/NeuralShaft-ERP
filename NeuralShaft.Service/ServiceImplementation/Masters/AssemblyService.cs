@@ -32,6 +32,13 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
             string insertAssy = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertAssy", new {@Assy = Assy.ToString() });
             return (insertAssy);
         }
+
+        public async Task<string> DeleteAssyItem(int assemblyItemId)
+        {
+            var DelAssyDtlItem = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteAssyDtlById", new { @AssemblyItemId = assemblyItemId });
+            return DelAssyDtlItem;
+
+        }
     }
     
 }
