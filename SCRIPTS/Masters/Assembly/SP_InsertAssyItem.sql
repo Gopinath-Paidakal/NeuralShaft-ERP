@@ -1,22 +1,22 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertAssy]    Script Date: 08/05/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertAssy]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_InsertAssy]
+/****** Object:  StoredProcedure [dbo].[SP_InsertAssyItem]    Script Date: 06/07/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertAssyItem]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_InsertAssyItem]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertAssy]    Script Date: 08/05/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertAssyItem]    Script Date: 06/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_InsertAssy]
+CREATE PROCEDURE [dbo].[SP_InsertAssyItem]
 (
 
-    @Assy nvarchar(Max)
+    @AssyItem nvarchar(Max)
 
 )
 ----With Encryption
@@ -27,36 +27,36 @@ SET NOCOUNT ON;
 BEGIN TRY
 	BEGIN TRANSACTION
 
-	Declare @AssemblyHdrId int
+	Declare @AssemblyItemId int
 
 
-	INSERT INTO AssemblyHdr
-		(
-			--AssemblyHdrId,
-			AssemblyName,
-			UOM,
-			AssemblyQty,
-			CreatedUserId,
-			CreatedDate
-		)
-		SELECT
-			--AssemblyHdrId,
-			AssemblyName,
-			'NOS',
-			1,
-			CreatedUserId,
-			CreatedDate
+	--INSERT INTO AssemblyHdr
+	--	(
+	--		--AssemblyHdrId,
+	--		AssemblyName,
+	--		UOM,
+	--		AssemblyQty,
+	--		CreatedUserId,
+	--		CreatedDate
+	--	)
+	--	SELECT
+	--		--AssemblyHdrId,
+	--		AssemblyName,
+	--		'NOS',
+	--		1,
+	--		CreatedUserId,
+	--		CreatedDate
 
-		FROM OPENJSON(@Assy, '$.AssemblyHdr')
-		WITH
-		(
-			--AssemblyHdrId INT,
-			AssemblyName NVARCHAR(200),
-			CreatedUserId INT,
-			CreatedDate Date
-		)
+	--	FROM OPENJSON(@Assy, '$.AssemblyHdr')
+	--	WITH
+	--	(
+	--		--AssemblyHdrId INT,
+	--		AssemblyName NVARCHAR(200),
+	--		CreatedUserId INT,
+	--		CreatedDate Date
+	--	)
 
-	 set @AssemblyHdrId = SCOPE_IDENTITY();
+	-- set @AssemblyHdrId = SCOPE_IDENTITY();
 
 	 INSERT INTO AssemblyItem
 		(
@@ -69,17 +69,18 @@ BEGIN TRY
 		)
 		SELECT
 			--AssemblyItemId,
-			@AssemblyHdrId,
+			AssemblyHdrId,
 			ItemId,
 			ItemQty,
 			CreatedUserId,
 			CreatedDate
 
-		FROM OPENJSON(@Assy, '$.AssemblyItem')
+		FROM OPENJSON(@AssyItem, '$.AssemblyItem')
 		WITH
 		(
 			--AssemblyItemId INT,
-			--AssemblyHdrId INT,
+
+			AssemblyHdrId INT,
 			ItemId INT,
 			ItemQty NUMERIC(18,2),
 			
@@ -87,8 +88,9 @@ BEGIN TRY
 			CreatedDate Date
 		);
 
-    select @AssemblyHdrId
-	
+	set @AssemblyItemId = SCOPE_IDENTITY();
+
+    select @AssemblyItemId
 
 	COMMIT TRANSACTION
 

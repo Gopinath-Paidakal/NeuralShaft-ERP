@@ -51,7 +51,7 @@ BEGIN TRY
 	    INSERT INTO dbo.Item
         (
             ItemType, HSNCode, ItemName, Height, Width, Depth, Speed,
-            TravelHeight, Finish, OpeningType, [Weight],  LevelNo, CreatedBy, CreatedDate
+            TravelHeight, Finish, OpeningType, [Weight],  LevelNo, CreatedUserId, CreatedDate
         )
         SELECT *
         FROM OPENJSON(@Item, '$.Assembly')
@@ -72,8 +72,8 @@ BEGIN TRY
             [Weight] numeric(18,2),
             LevelNo SMALLINT,
 
-            CreatedBy NVARCHAR(20),
-            CreatedDate DATETIME
+            CreatedUserId INT,
+            CreatedDate DATE
         );
 
         set @ItemId = SCOPE_IDENTITY()
@@ -105,7 +105,8 @@ BEGIN TRY
             ItemStage, LevelNo, ParentItemId, ChildItemId, 
             ItemWeight, ItemSpeed, ItemTravelHeight, ItemHeight, ItemWidth, ItemDepth,     -- Added on 2/7/2026
             ItemCapacity, ItemFinish, ItemOpeningType, ItemDBG, ItemSubType,
-            CreatedBy, CreatedDate
+            ItemNoOfLandings, ItemNoOfPassengers, ItemRangeMin, ItemRangeMax, ItemLength, ItemThickness,    -- Added On 6/7/2026
+            CreatedUserId, CreatedDate
         )
         SELECT *
         FROM OPENJSON(@Item, '$.Raw_Material')
@@ -154,8 +155,15 @@ BEGIN TRY
             ItemDBG NVARCHAR(100),
             ItemSubType NVARCHAR(100),
 
-            CreatedBy NVARCHAR(20),
-            CreatedDate DATETIME
+            ItemNoOfLandings INT, 
+            ItemNoOfPassengers INT, 
+            ItemRangeMin INT,
+            ItemRangeMax INT,
+            ItemLength INT,       
+            ItemThickness INT,
+
+            CreatedUserId INT,
+            CreatedDate DATE
         );
 
         set @ItemId = SCOPE_IDENTITY()

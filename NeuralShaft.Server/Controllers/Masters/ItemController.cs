@@ -38,13 +38,21 @@ namespace NeuralShaft.Server.Controllers.Masters
             //return Ok(getItem);
         }
 
-        [HttpGet("GetItemById/{itemType}/{itemId}")]
-        public async Task<ActionResult> GetItemById(string itemType, int itemId)
+        [HttpGet("GetItemById/{itemId}")]
+        public async Task<ActionResult> GetItemById(int itemId)
         {
-            string getItemById = await _itemService.GetRawMatlForAssyByItemId(itemType, itemId);
+            string getItemById = await _itemService.GetItemById(itemId);
             return Content(getItemById, "application/json");
             //return Ok(getItemById);
         }
+
+        //[HttpGet("GetItemById/{itemType}/{itemId}")]
+        //public async Task<ActionResult> GetItemById(string itemType, int itemId)
+        //{
+        //    string getItemById = await _itemService.GetRawMatlForAssyByItemId(itemType, itemId);
+        //    return Content(getItemById, "application/json");
+        //    //return Ok(getItemById);
+        //}
 
         [HttpPost("InsertItem/{itemType}")]
         public async Task<IActionResult> InsertItem(string itemType, [FromForm] string item, [FromForm] List<IFormFile> attachments)
@@ -57,16 +65,24 @@ namespace NeuralShaft.Server.Controllers.Masters
 
         }
 
-        //[HttpPost("InsertAssy/{itemType}")]
-        //public async Task<IActionResult> InsertAssembly(string itemType, [FromBody] object item)    //, [FromForm] List<IFormFile> attachments)
-        //{
-        //    var itemAssyId = await _itemService.InsertAssembly(itemType, item);
+        [HttpPost("UpdateItem/{ItemId}")]
+        public async Task<IActionResult> UpdateItem(int ItemId, [FromBody] object item)
+        {
+            var updateItem = await _itemService.UpdateItem(ItemId, item);
+            return Ok(updateItem);
 
-        //    //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(itemId.ToString()));
-
-        //    return Ok(itemAssyId);
-
-        //}
-
+        }
     }
 }
+
+
+//[HttpPost("InsertAssy/{itemType}")]
+//public async Task<IActionResult> InsertAssembly(string itemType, [FromBody] object item)    //, [FromForm] List<IFormFile> attachments)
+//{
+//    var itemAssyId = await _itemService.InsertAssembly(itemType, item);
+
+//    //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(itemId.ToString()));
+
+//    return Ok(itemAssyId);
+
+//}

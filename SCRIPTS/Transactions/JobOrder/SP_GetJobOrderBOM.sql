@@ -25,69 +25,179 @@ SET NOCOUNT ON;
 BEGIN TRY
     BEGIN TRANSACTION
 
-        --Declare @SODtlId int
-        Declare @SOHdrId int
-        Declare @JobOrderId INT
-        Declare @OrdClientId INT
+--Declare @SODtlId int = 9
+Declare @SOHdrId int = 0
+Declare @JobOrderId int = 0
 
-        Declare @Product nvarchar(30)
-        Declare @ProductId int
-        Declare @LandingDoors int = 0
-        Declare @CarDoors int = 0
+Declare @OrdClientId int = 0
 
-        --select * from sohdr
-        --select * from sodtl
-        --select * from SOLandDoor
-        --select * from SOCarDoor
+Declare @Product nvarchar(30)
+Declare @NoOfLandings int = 0
+Declare @CarDoors int = 0
 
-        Set @OrdClientId = (Select OrdClientHdrId from SOHdr where SOHdrId = @SOHdrId)
-        Set @Product = (Select SOProduct from SODtl where SODtlId = @SODtlId)
-        Set @ProductId = (Select DefaultDataId from DefaultData where DefaultDataName = @Product)
-        Set @LandingDoors = (Select count(*) from SOLandDoor where SODtlId = @SODtlId)
-        Set @CarDoors = (Select count(*) from SOCarDoor where SODtlId = @SODtlId)
+Declare @Passengers int = 0
+Declare @ApproxFloorHeight int = 0
+Declare @BaseToLandingHeight int = 0
 
-        --Select @OrdClientId, @Product, @LandingDoors, @CarDoors
+Declare @OverHeadHeight int = 0
+Declare @Pit int = 0
 
-        --DROP TABLE #JobOrderBOM;
+Declare @Total int = 0
 
-        --CREATE TABLE #JobOrderBOM
-        --(
-        --    --JobOrderBOMId INT,
-        --    SODtlId INT,
-        --    SOHdrId INT,
-        --    OrdClientHdrId INT,
-        --    JobOrderId INT,
+Declare @BracketCount int = 0
 
-        --    ProductId INT,
-        --    AssemblyHdrId INT,
-        --    ItemId INT,
-        --    ItemQty DECIMAL(18,2),   
+Declare @GuideRailLength int = 0
+Declare @GuideRailCount int = 0
 
-        --    CreatedUserId INT,
-        --    CreatedDate DATETIME
-        --);
 
-        --INSERT INTO #JobOrderBOM
-        INSERT INTO JobOrderBOM
+--select * from sohdr
+--select * from sodtl
+--select * from SOLandDoor
+--select * from SOCarDoor
+
+Set @OrdClientId = (Select OrdClientHdrId from SOHdr where SOHdrId = @SOHdrId)
+Set @Product = (Select SOProduct from SODtl where SODtlId = @SODtlId)
+
+Set @NoOfLandings = (Select NoOfOpenings from SODtl where SODtlId = @SODtlId)
+Set @Passengers = (Select NoOfPassengers from SODtl where SODtlId = @SODtlId)
+Set @Pit = (Select ElevatorPit from SODtl where SODtlId = @SODtlId)
+Set @ApproxFloorHeight = (Select ApproxFloorHeight from SODtl where SODtlId = @SODtlId)
+Set @OverHeadHeight = (Select OverheadHeight from SODtl where SODtlId = @SODtlId)
+
+Set @BaseToLandingHeight = (@ApproxFloorHeight * @NoOfLandings)
+
+--Set @CarDoors = (Select count(*) from SOCarDoor where SODtlId = @SODtlId)
+
+Set @Total = (@BaseToLandingHeight + @OverHeadHeight + @Pit)
+
+Set @BracketCount = (@Total / 1500)
+Set @GuideRailCount = (@Total / 5000)
+
+
+DECLARE @SODetails   NVARCHAR(MAX)
+DECLARE @BOMDetails NVARCHAR(MAX)
+DECLARE @JobOrderBOM NVARCHAR(MAX)
+
+ SET @SODetails = (
+       
+Select @OrdClientId as 'OrdClientId',
+       @Product as 'Product', 
+       @NoOfLandings as 'No Of Landings', 
+       @Passengers as 'Passengers',
+       @BaseToLandingHeight as 'BaseToLandingHeight',
+
+       @OverHeadHeight as 'OverHeadHeight',
+       @Pit as 'Pit',
+
+       @Total as 'Total',
+       @BracketCount as 'BracketCount',
+       @GuideRailCount as 'GuideRailCount'
+
+        FOR JSON PATH   
+    )
+
+IF OBJECT_ID('tempdb..#BOMAssembly') IS NOT NULL
+    DROP TABLE #BOMAssembly;
+
+DROP TABLE IF EXISTS #BOMAssembly;
+
+CREATE TABLE #BOMAssembly
+(
+    SourceTable     NVARCHAR(20),
+    BOMMstId        INT NULL,
+    AssemblyItemId  INT NULL,
+    ProductId       INT NULL,
+
+    AssemblyHdrId   INT,
+    ItemId          INT,
+    ItemName        NVARCHAR(150),
+    
+    ItemQty         INT,
+    ReqItemQty      INT,
+    TotalQty        INT
+
+);
+
+INSERT INTO #BOMAssembly
+(
+    SourceTable,
+    BOMMstId,
+    AssemblyItemId,
+    ProductId,
+
+    AssemblyHdrId,
+    ItemId,
+    ItemName,
+    
+    ItemQty,
+    ReqItemQty,
+    TotalQty
+)
+SELECT
+    'BOMMst',
+    BOMMst.BOMMstId,
+    NULL,
+    BOMMst.ProductId,
+
+    BOMMst.AssemblyHdrId,
+    [BOMMst].ItemId,
+    [ITEM].ItemName,
+    
+    BOMMst.ItemQty,
+    0 AS ReqItemQty,
+    0 AS TotalQty
+
+FROM dbo.BOMMst
+INNER JOIN [ITEM] On [ITEM].[ItemId] = [BOMMst].[ItemId];
+
+INSERT INTO #BOMAssembly
+(
+    SourceTable,
+    BOMMstId,
+    AssemblyItemId,
+    ProductId,
+
+    AssemblyHdrId,
+    [ITEM].ItemId,
+    [ITEM].ItemName,
+    
+    ItemQty,
+    ReqItemQty,
+    TotalQty
+)
+SELECT
+    'AssemblyItem',
+    NULL,
+    [AssemblyItem].AssemblyItemId,
+    NULL,
+
+    [AssemblyItem].AssemblyHdrId,
+    [AssemblyItem].ItemId,
+    [ITEM].ItemName,
+
+    ItemQty,
+    0  AS ReqItemQty,
+    0  AS TotalQty
+
+FROM dbo.AssemblyItem
+INNER JOIN [ITEM] On [ITEM].[ItemId] = [AssemblyItem].[ItemId];
+
+SET @BOMDetails = (
+    select * from #BOMAssembly
+
+    FOR JSON PATH   
+ )
+
+ SET @JobOrderBOM = (
         SELECT
-            @SODtlId,
-            @SOHdrId,
-            @JobOrderId,
-            @OrdClientId,
+            JSON_QUERY(@SODetails)  AS SODetails,
+            JSON_QUERY(@BOMDetails) AS BOMDetails
+        FOR JSON PATH,  WITHOUT_ARRAY_WRAPPER
+        )
 
-            ProductId,
-            AssemblyHdrId,
-            ItemId,
-            ItemQty,
-            CreatedUserId,
-            CreatedDate
+ Select @JobOrderBOM
 
-        FROM BOMMst
-        Where ProductId = @ProductId
-
-        Select * from JobOrderBOM
-
-    COMMIT TRANSACTION
+ COMMIT TRANSACTION
   
 
 END TRY

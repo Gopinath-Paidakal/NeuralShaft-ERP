@@ -1,21 +1,21 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetItem]    Script Date: 08/05/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetItem]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_GetItem]
+/****** Object:  StoredProcedure [dbo].[SP_GetItemById]    Script Date: 08/05/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetItemById]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetItemById]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetItem]    Script Date: 08/05/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetItemById]    Script Date: 08/05/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_GetItem]
+CREATE PROCEDURE [dbo].[SP_GetItemById]
 (
-	@ItemType nvarchar(50) = ''
+	@ItemId int = 0
   
 )
 ----With Encryption
@@ -23,81 +23,6 @@ AS
 
 SET NOCOUNT ON;
 BEGIN TRY
-
-   if upper(@ItemType) = 'PRODUCT'
-	BEGIN 
-
-      SELECT (
-        SELECT 
-                --[ItemId],
-                --ISNULL([ItemType], '') AS [ItemType],
-                --ISNULL([ItemCode], '') AS [ItemCode],
-                --ISNULL([ItemName], '') AS [ItemName],
-                --ISNULL([HSNCode], '') AS [HSNCode]
-                   [ItemId]
-              ,[CatgId]
-              ,[ItemGrpId]
-              ,[UomId]
-              ,[WareHouseId]
-              ,[TaxId]
-              ,[ItemType]
-              ,[ItemCode]
-              ,[Item].[HSNCode]
-              ,[ItemName]
-              ,[SuppItemName]
-              ,[ItemDesc]
-              ,[ItemRemarks]
-              ,[ItemStockQty]
-              ,[ItemMinQty]
-              ,[ItemMaxQty]
-              ,[ItemReOrderQty]
-              ,[ItemOrdPriority]
-              ,[ItemLocation]
-              ,[ItemIsActive]
-              ,[ItemSellingPrice]
-              ,[ItemStage]
-              ,[LevelNo]
-              ,[Height]
-              ,[Width]
-              ,[Depth]
-              ,[Speed]
-              ,[TravelHeight]
-              ,[Finish]
-              ,[OpeningType]
-              ,[Weight]
-              ,[ParentItemId]
-              ,[ChildItemId]
-
-              ,[ItemWeight]
-              ,[ItemSpeed]
-              ,[ItemTravelHeight]
-              ,[ItemHeight]
-              ,[ItemWidth]
-              ,[ItemDepth]
-              ,[ItemCapacity]
-              ,[ItemFinish]
-              ,[ItemOpeningType]
-              ,[ItemDBG]
-              ,[ItemSubType]
-
-              ,[DefaultData].[DefaultDataName] as 'UOM'
-
-              ,[Item].[CreatedUserId]
-              ,[Item].[CreatedDate]
-
-            FROM [dbo].[Item]
-            INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
-
-            WHERE ItemType = upper('Item')
-
-            Order By ItemType
-            FOR JSON PATH, ROOT('Item')
-
-        ) AS ItemData;
-    END
-
-    if upper(@ItemType) = 'RAW-MATERIAL'
-	BEGIN 
 
       SELECT (
         SELECT 
@@ -111,7 +36,7 @@ BEGIN TRY
               ,[TaxId]
               ,[ItemType]
               ,[ItemCode]
-             -- ,[HSNCode]
+              ,[HSNCode]
               ,[ItemName]
               
               ,[SuppItemName]
@@ -155,71 +80,24 @@ BEGIN TRY
               ,[ItemDBG]
               ,[ItemSubType]
 
-              ,[DefaultData].[DefaultDataName] as 'UOM'
+              ,[ItemNoOfLandings]
+              ,[ItemNoOfPassengers]
+              ,[ItemRangeMin]
+              ,[ItemRangeMax]
+              ,[ItemLength]
+              ,[ItemThickness]
 
-              ,[Item].[CreatedUserId]
-              ,[Item].[CreatedDate]
-
-            FROM [dbo].[Item]
-            INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
-            WHERE ItemType = upper(@ItemType)
-
-            Order By ItemType
-            FOR JSON PATH, ROOT('Raw-Material')
-
-        ) AS ItemData;
-    END
-
-    if upper(@ItemType) = 'ASSEMBLY'
-	BEGIN 
-
-      SELECT (
-        SELECT 
-                
-               [ItemId]
-              ,[CatgId]
-              ,[ItemGrpId]
-              ,[UomId]
-              ,[WareHouseId]
-              ,[TaxId]
-              ,[ItemType]
-              ,[ItemCode]
-              ,[HSNCode]
-              ,[ItemName]
-              ,[SuppItemName]
-              ,[ItemDesc]
-              ,[ItemRemarks]
-              ,[ItemStockQty]
-              ,[ItemMinQty]
-              ,[ItemMaxQty]
-              ,[ItemReOrderQty]
-              ,[ItemOrdPriority]
-              ,[ItemLocation]
-              ,[ItemIsActive]
-              ,[ItemSellingPrice]
-              ,[ItemStage]
-              ,[LevelNo]
-              ,[Height]
-              ,[Width]
-              ,[Depth]
-              ,[Speed]
-              ,[TravelHeight]
-              ,[Finish]
-              ,[OpeningType]
-              ,[Weight]
-              ,[ParentItemId]
-              ,[ChildItemId]
               ,[CreatedUserId]
               ,[CreatedDate]
 
             FROM [dbo].[Item]
-             WHERE ItemType = upper('ASSEMBLY')
+            WHERE ItemId = @ItemId
+
             Order By ItemType
-            FOR JSON PATH, ROOT('Assembly')
+            FOR JSON PATH, ROOT('Item')
 
-        ) AS ItemData;
-    END
-
+        ) AS Item
+ 
 END TRY
 
 	BEGIN CATCH
@@ -242,6 +120,128 @@ END TRY
 End_Prog:
 
 
+--   if upper(@ItemType) = 'ASSEMBLY'
+	--BEGIN 
+
+ --     SELECT (
+ --       SELECT 
+                
+ --              [ItemId]
+ --             ,[CatgId]
+ --             ,[ItemGrpId]
+ --             ,[UomId]
+ --             ,[WareHouseId]
+ --             ,[TaxId]
+ --             ,[ItemType]
+ --             ,[ItemCode]
+ --             ,[HSNCode]
+ --             ,[ItemName]
+ --             ,[SuppItemName]
+ --             ,[ItemDesc]
+ --             ,[ItemRemarks]
+ --             ,[ItemStockQty]
+ --             ,[ItemMinQty]
+ --             ,[ItemMaxQty]
+ --             ,[ItemReOrderQty]
+ --             ,[ItemOrdPriority]
+ --             ,[ItemLocation]
+ --             ,[ItemIsActive]
+ --             ,[ItemSellingPrice]
+ --             ,[ItemStage]
+ --             ,[LevelNo]
+ --             ,[Height]
+ --             ,[Width]
+ --             ,[Depth]
+ --             ,[Speed]
+ --             ,[TravelHeight]
+ --             ,[Finish]
+ --             ,[OpeningType]
+ --             ,[Weight]
+ --             ,[ParentItemId]
+ --             ,[ChildItemId]
+ --             ,[CreatedUserId]
+ --             ,[CreatedDate]
+
+ --           FROM [dbo].[Item]
+ --            WHERE ItemType = upper('ASSEMBLY')
+ --           Order By ItemType
+ --           FOR JSON PATH, ROOT('Assembly')
+
+ --       ) AS ItemData;
+ --   END
+
+
+--  if upper(@ItemType) = 'PRODUCT'
+	--BEGIN 
+
+ --     SELECT (
+ --       SELECT 
+ --               --[ItemId],
+ --               --ISNULL([ItemType], '') AS [ItemType],
+ --               --ISNULL([ItemCode], '') AS [ItemCode],
+ --               --ISNULL([ItemName], '') AS [ItemName],
+ --               --ISNULL([HSNCode], '') AS [HSNCode]
+ --                  [ItemId]
+ --             ,[CatgId]
+ --             ,[ItemGrpId]
+ --             ,[UomId]
+ --             ,[WareHouseId]
+ --             ,[TaxId]
+ --             ,[ItemType]
+ --             ,[ItemCode]
+ --             ,[Item].[HSNCode]
+ --             ,[ItemName]
+ --             ,[SuppItemName]
+ --             ,[ItemDesc]
+ --             ,[ItemRemarks]
+ --             ,[ItemStockQty]
+ --             ,[ItemMinQty]
+ --             ,[ItemMaxQty]
+ --             ,[ItemReOrderQty]
+ --             ,[ItemOrdPriority]
+ --             ,[ItemLocation]
+ --             ,[ItemIsActive]
+ --             ,[ItemSellingPrice]
+ --             ,[ItemStage]
+ --             ,[LevelNo]
+ --             ,[Height]
+ --             ,[Width]
+ --             ,[Depth]
+ --             ,[Speed]
+ --             ,[TravelHeight]
+ --             ,[Finish]
+ --             ,[OpeningType]
+ --             ,[Weight]
+ --             ,[ParentItemId]
+ --             ,[ChildItemId]
+
+ --             ,[ItemWeight]
+ --             ,[ItemSpeed]
+ --             ,[ItemTravelHeight]
+ --             ,[ItemHeight]
+ --             ,[ItemWidth]
+ --             ,[ItemDepth]
+ --             ,[ItemCapacity]
+ --             ,[ItemFinish]
+ --             ,[ItemOpeningType]
+ --             ,[ItemDBG]
+ --             ,[ItemSubType]
+
+ --             ,[DefaultData].[DefaultDataName] as 'UOM'
+
+ --             ,[Item].[CreatedUserId]
+ --             ,[Item].[CreatedDate]
+
+ --           FROM [dbo].[Item]
+ --           INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+
+ --           WHERE ItemType = upper('Item')
+
+ --           Order By ItemType
+ --           FOR JSON PATH, ROOT('Item')
+
+ --       ) AS ItemData;
+ --   END
  --[ItemId],
                 --ISNULL([ItemType], '') AS [ItemType],
                 --ISNULL([ItemCode], '') AS [ItemCode],

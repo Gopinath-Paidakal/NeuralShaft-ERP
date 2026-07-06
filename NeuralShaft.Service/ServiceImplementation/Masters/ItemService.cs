@@ -31,6 +31,12 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
             }
         }
 
+        public async Task<string> GetItemById(int itemId)
+        {
+            string getItemById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetItemById", new {@ItemId = itemId });
+            return getItemById;
+        }
+
         public async Task<string> GetRawMatlForAssyByItemId(string itemType, int itemId)
         {
             try
@@ -63,13 +69,19 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
             }
         }
 
-        //public async Task<string> InsertAssembly(string itemType, object item)
-        //{
-        //    string insertAssy = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertItem", new { @ItemType = itemType, @Item = item.ToString() });
-        //    return (insertAssy);
+        public async Task<string> UpdateItem(int itemId, object item)
+        {
+            string updateItem = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateItem", new { @ItemId = itemId, @Item = item.ToString() });
+            return (updateItem);
 
-        //}
-
-      
+        }
     }
 }
+
+
+//public async Task<string> InsertAssembly(string itemType, object item)
+//{
+//    string insertAssy = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertItem", new { @ItemType = itemType, @Item = item.ToString() });
+//    return (insertAssy);
+
+//}

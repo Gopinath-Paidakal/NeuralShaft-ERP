@@ -50,6 +50,17 @@ namespace NeuralShaft.Server.Controllers.Masters
 
         }
 
+        [HttpPost("InsertAssyItem/{Assy}")]
+        public async Task<IActionResult> InsertAssemblyItem([FromBody] object Assy)
+        {
+            var itemAssyId = await _assyService.InsertAssyItem(Assy);
+
+            //var uploaded = await _uploadService.UploadFilesAsync(attachments, savePath, Convert.ToInt32(itemId.ToString()));
+
+            return Ok(itemAssyId);
+
+        }
+
         [HttpPost("DeleteAssyItem/{assemblyItemId}")]
         public async Task<IActionResult> DeleteAssyItem(int assemblyItemId)
         {

@@ -33,9 +33,11 @@ SELECT
       ,[ProductId]
       ,[AssemblyHdr].[AssemblyHdrId]
       ,[AssemblyHdr].[AssemblyName]
+
       ,[Item].[ItemId]
       ,[AssemblyItem].[ItemQty]
-      ,[Item].[ItemName]
+      
+	  ,[Item].[ItemName]
       ,[DefaultData].[DefaultDataName] as 'UOM'
       
 	  FROM [dbo].[BOMMst]

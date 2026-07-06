@@ -63,7 +63,7 @@ Delete from BOMMst
 
 --delete from MenuPermissions
 
---delete from BOM
+--delete from BOMMst
 
 --delete from filepath
 --delete from Users where EmpId < '1000'
