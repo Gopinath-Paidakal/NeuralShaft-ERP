@@ -38,15 +38,17 @@ BEGIN TRY
         T.OrdClientGstNo            = S.OrdClientGstNo,
         T.OrdClientAdhaarNo         = S.OrdClientAdhaarNo,
         T.OrdClientAddrType         = S.OrdClientAddrType,
+        T.OrdClientPriSalutation    = S.OrdClientPriSalutation,
         T.OrdClientPriContPerson    = S.OrdClientPriContPerson,
-        T.OrdClientPriMailId        = S.OrdClientPriMailId,
 
+        T.OrdClientPriMailId        = S.OrdClientPriMailId,
         T.OrdClientPriMobileNo      = S.OrdClientPriMobileNo,
+        T.OrdClientSecSalutation    = S.OrdClientSecSalutation,
         T.OrdClientSecContPerson    = S.OrdClientSecContPerson,
         T.OrdClientSecMailId        = S.OrdClientSecMailId,
+
         T.OrdClientSecMobileNo      = S.OrdClientSecMobileNo,
         T.OrdClientLatitude         = S.OrdClientLatitude,
-
         T.OrdClientLongitude        = S.OrdClientLongitude,
         T.OrdClientTravelDistance   = S.OrdClientTravelDistance,
         T.OrdStatus                 = S.OrdStatus
@@ -72,18 +74,21 @@ BEGIN TRY
         OrdClientGstNo NVARCHAR(100),
         OrdClientAdhaarNo NVARCHAR(100),
         OrdClientAddrType NVARCHAR(100),
+        OrdClientPriSalutation NVARCHAR(15),
         OrdClientPriContPerson NVARCHAR(100),
-        OrdClientPriMailId NVARCHAR(100),
 
+        OrdClientPriMailId NVARCHAR(100),
         OrdClientPriMobileNo NVARCHAR(100),
+        OrdClientSecSalutation NVARCHAR(15),
         OrdClientSecContPerson NVARCHAR(100),
         OrdClientSecMailId NVARCHAR(100),
+
         OrdClientSecMobileNo NVARCHAR(100),
         OrdClientLatitude NVARCHAR(100),
-
         OrdClientLongitude NVARCHAR(100),
         OrdClientTravelDistance NVARCHAR(100),
         OrdStatus NVARCHAR(10)
+
     ) S
     ON T.OrdClientHdrId = S.OrdClientHdrId;
 

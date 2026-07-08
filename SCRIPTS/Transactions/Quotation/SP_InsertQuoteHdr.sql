@@ -95,6 +95,7 @@ BEGIN TRY
            ,[GSTExempted]
            ,[QuoteStatus]
 
+           ,[QuoteContSalutation]
            ,[CreatedUserId]
            ,[CreatedDate])
 
@@ -122,6 +123,7 @@ BEGIN TRY
            ,@ComplementaryAMC
            ,1                                                               -- GST Exempted
            ,(Select EnqStatus from EnqHdr where EnqHdrId = @EnqHdrId)
+           ,(Select EnqContactSalutation from EnqClient where EnqHdrId = @EnqHdrId)
            ,(Select CreatedUserId from EnqHdr where EnqHdrId = @EnqHdrId)
            ,getdate() 
            ) 

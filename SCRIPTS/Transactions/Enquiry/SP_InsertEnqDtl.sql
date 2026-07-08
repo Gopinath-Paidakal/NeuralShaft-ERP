@@ -94,7 +94,7 @@ BEGIN TRANSACTION
 			INSERT INTO EnqDtl(
 			EnqHdrId,
 	
-			ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
+			DDProductId, ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
 			ElevatorSpeed, EnqProduct, NoOfPassengers, EnqProductType, Capacity,
 			TotalFloors,
 
@@ -120,7 +120,7 @@ BEGIN TRANSACTION
 			SELECT 
 				@EnqHdrId,
 	
-				ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
+				DDProductId, ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
 				ElevatorSpeed, EnqProduct, NoOfPassengers, EnqProductType, Capacity,
 				TotalFloors,
 	
@@ -145,6 +145,8 @@ BEGIN TRANSACTION
 
 			FROM OPENJSON(@EnqDtl, '$.EnqDtl')
 			WITH (
+
+				DDProductId INT,
 				ShaftType NVARCHAR(100),
 				ShaftWidth NVARCHAR(100),
 				ShaftDepth NVARCHAR(100),

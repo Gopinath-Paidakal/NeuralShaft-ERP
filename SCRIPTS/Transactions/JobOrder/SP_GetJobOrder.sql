@@ -57,20 +57,38 @@ SELECT
 
             --,[JobOrderPTCDtl].JobOrderPTCDtlId
 
+            ,[SODtl].[DDProductId] as 'ProductId'
+            ,[SODtl].[SOProduct]
+
+            --,[SODtl].[ApproxFloorHeight]
+            --,[SODtl].[NoOfOpenings]
+            --,[SODtl].[OverheadHeight]
+            --,[SODtl].[ElevatorPit]
+            --,(([SODtl].[ApproxFloorHeight] * [SODtl].[NoOfOpenings]) + ([SODtl].[OverheadHeight]) + ([SODtl].[ElevatorPit])) as 'TravelHeight'
+            
+            --,[SODtl].[ShaftWidth] as 'SoDtlWidth'
+            --,[SODtl].[ShaftDepth] as 'SoDtlDepth'
+            --,[SODtl].[CabinWidth] as 'SoDtlCabinWidth'
+            --,[SODtl].[CabinDepth] as 'SoDtlCabinDepth'
+
+
+            --,[JobOrderPTCDtl].[Width] as 'PTCDtlWidth'
+            --,[JobOrderPTCDtl].[Depth] as 'PTCDtlDepth'
+
             ,[JobOrder].[CreatedUserId]
             ,[JobOrder].[CreatedDate]
 
 
          FROM [dbo].[JobOrder]
-         --INNER JOIN [JobOrderSVRHdr] ON [JobOrderSVRHdr].JobOrderId = [JobOrder].JobOrderId
-         --INNER JOIN [JobOrderSCRHdr] ON [JobOrderSCRHdr].JobOrderId = [JobOrder].JobOrderId
-         --INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderId = [JobOrder].JobOrderId
+         INNER JOIN [SODtl] ON [SoDtl].SoDtlId = [JobOrder].SoDtlId
+         --INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderPTCDtlId = [JobOrder].JobOrderPTCDtlId
           
-          WHERE [JobOrder].[JobOrderDate] >= @FromDate AND [JobOrder].[JobOrderDate] < DATEADD(DAY, 1, @ToDate)          
+         WHERE [JobOrder].[JobOrderDate] >= @FromDate AND [JobOrder].[JobOrderDate] < DATEADD(DAY, 1, @ToDate)          
 
-          Order by [JobOrder].[JobOrderNo]
+         Order by [JobOrder].[JobOrderNo]
       
-		  FOR JSON PATH
+		 FOR JSON PATH
+
         )
     ) AS JobOrder
     FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
@@ -98,6 +116,9 @@ END TRY
 End_Prog:
 
 
+         --INNER JOIN [JobOrderSVRHdr] ON [JobOrderSVRHdr].JobOrderId = [JobOrder].JobOrderId
+         --INNER JOIN [JobOrderSCRHdr] ON [JobOrderSCRHdr].JobOrderId = [JobOrder].JobOrderId
+         --INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderId = [JobOrder].JobOrderId
 
 
  --SELECT

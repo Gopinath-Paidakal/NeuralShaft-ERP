@@ -45,8 +45,9 @@ BEGIN TRY
                 Q.DeliveryBy          = J.DeliveryBy,
                 Q.ComplementaryAMC    = J.ComplementaryAMC,
                 Q.GSTExempted         = J.GSTExempted,
-                Q.ModifiedUserId      = J.ModifiedUserId,     --1,
+                Q.QuoteContSalutation = J.QuoteContSalutation,
 
+                Q.ModifiedUserId      = J.ModifiedUserId,     --1,
                 Q.ModifiedDate        = J.ModifiedDate
 
             FROM dbo.QuoteHdr Q
@@ -69,8 +70,9 @@ BEGIN TRY
                 DeliveryBy            SMALLINT,
                 ComplementaryAMC      SMALLINT,
                 GSTExempted           BIT,
-                ModifiedUserId        int,
+                QuoteContSalutation   NVARCHAR(15),
 
+                ModifiedUserId        int,
                 ModifiedDate          DATETIME
             ) J
             WHERE Q.QuoteHdrId = @QuoteHdrId;

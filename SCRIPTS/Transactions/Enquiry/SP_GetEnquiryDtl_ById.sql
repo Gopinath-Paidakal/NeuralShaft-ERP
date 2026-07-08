@@ -35,6 +35,7 @@ Declare @EnqDtlString nvarchar(max)
 	    SELECT [EnqDtlId]
          [EnqDtlId]
         ,[EnqHdrId]
+        ,[DDProductId]
 
         ,[ShaftType]
         ,[ShaftWidth]

@@ -58,6 +58,7 @@ BEGIN TRY
 		  [EnqClient].EnqLeadSource,
 		  [EnqClient].EnqSourceBy,
 		  [EnqClient].EnqContactPerson,
+		  [EnqClient].EnqContactSalutation,
 
 		  dbo.fn_FormatDate([EnqHdr].[CreatedDate]) AS CreatedDate
 

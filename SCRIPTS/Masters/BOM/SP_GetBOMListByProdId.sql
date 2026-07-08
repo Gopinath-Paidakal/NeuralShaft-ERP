@@ -35,10 +35,12 @@ SELECT
       ,[AssemblyHdr].[AssemblyName]
 
       ,[Item].[ItemId]
+	  ,[Item].[ItemType]
       ,[AssemblyItem].[ItemQty]
       
 	  ,[Item].[ItemName]
       ,[DefaultData].[DefaultDataName] as 'UOM'
+	  ,[Item].[ItemLength] as 'ItemLength'
       
 	  FROM [dbo].[BOMMst]
 	  INNER JOIN [AssemblyHdr] On [AssemblyHdr].[AssemblyHdrId] = [BOMMst].[AssemblyHdrId]

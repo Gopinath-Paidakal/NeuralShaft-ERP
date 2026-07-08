@@ -63,14 +63,19 @@ Declare @EnqDtlId int
 		      ,[EnqHdrId]
 		      ,[EnqClientGUID]
 		      ,[EnqConsultant]
+              ,[EnqClientSalutation]
+
 		      ,[EnqClientName]
 		      ,[EnqClientMobileNo]
 		      ,[EnqClientEmailId]
 		      ,[EnqClientAddress]
 		      ,[EnqClientCategory]
-		      ,[EnqLeadSource]
+		      
+              ,[EnqLeadSource]
 		      ,[EnqSourceBy]
               ,[EnqContactPerson]
+              ,[EnqContactSalutation]
+
         FROM EnqClient
         WHERE EnqHdrId = @EnqHdrId
         FOR JSON PATH, WITHOUT_ARRAY_WRAPPER

@@ -55,18 +55,21 @@ BEGIN TRY
             ISNULL(OrdClientGstNo,         '') AS OrdClientGstNo,
             ISNULL(OrdClientAdhaarNo,      '') AS OrdClientAdhaarNo,
             ISNULL(OrdClientAddrType,      '') AS OrdClientAddrType,
+            ISNULL(OrdClientPriSalutation, '') AS OrdClientPriSalutation,
             ISNULL(OrdClientPriContPerson, '') AS OrdClientPriContPerson,
-            ISNULL(OrdClientPriMailId,     '') AS OrdClientPriMailId,
 
+            ISNULL(OrdClientPriMailId,     '') AS OrdClientPriMailId,
             ISNULL(OrdClientPriMobileNo,   '') AS OrdClientPriMobileNo,
+            ISNULL(OrdClientSecSalutation, '') AS OrdClientSecSalutation,
             ISNULL(OrdClientSecContPerson, '') AS OrdClientSecContPerson,
             ISNULL(OrdClientSecMailId,     '') AS OrdClientSecMailId,
+
             ISNULL(OrdClientSecMobileNo,   '') AS OrdClientSecMobileNo,
             ISNULL(OrdClientLatitude,      '') AS OrdClientLatitude,
-
             ISNULL(OrdClientLongitude,     '') AS OrdClientLongitude,
             ISNULL(OrdClientTravelDistance,'') AS OrdClientTravelDistance,
             ISNULL(OrdStatus,              '') AS OrdStatus
+
 
         FROM dbo.OrdClientAddr
         WHERE OrdClientHdrId = @OrdClientHdrId

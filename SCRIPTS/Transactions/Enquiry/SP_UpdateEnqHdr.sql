@@ -68,7 +68,8 @@ BEGIN TRY
 			C.EnqClientCategory = J.EnqClientCategory,
 			C.EnqLeadSource = J.EnqLeadSource,
 			C.EnqSourceBy = J.EnqSourceBy,
-			C.EnqContactPerson = J.EnqContactPerson
+			C.EnqContactPerson = J.EnqContactPerson,
+			C.EnqContactSalutation = J.EnqContactSalutation
 
 		FROM EnqClient C
 		CROSS APPLY OPENJSON(@EnqHdr,'$.EnqClient')
@@ -86,7 +87,8 @@ BEGIN TRY
 			EnqClientCategory NVARCHAR(100),
 			EnqLeadSource NVARCHAR(100),
 			EnqSourceBy NVARCHAR(100),
-			EnqContactPerson NVARCHAR(100)
+			EnqContactPerson NVARCHAR(100),
+			EnqContactSalutation NVARCHAR(15)
 
 		) J
 		WHERE C.EnqClientId = J.EnqClientId and C.EnqHdrId = @EnqHdrId

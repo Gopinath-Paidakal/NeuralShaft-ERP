@@ -199,6 +199,7 @@ BEGIN TRY
 			,[QuoteHdrId]
 			,[SOHdrId]
 			,[TaxId]
+			,[DDProductId]
            
 			,[ShaftType]
 			,[ShaftWidth]
@@ -307,6 +308,7 @@ BEGIN TRY
 			,[QuoteHdrId]
 			,[SODtlId]
 			,[TaxId]
+			,[DDProductId]
 
 			,[ShaftType]
 			,[ShaftWidth]

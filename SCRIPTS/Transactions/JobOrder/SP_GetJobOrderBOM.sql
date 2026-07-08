@@ -15,7 +15,9 @@ GO
 
 CREATE PROCEDURE [dbo].[SP_GetJobOrderBOM]
 (
-	@SODtlId Int
+   @DDProductId Int,
+   @SODtlId Int
+ 
 )
 ----With Encryption
 AS
@@ -25,175 +27,176 @@ SET NOCOUNT ON;
 BEGIN TRY
     BEGIN TRANSACTION
 
---Declare @SODtlId int = 9
-Declare @SOHdrId int = 0
-Declare @JobOrderId int = 0
+    DECLARE @SODetails NVARCHAR(MAX)
+    DECLARE @BOMDetails NVARCHAR(MAX)
+    DECLARE @SOLandingDoors   NVARCHAR(MAX)
+    DECLARE @SOCarDoors   NVARCHAR(MAX)
+    DECLARE @CarBracket  NVARCHAR(MAX)
+    DECLARE @JobOrderBOM NVARCHAR(MAX)
 
-Declare @OrdClientId int = 0
+   --============== SO Details
 
-Declare @Product nvarchar(30)
-Declare @NoOfLandings int = 0
-Declare @CarDoors int = 0
-
-Declare @Passengers int = 0
-Declare @ApproxFloorHeight int = 0
-Declare @BaseToLandingHeight int = 0
-
-Declare @OverHeadHeight int = 0
-Declare @Pit int = 0
-
-Declare @Total int = 0
-
-Declare @BracketCount int = 0
-
-Declare @GuideRailLength int = 0
-Declare @GuideRailCount int = 0
-
-
---select * from sohdr
---select * from sodtl
---select * from SOLandDoor
---select * from SOCarDoor
-
-Set @OrdClientId = (Select OrdClientHdrId from SOHdr where SOHdrId = @SOHdrId)
-Set @Product = (Select SOProduct from SODtl where SODtlId = @SODtlId)
-
-Set @NoOfLandings = (Select NoOfOpenings from SODtl where SODtlId = @SODtlId)
-Set @Passengers = (Select NoOfPassengers from SODtl where SODtlId = @SODtlId)
-Set @Pit = (Select ElevatorPit from SODtl where SODtlId = @SODtlId)
-Set @ApproxFloorHeight = (Select ApproxFloorHeight from SODtl where SODtlId = @SODtlId)
-Set @OverHeadHeight = (Select OverheadHeight from SODtl where SODtlId = @SODtlId)
-
-Set @BaseToLandingHeight = (@ApproxFloorHeight * @NoOfLandings)
-
---Set @CarDoors = (Select count(*) from SOCarDoor where SODtlId = @SODtlId)
-
-Set @Total = (@BaseToLandingHeight + @OverHeadHeight + @Pit)
-
-Set @BracketCount = (@Total / 1500)
-Set @GuideRailCount = (@Total / 5000)
-
-
-DECLARE @SODetails   NVARCHAR(MAX)
-DECLARE @BOMDetails NVARCHAR(MAX)
-DECLARE @JobOrderBOM NVARCHAR(MAX)
-
- SET @SODetails = (
+     SET @SODetails = (
        
-Select @OrdClientId as 'OrdClientId',
-       @Product as 'Product', 
-       @NoOfLandings as 'No Of Landings', 
-       @Passengers as 'Passengers',
-       @BaseToLandingHeight as 'BaseToLandingHeight',
+        SELECT  
 
-       @OverHeadHeight as 'OverHeadHeight',
-       @Pit as 'Pit',
+             [SODtl].[ApproxFloorHeight]
+            ,[SODtl].[NoOfOpenings]
+            ,[SODtl].[OverheadHeight]
+            ,[SODtl].[ElevatorPit]
+            ,(([SODtl].[ApproxFloorHeight] * [SODtl].[NoOfOpenings]) + ([SODtl].[OverheadHeight]) + ([SODtl].[ElevatorPit])) as 'TravelHeight'
+            
+            ,[SODtl].[ShaftWidth] as 'SoDtlWidth'
+            ,[SODtl].[ShaftDepth] as 'SoDtlDepth'
+            ,[SODtl].[CabinWidth] as 'SoDtlCabinWidth'
+            ,[SODtl].[CabinDepth] as 'SoDtlCabinDepth'
 
-       @Total as 'Total',
-       @BracketCount as 'BracketCount',
-       @GuideRailCount as 'GuideRailCount'
+            ,[JobOrderPTCDtl].[Width] as 'PTCDtlWidth'
+            ,[JobOrderPTCDtl].[Depth] as 'PTCDtlDepth'
+            ,([JobOrderPTCDtl].[Width] - [SODtl].[CabinWidth] - 260) as 'CarBracketRange'
+
+            From [SoDtl]
+            INNER JOIN [JobOrder] ON [JobOrder].SoDtlId = [SoDtl].SoDtlId
+            INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderPTCDtlId = [JobOrder].JobOrderPTCDtlId
+
+            Where [SoDtl].[SODtlId] = @SODtlId
+
+            FOR JSON PATH   
+    )
+
+     --============== BOM Details
+
+    SET @BOMDetails = (
+       
+        SELECT [BOMMstId]
+	          --,[BOMMstType]
+              ,[ProductId]
+              ,[AssemblyHdr].[AssemblyHdrId]
+              ,[AssemblyHdr].[AssemblyName]
+
+              ,[Item].[ItemId]
+	          ,[Item].[ItemType]
+              ,[AssemblyItem].[ItemQty]
+      
+	          ,[Item].[ItemName]
+              ,[DefaultData].[DefaultDataName] as 'UOM'
+              ,[Item].[ItemLength] as 'ItemLength'
+              ,[Item].[ItemRangeMin] as 'ItemRangeMin'
+              ,[Item].[ItemRangeMax] as 'ItemRangeMax'
+      
+	          FROM [dbo].[BOMMst]
+	          INNER JOIN [AssemblyHdr] On [AssemblyHdr].[AssemblyHdrId] = [BOMMst].[AssemblyHdrId]
+	          INNER JOIN [AssemblyItem] On [AssemblyItem].[AssemblyHdrId] = [AssemblyHdr].[AssemblyHdrId]
+	          INNER JOIN [Item] On [Item].[ItemId] = [AssemblyItem].[ItemId]
+	          INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+
+	        Where [BOMMst].ProductId = @DDProductId
+
+
+            FOR JSON PATH   
+    )
+
+    -- ========== SO Landing Doors
+    SET @SOLandingDoors = (
+       
+    SELECT 
+               [SOLandDoorId]
+              ,[SODtlId]
+              ,[SOLandFloorType]
+              ,[SOLandDoorType]
+              ,[SOLandDoorFinishType]
+
+              ,[SOLandDoorAngle]
+              ,[SOLandDoorSide]
+              ,[SOLandDoorHeight]
+              ,[SOLandDoorWidth]
+              ,[SOLandDoorDescription]
+
+              --,[SOLandDoorAmount]
+              ,[Item].ItemId as 'ItemId'
+              ,[Item].ItemName as 'ItemName'            
+
+          FROM [dbo].[SOLandDoor] 
+
+          LEFT JOIN [Item] On [Item].ItemOpeningType = [SOLandDoor].SOLandDoorType and 
+                               [Item].ItemFinish = [SOLandDoor].[SOLandDoorFinishType] and
+                               [Item].ItemWidth = [SOLandDoor].[SOLandDoorWidth] and
+                               [Item].ItemHeight = [SOLandDoor].[SOLandDoorHeight] 
+          where SODtlId = @SODtlId
+
 
         FOR JSON PATH   
     )
 
-IF OBJECT_ID('tempdb..#BOMAssembly') IS NOT NULL
-    DROP TABLE #BOMAssembly;
+    --============== Car Doors
+     SET @SOCarDoors = (
+       
+            SELECT [SOCarDoorId]
+              ,[SODtlId]
+              ,[SOCarFloorType]
+              ,[SOCarDoorType]
+              ,[SOCarDoorFinishType]
+              ,[SOCarDoorAngle]
+           
+              ,[SOCarDoorSide]
+              ,[SOCarDoorHeight]
+              ,[SOCarDoorWidth]
+              ,[SOCarDoorDescription]
+              --,[SOCarDoorAmount]
+              --,[SOCrudType]
+              ,[Item].ItemId as 'ItemId'
+              ,[Item].ItemName as 'ItemName'          
 
-DROP TABLE IF EXISTS #BOMAssembly;
+          FROM [dbo].[SOCarDoor]
 
-CREATE TABLE #BOMAssembly
-(
-    SourceTable     NVARCHAR(20),
-    BOMMstId        INT NULL,
-    AssemblyItemId  INT NULL,
-    ProductId       INT NULL,
+          LEFT JOIN [Item] On  [Item].ItemOpeningType = [SOCarDoor].SOCarDoorType and 
+                               [Item].ItemFinish = [SOCarDoor].[SOCarDoorFinishType] and
+                               [Item].ItemWidth = [SOCarDoor].[SOCarDoorWidth] and
+                               [Item].ItemHeight = [SOCarDoor].[SOCarDoorHeight] 
 
-    AssemblyHdrId   INT,
-    ItemId          INT,
-    ItemName        NVARCHAR(150),
-    
-    ItemQty         INT,
-    ReqItemQty      INT,
-    TotalQty        INT
+          where SODtlId = @SODtlId
 
-);
+        FOR JSON PATH   
+    )
 
-INSERT INTO #BOMAssembly
-(
-    SourceTable,
-    BOMMstId,
-    AssemblyItemId,
-    ProductId,
+    --============== Car Bracket
 
-    AssemblyHdrId,
-    ItemId,
-    ItemName,
-    
-    ItemQty,
-    ReqItemQty,
-    TotalQty
-)
-SELECT
-    'BOMMst',
-    BOMMst.BOMMstId,
-    NULL,
-    BOMMst.ProductId,
+    Declare @CarBracketRange int
 
-    BOMMst.AssemblyHdrId,
-    [BOMMst].ItemId,
-    [ITEM].ItemName,
-    
-    BOMMst.ItemQty,
-    0 AS ReqItemQty,
-    0 AS TotalQty
+    Set @CarBracketRange = (SELECT  ([JobOrderPTCDtl].[Width] - [SODtl].[CabinWidth] - 260) 
+            From [SoDtl]
+            INNER JOIN [JobOrder] ON [JobOrder].SoDtlId = [SoDtl].SoDtlId
+            INNER JOIN [JobOrderPTCDtl] ON [JobOrderPTCDtl].JobOrderPTCDtlId = [JobOrder].JobOrderPTCDtlId
+            Where [SoDtl].[SODtlId] = @SODtlId)
 
-FROM dbo.BOMMst
-INNER JOIN [ITEM] On [ITEM].[ItemId] = [BOMMst].[ItemId];
 
-INSERT INTO #BOMAssembly
-(
-    SourceTable,
-    BOMMstId,
-    AssemblyItemId,
-    ProductId,
+    SET @CarBracket = (
+       
+            SELECT 
+               [ItemId]
+              ,[ItemName]
+              ,[ItemRangeMin]
+              ,[ItemRangeMax]
+              
+          FROM [dbo].[Item]
 
-    AssemblyHdrId,
-    [ITEM].ItemId,
-    [ITEM].ItemName,
-    
-    ItemQty,
-    ReqItemQty,
-    TotalQty
-)
-SELECT
-    'AssemblyItem',
-    NULL,
-    [AssemblyItem].AssemblyItemId,
-    NULL,
+          where [Item].[ItemType]  = 'Car Bracket'
+                and @CarBracketRange BETWEEN ItemRangeMin AND ItemRangeMax
 
-    [AssemblyItem].AssemblyHdrId,
-    [AssemblyItem].ItemId,
-    [ITEM].ItemName,
+        FOR JSON PATH   
+    )
 
-    ItemQty,
-    0  AS ReqItemQty,
-    0  AS TotalQty
 
-FROM dbo.AssemblyItem
-INNER JOIN [ITEM] On [ITEM].[ItemId] = [AssemblyItem].[ItemId];
-
-SET @BOMDetails = (
-    select * from #BOMAssembly
-
-    FOR JSON PATH   
- )
 
  SET @JobOrderBOM = (
         SELECT
             JSON_QUERY(@SODetails)  AS SODetails,
-            JSON_QUERY(@BOMDetails) AS BOMDetails
+            JSON_QUERY(@BOMDetails)  AS BOMDetails,
+            JSON_QUERY(@SOLandingDoors)  AS SOLandingDoors,
+            JSON_QUERY(@SOCarDoors)  AS SOCarDoors,
+            JSON_QUERY(@CarBracket)  AS CarBracket
         FOR JSON PATH,  WITHOUT_ARRAY_WRAPPER
-        )
+ )
 
  Select @JobOrderBOM
 

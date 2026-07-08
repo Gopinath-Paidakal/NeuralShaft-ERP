@@ -88,9 +88,9 @@ BEGIN TRY
 			--Select 'Inserting SODtl'
 
 			INSERT INTO SODtl(
-			SOHdrId,
+			SOHdrId, 
 	
-			ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
+			DDProductId, ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
 			ElevatorSpeed, SOProduct, NoOfPassengers, SOProductType, Capacity,
 			TotalFloors,
 
@@ -114,9 +114,9 @@ BEGIN TRY
 
 			)
 			SELECT 
-				@SOHdrId,
+				@SOHdrId, 
 	
-				ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
+				DDProductId, ShaftType, ShaftWidth, ShaftDepth, OverheadHeight, ElevatorPit,
 				ElevatorSpeed, SOProduct, NoOfPassengers, SOProductType, Capacity,
 				TotalFloors,
 	
@@ -141,6 +141,7 @@ BEGIN TRY
 
 			FROM OPENJSON(@SODtl, '$.SODtl')
 			WITH (
+				DDProductId INT,
 				ShaftType NVARCHAR(100),
 				ShaftWidth NVARCHAR(100),
 				ShaftDepth NVARCHAR(100),

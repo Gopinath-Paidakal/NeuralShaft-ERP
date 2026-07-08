@@ -1,21 +1,22 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderPTCDtl]    Script Date: 25/06/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertJobOrderPTCDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_InsertJobOrderPTCDtl]
+/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderBOM]    Script Date: 04/07/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertJobOrderBOM]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_InsertJobOrderBOM]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderPTCDtl]    Script Date: 25/06/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertJobOrderBOM]    Script Date: 04/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_InsertJobOrderPTCDtl]
+CREATE PROCEDURE [dbo].[SP_InsertJobOrderBOM]
 (
-    @JobOrderPTCDtl NVARCHAR(MAX)
+   @JobOrderBOM NVARCHAR(MAX)
+ 
 )
 ----With Encryption
 AS
@@ -23,89 +24,73 @@ AS
 SET NOCOUNT ON;
 
 BEGIN TRY
-
     BEGIN TRANSACTION
 
-    Declare @JobOrderPTCDtlId int
-    Declare @JobOrderId  int
+    --Declare @ProductId int
 
-    ---set @JobOrderId = JSON_VALUE(@JobOrderPTCDtl, '$.JobOrderId')
-    SET @JobOrderId = JSON_VALUE(@JobOrderPTCDtl, '$.JobOrderPTCDtl.JobOrderId');
+    --set @ProductId = JSON_VALUE(@JobOrderBOM, '$.ProductId')
 
-    INSERT INTO dbo.JobOrderPTCDtl
+    INSERT INTO dbo.JobOrderBOM
         (
+            SODtlId,
+            --SOHdrId,
+            --OrdClientHdrId,
             JobOrderId,
-            Width,
-            Depth,
-            Pit,
-            Ovehead,
+            ProductId,
 
-            TravelHeight,
-            Stage,
-            CarDbg,
-            CounterDbg,
-            GuiderailCar,
-
-            GuiderailCounter,
-            CarTop,
-            CarBottom,
-            CouterTop,
-            CounterBottom
+            AssemblyHdrId,
+            ItemId,
+            ItemQty,
+            ItemReqdQty,
+            ItemTotalQty,
+            
+            CreatedUserId,
+            CreatedDate
         )
         SELECT
+            SODtlId,
+            --SOHdrId,
+            --OrdClientHdrId,
             JobOrderId,
-            Width,
-            Depth,
-            Pit,
-            Ovehead,
+            ProductId,
 
-            TravelHeight,
-            Stage,
-            CarDbg,
-            CounterDbg,
-            GuiderailCar,
-        
-            GuiderailCounter,
-            CarTop,
-            CarBottom,
-            CouterTop,
-            CounterBottom
+            AssemblyHdrId,
+            ItemId,
+            ItemQty,
+            ItemReqdQty,
+            ItemTotalQty,
 
-        FROM OPENJSON(@JobOrderPTCDtl, '$.JobOrderPTCDtl')
+            CreatedUserId,
+            CreatedDate
+
+        FROM OPENJSON(@JobOrderBOM, '$.JobOrderBOM')
         WITH
         (
+            --JobOrderBOMId INT,
+            SODtlId INT,
+            --SOHdrId INT,
+
+            --OrdClientHdrId INT,
             JobOrderId INT,
-            Width INT,
-            Depth INT,
-            Pit INT,
-            Ovehead INT,
 
-            TravelHeight INT,
-            Stage NVARCHAR(50),
-            CarDbg NVARCHAR(150),
-            CounterDbg NVARCHAR(150),
-            GuiderailCar NVARCHAR(150),
-        
-            GuiderailCounter NVARCHAR(150),
-            CarTop NVARCHAR(150),
-            CarBottom NVARCHAR(150),
-            CouterTop NVARCHAR(150),
-            CounterBottom NVARCHAR(150)
+            ProductId INT,
+            AssemblyHdrId INT,
+            ItemId INT,
+            ItemQty DECIMAL(18,2),
+            ItemReqdQty DECIMAL(18,2),
+
+            ItemTotalQty DECIMAL(18,2),
+            CreatedUserId INT,
+            CreatedDate Date
         );
-    
-    
-    set @JobOrderPTCDtlId = SCOPE_IDENTITY()
 
-    ---==================================================
-    --- Updating the JobOrder
-    --====================================================
-    Update JobOrder set JobOrderPTCDtlId = @JobOrderPTCDtlId where JobOrder.JobOrderId = @JobOrderId
-    -----=================================================
 
-    select @JobOrderPTCDtlId
+    --Select @ProductId
+
+    Select 'Job Order BOM Inserted'
 
     COMMIT TRANSACTION
-
+  
 
 END TRY
 
@@ -128,20 +113,6 @@ END TRY
 	END CATCH
 
 End_Prog:
-
-
-
- --set @JobOrderPTCDtlId = SCOPE_IDENTITY()
-
-        -------===============================================
-        ------ Updating [SVRDocName] with id, path, filename
-        --------===============================================
-        --Update [JobOrderSVRDtl] set [JobOrderSVRDtl].SVRDocName = 
-        --                            Convert(nvarchar(10),[JobOrderSVRDtl].JobOrderSVRDtlId) + '_' +
-        --                            Convert(nvarchar(50),[JobOrderSVRDtl].SVRDocPath) + 
-        --                            Convert(nvarchar(100),[JobOrderSVRDtl].SVRDocName)
-
-        --Where [JobOrderSVRDtl].JobOrderSVRDtlId = @JobOrderSVRDtlId
 
 
 

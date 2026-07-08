@@ -100,6 +100,8 @@ Select * from AssemblyHdr
 Select * from AssemblyItem
 Select * from BOMMst
 
+Select * from JobOrderBOM
+
 
 
 

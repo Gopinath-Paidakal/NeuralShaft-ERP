@@ -42,6 +42,7 @@ BEGIN TRY
             ,[SOHdrId]
 
               ,[TaxId]
+              ,[DDProductId]
               ,[ShaftType]
               ,[ShaftWidth]
               ,[ShaftDepth]
@@ -159,9 +160,13 @@ BEGIN TRY
               ,[SOLandDoorDescription]
 
               ,[SOLandDoorAmount]
+              --,[Item].ItemId as 'ItemId'
 
-          FROM [dbo].[SOLandDoor]
-
+          FROM [dbo].[SOLandDoor] 
+          --INNER JOIN [Item] On [Item].ItemOpeningType = [SOLandDoor].SOLandDoorType and 
+          --                     [Item].ItemFinish = [SOLandDoor].[SOLandDoorFinishType] and
+          --                     [Item].ItemWidth = [SOLandDoor].[SOLandDoorWidth] and
+          --                     [Item].ItemHeight = [SOLandDoor].[SOLandDoorHeight] 
 
           WHERE [SOLandDoor].SODtlId = @SODtlId 
           FOR JSON PATH, WITHOUT_ARRAY_WRAPPER

@@ -29,7 +29,7 @@ BEGIN TRY
 
     Declare @JobOrderId  int
 
-    set @JobOrderId = JSON_VALUE(@JobOrderPVR, '$JobOrderPVR.JobOrderId')
+    set @JobOrderId = JSON_VALUE(@JobOrderPVR, '$.JobOrderPVR.JobOrderId')
 
     INSERT INTO JobOrderPVR
     (

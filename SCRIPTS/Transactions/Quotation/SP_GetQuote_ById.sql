@@ -30,7 +30,8 @@ Declare @quotedtlstr nvarchar(max)
     SELECT
     (
   
-        -- =========== EnqHdr
+        -- =========== EnqDtl
+
 	   SELECT [QuoteDtlId]
           ,[QuoteHdrId]
           ,[EnqDtlId]

@@ -32,6 +32,7 @@ BEGIN TRY
 	UPDATE E
 		
 		SET
+			E.DDProductId = J.DDProductId,
 			E.ShaftType = J.ShaftType,
 			E.ShaftWidth = J.ShaftWidth,
 			E.ShaftDepth = J.ShaftDepth,
@@ -39,6 +40,7 @@ BEGIN TRY
 			E.ElevatorPit = J.ElevatorPit,
 		
 			E.ElevatorSpeed = J.ElevatorSpeed,
+			
 			E.EnqProduct = J.EnqProduct,
 			E.NoOfPassengers = J.NoOfPassengers,
 			E.EnqProductType = J.EnqProductType,
@@ -106,6 +108,8 @@ BEGIN TRY
 			INNER JOIN OPENJSON(@EnqDtl, '$.EnqDtl')
 
 			WITH (
+
+			    DDProductId INT,
 				ShaftType NVARCHAR(100),
 				ShaftWidth NVARCHAR(100),
 				ShaftDepth NVARCHAR(100),
@@ -113,6 +117,7 @@ BEGIN TRY
 				ElevatorPit NVARCHAR(100),
 
 				ElevatorSpeed NUMERIC(8,2),
+			
 				EnqProduct NVARCHAR(100),
 				NoOfPassengers SMALLINT,
 				EnqProductType NVARCHAR(100),

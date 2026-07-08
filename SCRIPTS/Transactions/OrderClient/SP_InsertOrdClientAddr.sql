@@ -44,15 +44,17 @@ BEGIN TRY
         OrdClientGstNo,
         OrdClientAdhaarNo,
         OrdClientAddrType,
+        OrdClientPriSalutation,
         OrdClientPriContPerson,
-        OrdClientPriMailId,
 
+        OrdClientPriMailId,
         OrdClientPriMobileNo,
+        OrdClientSecSalutation,
         OrdClientSecContPerson,
-        OrdClientSecMailId,
+        OrdClientSecMailId,        
+
         OrdClientSecMobileNo,
         OrdClientLatitude,
-
         OrdClientLongitude,
         OrdClientTravelDistance,
         OrdStatus
@@ -73,15 +75,17 @@ BEGIN TRY
         OrdClientGstNo,
         OrdClientAdhaarNo,
         OrdClientAddrType,
+        OrdClientPriSalutation,
         OrdClientPriContPerson,
-        OrdClientPriMailId,
 
+        OrdClientPriMailId,
         OrdClientPriMobileNo,
+        OrdClientSecSalutation,
         OrdClientSecContPerson,
         OrdClientSecMailId,
+
         OrdClientSecMobileNo,
         OrdClientLatitude,
-
         OrdClientLongitude,
         OrdClientTravelDistance,
         OrdStatus
@@ -104,15 +108,17 @@ BEGIN TRY
         OrdClientGstNo NVARCHAR(100),
         OrdClientAdhaarNo NVARCHAR(100),
         OrdClientAddrType NVARCHAR(100),
+        OrdClientPriSalutation NVARCHAR(15),
         OrdClientPriContPerson NVARCHAR(100),
-        OrdClientPriMailId NVARCHAR(100),
 
+        OrdClientPriMailId NVARCHAR(100),
         OrdClientPriMobileNo NVARCHAR(100),
+        OrdClientSecSalutation NVARCHAR(15),
         OrdClientSecContPerson NVARCHAR(100),
         OrdClientSecMailId NVARCHAR(100),
+
         OrdClientSecMobileNo NVARCHAR(100),
         OrdClientLatitude NVARCHAR(100),
-
         OrdClientLongitude NVARCHAR(100),
         OrdClientTravelDistance NVARCHAR(100),
         OrdStatus NVARCHAR(10)

@@ -39,23 +39,25 @@ BEGIN TRY
           ,[QuoteHdr].[QuoteSlNo]
 
 	      ,[QuoteHdr].[QuoteConsultant]
+		  ,[QuoteHdr].[QuoteClientSalutation]
           ,[QuoteHdr].[QuoteCustComp]
 		  ,[QuoteHdr].[QuoteBillingAddr]
           ,[QuoteHdr].[QuoteContPerson]
-          ,[QuoteHdr].[QuoteMobileNo]
 
+          ,[QuoteHdr].[QuoteMobileNo]
 	      ,[QuoteHdr].[ProjectName]
 	      ,[QuoteHdr].[ExpectedClosingDate]
 	      ,[QuoteHdr].[QuoteEmailId]
           ,[QuoteHdr].[DeliveryBy]
-	      ,[QuoteHdr].[ComplementaryAMC]
 
+	      ,[QuoteHdr].[ComplementaryAMC]
           ,[QuoteHdr].[QuoteValidity]
           ,[QuoteHdr].[QuotePaymentTerms]
 	      ,[QuoteHdr].[GSTExempted]
 	      ,[QuoteHdr].[ProductCount]
-		  ,[QuoteHdr].[QuoteStatus]
 
+		  ,[QuoteHdr].[QuoteStatus]
+		  ,[QuoteHdr].[QuoteContSalutation]
 		  ,[QuoteHdr].[CreatedUserId]
 		  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 		  ,[Employee].[EmpMobileNo]

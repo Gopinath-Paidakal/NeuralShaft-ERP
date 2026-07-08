@@ -22,5 +22,22 @@ namespace NeuralShaft.Server.Controllers.JobOrder
             string jobOrderList = await _JobOrderService.GetJobOrder(fromDate, toDate);
             return Content(jobOrderList, "application/json");
         }
+
+        [HttpGet("GetJobOrderBOM/{ddProductId}/{soDtlId}")]
+        public async Task<ActionResult> GetJobOrderBOM(int ddProductId, int soDtlId)
+        {
+            string jobOrderBOM = await _JobOrderService.GetJobOrderBOM(ddProductId, soDtlId);
+            return Content(jobOrderBOM, "application/json");
+        }
+
+        [HttpPost("InsertJobOrderBOM")]
+        public async Task<IActionResult> InsertJobOrderBOM([FromBody] object jobOrderBOM)
+        {
+            //await _service.InsertEnquiry(data);
+            //return Ok();
+            var insertJOBOM = await _JobOrderService.InsertJobOrderBOM(jobOrderBOM);
+            return Ok(insertJOBOM);
+
+        }
     }
 }

@@ -132,7 +132,8 @@ BEGIN TRY
 		   EnqLeadSource,
 		   EnqSourceBy,
 
-		   EnqContactPerson)
+		   EnqContactPerson,
+		   EnqContactSalutation)
           
      Select
 		   @EnqHdrId,
@@ -148,8 +149,8 @@ BEGIN TRY
            EnqLeadSource, 
 		   EnqSourceBy,
 
-		   EnqContactPerson
-      
+		   EnqContactPerson,
+		   EnqContactSalutation
 
     FROM OPENJSON(@EnqHdr, '$.EnqClient')
     WITH
@@ -166,7 +167,8 @@ BEGIN TRY
 		   EnqLeadSource nvarchar(100),
            EnqSourceBy nvarchar(100),
 
-		   EnqContactPerson nvarchar(100)
+		   EnqContactPerson nvarchar(100),
+		   EnqContactSalutation nvarchar(15)
           
     )
 
