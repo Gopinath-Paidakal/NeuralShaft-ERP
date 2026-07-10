@@ -108,7 +108,9 @@ DECLARE @TotDefaultData NVARCHAR(MAX)
         ISNULL([TentativeDuration5], 0) AS [TentativeDuration5],
         ISNULL([TentativeDuration6], 0) AS [TentativeDuration6],
         ISNULL([TentativeDuration7], 0) AS [TentativeDuration7],
-        ISNULL([EnquirySource], 0) AS [EnquirySource]
+        ISNULL([EnquirySource], 0) AS [EnquirySource],
+
+        ISNULL([Stage], '') AS [Stage]     --- Added on 09/07/2026
 
         from DefaultData
         --where DefaultData.FormType = @FormType

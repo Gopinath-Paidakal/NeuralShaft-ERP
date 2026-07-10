@@ -120,6 +120,8 @@ BEGIN TRY
            ,[TentativeDuration7]
 
            ,[EnquirySource]
+           ,[Stage]
+
            ,[CreatedUserId]
            ,[CreatedDate])    
 	
@@ -200,6 +202,7 @@ BEGIN TRY
            TentativeDuration7,
 
            EnquirySource,
+           [Stage],
 
            CreatedUserId,
 		   CreatedDate
@@ -285,6 +288,7 @@ BEGIN TRY
            [TentativeDuration7] smallint,
 
            [EnquirySource] nvarchar(100),
+           [Stage] nvarchar(50),
 
            CreatedUserId int,         
            CreatedDate nvarchar(20)

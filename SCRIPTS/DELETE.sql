@@ -55,7 +55,11 @@
 --Delete from AssemblyItem
 --Delete from BOMMst
 
-Delete from JobOrderBOM
+--Delete from JobOrderBOM
+
+
+Delete from ProformaInvHdr
+Delete from ProformaInvDtl
 
 --delete from Employee
 --delete From EmpAcademic

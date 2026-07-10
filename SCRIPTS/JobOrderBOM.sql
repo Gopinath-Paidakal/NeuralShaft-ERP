@@ -4,6 +4,7 @@ Declare @JobOrderId int = 9
 
 Declare @OrdClientId int = 162
 
+Declare @ProductId int
 Declare @Product nvarchar(30)
 Declare @NoOfLandings int = 0
 Declare @CarDoors int = 0
@@ -28,12 +29,10 @@ Declare @SOLandDoorFinishType varchar(100)
 Declare @SOLandDoorWidth int = 0
 Declare @SOLandDoorHeight int = 0
 
---select * from sohdr
---select * from sodtl
---select * from SOLandDoor
---select * from SOCarDoor
+
 
 Set @OrdClientId = (Select OrdClientHdrId from SOHdr where SOHdrId = @SOHdrId)
+Set @ProductId = (Select DDProductId from SODtl where SODtlId = @SODtlId)
 Set @Product = (Select SOProduct from SODtl where SODtlId = @SODtlId)
 
 Set @NoOfLandings = (Select NoOfOpenings from SODtl where SODtlId = @SODtlId)
@@ -57,24 +56,24 @@ Set @Total = (@BaseToLandingHeight + @OverHeadHeight + @Pit)
 Set @BracketCount = (@Total / 1500)
 Set @GuideRailCount = (@Total / 5000)
 
-Select @OrdClientId as 'OrdClientId',
-       @Product as 'Product', 
-       @NoOfLandings as 'No Of Landings', 
-       @Passengers as 'Passengers',
-       @BaseToLandingHeight as 'BaseToLandingHeight',
+--Select @OrdClientId as 'OrdClientId',
+--       @Product as 'Product', 
+--       @NoOfLandings as 'No Of Landings', 
+--       @Passengers as 'Passengers',
+--       @BaseToLandingHeight as 'BaseToLandingHeight',
 
-       @OverHeadHeight as 'OverHeadHeight',
-       @Pit as 'Pit',
+--       @OverHeadHeight as 'OverHeadHeight',
+--       @Pit as 'Pit',
 
-       @Total as 'Total',
-       @BracketCount as 'BracketCount',
-       @GuideRailCount as 'GuideRailCount',
-       @LandingDoors as 'LandingDoors',
+--       @Total as 'Total',
+--       @BracketCount as 'BracketCount',
+--       @GuideRailCount as 'GuideRailCount',
+--       @LandingDoors as 'LandingDoors',
 
-       @SOLandDoorType as 'SOLandDoorType',
-       @SOLandDoorFinishType as 'SOLandDoorFinishType',
-       @SOLandDoorWidth as 'SOLandDoorWidth',
-       @SOLandDoorHeight as 'SOLandDoorHeight'
+--       @SOLandDoorType as 'SOLandDoorType',
+--       @SOLandDoorFinishType as 'SOLandDoorFinishType',
+--       @SOLandDoorWidth as 'SOLandDoorWidth',
+--       @SOLandDoorHeight as 'SOLandDoorHeight'
 
 IF OBJECT_ID('tempdb..#BOMAssembly') IS NOT NULL
     DROP TABLE #BOMAssembly;
@@ -87,14 +86,15 @@ CREATE TABLE #BOMAssembly
     BOMMstId        INT NULL,
     ProductId       INT NULL,
 
+    AssemblyHdrId   INT NULL,
     AssemblyItemId  INT NULL,
-    AssemblyHdrId   INT,
+
     ItemId          INT,
     --ItemName        NVARCHAR(150),
     
-    ItemQty         INT,
-    ReqItemQty      INT,
-    TotalQty        INT
+    ItemQty         INT NULL,
+    ReqItemQty      INT NULL,
+    TotalQty        INT NULL
 
 );
 
@@ -160,26 +160,44 @@ FROM dbo.AssemblyItem
 INNER JOIN [ITEM] On [ITEM].[ItemId] = [AssemblyItem].[ItemId];
 
 
-select * from #BOMAssembly
+--select * from #BOMAssembly
 
  ----------- SO Landing Doors
+ Declare @TotLandingDoors int
 
+ set @TotLandingDoors = (select count(*) from [SOLandDoor] 
+
+          LEFT JOIN [Item] On [Item].ItemOpeningType = [SOLandDoor].[SOLandDoorType] and 
+                               [Item].ItemFinish = [SOLandDoor].[SOLandDoorFinishType] and
+                               [Item].ItemWidth = [SOLandDoor].[SOLandDoorWidth] and
+                               [Item].ItemHeight = [SOLandDoor].[SOLandDoorHeight] 
+          where SODtlId = 12 and ItemType = 'Landing Doors') 
+
+          --group by [SOLandDoor].[SOLandDoorType],[SOLandDoor].[SOLandDoorFinishType], [SOLandDoor].[SOLandDoorWidth],
+          --                     [SOLandDoor].[SOLandDoorHeight])
+
+ Select @TotLandingDoors
+
+ Insert into #BOMAssembly (AssemblyHdrId, ItemId, ItemQty)
  SELECT 
-               [SOLandDoorId]
-              ,[SODtlId]
-              ,[SOLandFloorType]
-              ,[SOLandDoorType]
-              ,[SOLandDoorFinishType]
+              -- [SOLandDoorId]
+               --[SODtlId]
+              --[SOLandFloorType]
+             --  [SOLandDoorType]
+             -- ,[SOLandDoorFinishType]
 
-              ,[SOLandDoorAngle]
-              ,[SOLandDoorSide]
-              ,[SOLandDoorHeight]
-              ,[SOLandDoorWidth]
-              ,[SOLandDoorDescription]
+              --,[SOLandDoorAngle]
+             -- ,[SOLandDoorSide]
+             -- ,[SOLandDoorHeight]
+             -- ,[SOLandDoorWidth]
+              --,[SOLandDoorDescription]
 
               --,[SOLandDoorAmount]
-              ,[Item].ItemId as 'ItemId'
-              ,[Item].ItemName as 'ItemName'            
+              14,
+              [Item].ItemId as 'ItemId',
+              [Item].ItemType as 'ItemType'
+              --,[Item].ItemName as 'ItemName'    
+              ,count(*) as 'Count'
 
           FROM [dbo].[SOLandDoor] 
 
@@ -187,37 +205,50 @@ select * from #BOMAssembly
                                [Item].ItemFinish = [SOLandDoor].[SOLandDoorFinishType] and
                                [Item].ItemWidth = [SOLandDoor].[SOLandDoorWidth] and
                                [Item].ItemHeight = [SOLandDoor].[SOLandDoorHeight] 
-          where SODtlId = @SODtlId
 
-       
-         --Insert into #BOMAssembly 
+          where SODtlId = 12 and ItemType = 'Landing Doors'
+
+          group by [SOLandDoor].[SOLandDoorType],[SOLandDoor].[SOLandDoorFinishType], [SOLandDoor].[SOLandDoorWidth],
+                                [SOLandDoor].[SOLandDoorHeight], [Item].ItemId
+
+   
+   select [Item].itemId, [Item].ItemName,  ItemQty, ReqItemQty
+   
+   from #BOMAssembly
+   Inner join [Item] on [item].itemid = #BOMAssembly.ItemId
+
+   --where AssemblyHdrId = 14 --order by AssemblyHdrId
+
+   --update #BOMAssembly set ReqItemQty =  (ItemQty * @TotLandingDoors) where 
+
+
 
         ----------- SO Car Doors
 
-            SELECT [SOCarDoorId]
-              ,[SODtlId]
-              ,[SOCarFloorType]
-              ,[SOCarDoorType]
-              ,[SOCarDoorFinishType]
-              ,[SOCarDoorAngle]
+          --  SELECT [SOCarDoorId]
+          --    ,[SODtlId]
+          --    ,[SOCarFloorType]
+          --    ,[SOCarDoorType]
+          --    ,[SOCarDoorFinishType]
+          --    ,[SOCarDoorAngle]
            
-              ,[SOCarDoorSide]
-              ,[SOCarDoorHeight]
-              ,[SOCarDoorWidth]
-              ,[SOCarDoorDescription]
-              --,[SOCarDoorAmount]
-              --,[SOCrudType]
-              ,[Item].ItemId as 'ItemId'
-              ,[Item].ItemName as 'ItemName'          
+          --    ,[SOCarDoorSide]
+          --    ,[SOCarDoorHeight]
+          --    ,[SOCarDoorWidth]
+          --    ,[SOCarDoorDescription]
+          --    --,[SOCarDoorAmount]
+          --    --,[SOCrudType]
+          --    ,[Item].ItemId as 'ItemId'
+          --    ,[Item].ItemName as 'ItemName'          
 
-          FROM [dbo].[SOCarDoor]
+          --FROM [dbo].[SOCarDoor]
 
-          LEFT JOIN [Item] On [Item].ItemOpeningType = [SOCarDoor].SOCarDoorType and 
-                               [Item].ItemFinish = [SOCarDoor].[SOCarDoorFinishType] and
-                               [Item].ItemWidth = [SOCarDoor].[SOCarDoorWidth] and
-                               [Item].ItemHeight = [SOCarDoor].[SOCarDoorHeight] 
+          --LEFT JOIN [Item] On [Item].ItemOpeningType = [SOCarDoor].SOCarDoorType and 
+          --                     [Item].ItemFinish = [SOCarDoor].[SOCarDoorFinishType] and
+          --                     [Item].ItemWidth = [SOCarDoor].[SOCarDoorWidth] and
+          --                     [Item].ItemHeight = [SOCarDoor].[SOCarDoorHeight] 
 
-          where SODtlId = @SODtlId
+          --where SODtlId = @SODtlId
 
 
 

@@ -110,6 +110,7 @@ BEGIN TRY
         T.TentativeDuration7 = S.TentativeDuration7,
 
         T.EnquirySource = S.EnquirySource,
+        T.Stage         = S.Stage,
 
         T.ModifiedUserId = S.ModifiedUserId,   ---1,   --'Admin',
         T.ModifiedDate = S.ModifiedDate
@@ -199,6 +200,7 @@ BEGIN TRY
         [TentativeDuration7] smallint,
 
         [EnquirySource] nvarchar(100),
+        [Stage] nvarchar(50),
 
         ModifiedUserId int,
         ModifiedDate nvarchar(20)

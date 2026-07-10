@@ -30,6 +30,13 @@ namespace NeuralShaft.Server.Controllers.JobOrder
             return Content(jobOrderBOM, "application/json");
         }
 
+        [HttpGet("GetJobOrderBOMUpdate/{soDtlId}")]
+        public async Task<ActionResult> GetJobOrderBOMUpdate(int soDtlId)
+        {
+            string jobOrderBOMUpdate = await _JobOrderService.GetJobOrderBOMUpdate(soDtlId);
+            return Content(jobOrderBOMUpdate, "application/json");
+        }
+
         [HttpPost("InsertJobOrderBOM")]
         public async Task<IActionResult> InsertJobOrderBOM([FromBody] object jobOrderBOM)
         {
@@ -37,6 +44,36 @@ namespace NeuralShaft.Server.Controllers.JobOrder
             //return Ok();
             var insertJOBOM = await _JobOrderService.InsertJobOrderBOM(jobOrderBOM);
             return Ok(insertJOBOM);
+
+        }
+
+        [HttpPost("InsertJOBOMItem")]
+        public async Task<IActionResult> InsertJOBOMItem([FromBody] object jobOrderBOM)
+        {
+            //await _service.InsertEnquiry(data);
+            //return Ok();
+            var insertJOBOMItem = await _JobOrderService.InsertJOBOMItem(jobOrderBOM);
+            return Ok(insertJOBOMItem);
+
+        }
+
+        [HttpPost("UpdateJOBOMItem/{JobOrderBOMId}/{qty}")]
+        public async Task<IActionResult> UpdateJOBOMItem(int JobOrderBOMId, int qty)
+        {
+            //await _service.InsertEnquiry(data);
+            //return Ok();
+            var updateJOBOMItem = await _JobOrderService.UpdateJOBOMItem(JobOrderBOMId, qty);
+            return Ok(updateJOBOMItem);
+
+        }
+
+        [HttpPost("DeleteJOBOMItem/{JobOrderBOMId}")]
+        public async Task<IActionResult> DeleteJOBOMItem(int JobOrderBOMId)
+        {
+            //await _service.InsertEnquiry(data);
+            //return Ok();
+            var deleteJOBOMItem = await _JobOrderService.DeleteJOBOMItem(JobOrderBOMId);
+            return Ok(deleteJOBOMItem);
 
         }
     }

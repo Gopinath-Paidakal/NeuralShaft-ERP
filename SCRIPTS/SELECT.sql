@@ -102,6 +102,9 @@ Select * from BOMMst
 
 Select * from JobOrderBOM
 
+Select * from ProformaInvHdr
+Select * from ProformaInvDtl
+
 
 
 

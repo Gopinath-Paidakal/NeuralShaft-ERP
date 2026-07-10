@@ -7,6 +7,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+//using NeuralShaft.Shared.Hubs;
+using NeuralShaft.Data;
 using NeuralShaft.Repository.RepoImplementation;
 using NeuralShaft.Repository.RepoInterfaces;
 using NeuralShaft.Service.EMail;
@@ -18,8 +20,10 @@ using NeuralShaft.Service.ServiceImplementation.Login;
 using NeuralShaft.Service.ServiceImplementation.Masters;
 using NeuralShaft.Service.ServiceImplementation.OrderApprove;
 using NeuralShaft.Service.ServiceImplementation.Previlege;
+using NeuralShaft.Service.ServiceImplementation.ProformaInvoice;
 using NeuralShaft.Service.ServiceImplementation.Quotation;
 using NeuralShaft.Service.ServiceImplementation.SalesOrder;
+using NeuralShaft.Service.ServiceImplementation.TaxInvoice;
 using NeuralShaft.Service.ServiceImplementation.Upload;
 using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.CRM;
@@ -29,11 +33,11 @@ using NeuralShaft.Service.ServiceInterfaces.Login;
 using NeuralShaft.Service.ServiceInterfaces.Masters;
 using NeuralShaft.Service.ServiceInterfaces.OrderApprove;
 using NeuralShaft.Service.ServiceInterfaces.Previlege;
+using NeuralShaft.Service.ServiceInterfaces.ProformaInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Quotation;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrder;
+using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Upload;
-//using NeuralShaft.Shared.Hubs;
-using NeuralShaft.Data;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -116,6 +120,11 @@ builder.Services.AddScoped<IPVR, PVRService>();
 builder.Services.AddScoped<ISVR, SVRService>();
 builder.Services.AddScoped<ISCR, SCRService>();
 builder.Services.AddScoped<IPTC, PTCService>();
+
+//--- Invoice
+builder.Services.AddScoped<IProformaInv, ProformaInvService>();
+builder.Services.AddScoped<ITaxInv, TaxInvoiceService>();
+
 
 //----- SMTP Setting for email services
 builder.Services.Configure<SmtpSettings>(

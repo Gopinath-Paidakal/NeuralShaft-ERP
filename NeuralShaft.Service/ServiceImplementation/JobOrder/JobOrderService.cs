@@ -14,6 +14,9 @@ namespace NeuralShaft.Service.ServiceImplementation.JobOrder
         {
             _repoJSon = repoJson;
         }
+
+       
+
         public async Task<string> GetJobOrder(string fromDate, string toDate)
         {
             string jobOrderList = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetJobOrder",
@@ -28,11 +31,36 @@ namespace NeuralShaft.Service.ServiceImplementation.JobOrder
             return jobOrderList;
         }
 
+        public async Task<string> GetJobOrderBOMUpdate(int soDtlId)
+        {
+            string jobOrderUpdateList = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetJobOrderBOMUpdate",
+                                new { @SODtlId = soDtlId });
+            return jobOrderUpdateList;
+        }
+
         public async Task<string> InsertJobOrderBOM(object jobOrderBOM)
         {
             string insertJOBOM = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertJobOrderBOM", new { @JobOrderBOM = jobOrderBOM.ToString() });
             return (insertJOBOM);
 
+        }
+
+        public async Task<string> InsertJOBOMItem(object jobOrderBOMItem)
+        {
+            string insertJOBOMItem = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertJOBOMItem", new { @JobOrderBOMItem = jobOrderBOMItem.ToString() });
+            return (insertJOBOMItem);
+        }
+
+        public async Task<string> UpdateJOBOMItem(int JobOrderBOMId, int qty)
+        {
+            string updateJOBItem = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateJOBOMItem", new { @JobOrderBOMId = JobOrderBOMId, @Qty = qty});
+            return (updateJOBItem);
+        }
+
+        public async Task<string> DeleteJOBOMItem(int JobOrderBOMId)
+        {
+            string deleteJOBItem = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteJOBOMItem", new { @JobOrderBOMId = JobOrderBOMId });
+            return deleteJOBItem;
         }
     }
 }

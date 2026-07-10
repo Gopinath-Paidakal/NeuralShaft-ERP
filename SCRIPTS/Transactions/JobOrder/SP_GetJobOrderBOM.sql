@@ -29,9 +29,14 @@ BEGIN TRY
 
     DECLARE @SODetails NVARCHAR(MAX)
     DECLARE @BOMDetails NVARCHAR(MAX)
+
     DECLARE @SOLandingDoors   NVARCHAR(MAX)
     DECLARE @SOCarDoors   NVARCHAR(MAX)
+
     DECLARE @CarBracket  NVARCHAR(MAX)
+
+    DECLARE @PVRDetails  NVARCHAR(MAX)
+
     DECLARE @JobOrderBOM NVARCHAR(MAX)
 
    --============== SO Details
@@ -44,6 +49,8 @@ BEGIN TRY
             ,[SODtl].[NoOfOpenings]
             ,[SODtl].[OverheadHeight]
             ,[SODtl].[ElevatorPit]
+            ,[SODtl].[EnqCabinType]
+            ,[SODtl].[FloorDetails]
             ,(([SODtl].[ApproxFloorHeight] * [SODtl].[NoOfOpenings]) + ([SODtl].[OverheadHeight]) + ([SODtl].[ElevatorPit])) as 'TravelHeight'
             
             ,[SODtl].[ShaftWidth] as 'SoDtlWidth'
@@ -80,7 +87,10 @@ BEGIN TRY
       
 	          ,[Item].[ItemName]
               ,[DefaultData].[DefaultDataName] as 'UOM'
+
               ,[Item].[ItemLength] as 'ItemLength'
+              ,[Item].[ItemThickness] as 'ItemThickness'
+              
               ,[Item].[ItemRangeMin] as 'ItemRangeMin'
               ,[Item].[ItemRangeMax] as 'ItemRangeMax'
       
@@ -122,7 +132,8 @@ BEGIN TRY
                                [Item].ItemFinish = [SOLandDoor].[SOLandDoorFinishType] and
                                [Item].ItemWidth = [SOLandDoor].[SOLandDoorWidth] and
                                [Item].ItemHeight = [SOLandDoor].[SOLandDoorHeight] 
-          where SODtlId = @SODtlId
+
+          where SODtlId = @SODtlId and ItemType = 'Landing Doors'
 
 
         FOR JSON PATH   
@@ -145,7 +156,8 @@ BEGIN TRY
               --,[SOCarDoorAmount]
               --,[SOCrudType]
               ,[Item].ItemId as 'ItemId'
-              ,[Item].ItemName as 'ItemName'          
+              ,[Item].ItemName as 'ItemName'   
+              
 
           FROM [dbo].[SOCarDoor]
 
@@ -187,14 +199,32 @@ BEGIN TRY
     )
 
 
+    SET @PVRDetails = (
+       
+            SELECT 
+               [MotorAreaDetails]
+              
+          FROM [dbo].[JobOrderPVR]
+
+          where [JobOrderPVR].SODtlId = @SODtlId
+
+        FOR JSON PATH   
+    )
+
+
 
  SET @JobOrderBOM = (
         SELECT
             JSON_QUERY(@SODetails)  AS SODetails,
             JSON_QUERY(@BOMDetails)  AS BOMDetails,
+
             JSON_QUERY(@SOLandingDoors)  AS SOLandingDoors,
             JSON_QUERY(@SOCarDoors)  AS SOCarDoors,
-            JSON_QUERY(@CarBracket)  AS CarBracket
+
+            JSON_QUERY(@CarBracket)  AS CarBracket,
+
+            JSON_QUERY(@PVRDetails)  AS PVRDetails
+
         FOR JSON PATH,  WITHOUT_ARRAY_WRAPPER
  )
 
