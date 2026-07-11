@@ -8,9 +8,10 @@ namespace NeuralShaft.Service.ServiceInterfaces.ProformaInvoice
     {
         Task<string> GetProformaInv(string fromDate, string toDate);
         Task<string> GetOrdClientByIdProInv(int ordClientHdrId);
+        Task<string> GetOrdClientByIdSODtl(int SOHdrId);
         Task<string> GetProformaInvById(int proformaInvHdrId);
         Task<string> InsertProformaInv(object proformaInv);
-        Task<string> UpdateProformaInv(int ProformaInvHdrId, object proformaInv);
-        Task<string> DeleteProformaInv(int ProformaInvHdrId);
+        Task<string> UpdateProformaInv(int proformaInvHdrId, object proformaInv);
+        Task<string> DeleteProformaInv(int proformaInvHdrId);
     }
 }

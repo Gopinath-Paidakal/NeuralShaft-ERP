@@ -59,7 +59,7 @@ BEGIN TRY
 	else
 		set @QuoteNo =@QuoteNo + 1
 
-	set @QuoteSlNo = @Prefix + RIGHT('0000' + CAST(@QuoteNo AS VARCHAR(10)), 5) + '/'            
+	set @QuoteSlNo = @Prefix + RIGHT('00' + CAST(@QuoteNo AS VARCHAR(10)), 5) + '/'            
 	                 + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
     --- Setting the values from default data for quotation Header

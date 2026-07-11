@@ -17,7 +17,7 @@ SET NOCOUNT ON;
 DECLARE @OrdClientHdr   NVARCHAR(MAX)
 DECLARE @OrdClientAddr  NVARCHAR(MAX)
 DECLARE @SOHdr NVARCHAR(MAX)
-DECLARE @SODtl NVARCHAR(MAX)
+--DECLARE @SODtl NVARCHAR(MAX)
 DECLARE @ProformaInv NVARCHAR(MAX)
 BEGIN TRY
 
@@ -27,8 +27,8 @@ BEGIN TRY
 
             OrdClientHdrId,
             ISNULL(OrdConsultant,   '') AS OrdConsultant,
-            ISNULL(OrdClientName,   '') AS OrdClientName,
-            ISNULL(OrdClientTitle,  '') AS OrdClientTitle,
+            OrdClientTitle +  ' ' + OrdClientName as  'OrdClientName',
+            --ISNULL(OrdClientTitle,  '') AS OrdClientTitle,
 
             ISNULL(OrdGstTradeName, '') AS OrdGstTradeName,
             ISNULL(OrdGstNo,        '') AS OrdGstNo,
@@ -80,18 +80,149 @@ BEGIN TRY
 
     SET @SOHdr = (
         SELECT [SOHdrId]
-              --,[CompanyId]
+              
+              ,[SOHNo]
+              ,[SOHSlNo]
+              ,[SOHDate]
+
+              ,[SOConsultant]
+              ,[SOCustComp],
+              
+              [QuoteHdr].QuoteHdrId,
+              [QuoteHdr].QuoteNo
+
+
+        FROM dbo.SOHdr
+        INNER JOIN [QuoteHdr] On [QuoteHdr].QuoteHdrId = [SOHdr].QuoteHdrId
+        WHERE OrdClientHdrId = @OrdClientHdrId
+        FOR JSON PATH
+    )
+
+    --SET @SODtl = (
+    --  SELECT [SODtlId]
+    --          --,[SOHdrId]
+    --          --,[EnqHdrId]
+    --          --,[EnqDtlId]
+    --          --,[QuoteHdrId]
+    --          --,[TaxId]
+    --          --,[DDProductId]
+    --          --,[ShaftType]
+    --          --,[ShaftWidth]
+    --          --,[ShaftDepth]
+    --          --,[OverheadHeight]
+    --          --,[ElevatorPit]
+    --          --,[ElevatorSpeed]
+    --          ,[SOProduct]
+    --          ,[NoOfPassengers]
+    --          ,[SOProductType]
+    --          ,[Capacity]
+    --          ,[TotalFloors]
+    --          ,[FloorDetails]
+    --          --,[NoStop]
+    --          --,[NoStopDetails]
+    --          --,[TotalStops]
+    --          --,[NoOfOpenings]
+    --          --,[PriceLess]
+    --          --,[ApproxFloorHeight]
+    --          --,[DoorOpening]
+    --          --,[DoorFinish]
+    --          --,[DoorWidth]
+    --          --,[DoorHeight]
+    --          --,[DoubleEntrance]
+    --          --,[DoubleEntranceType]
+    --          --,[DoubleEntranceTypeDetails]
+    --          --,[NoOfDoorOpenings]
+    --          --,[EnqCabinType]
+    --          --,[CabinWidth]
+    --          --,[CabinDepth]
+    --          --,[CabinHeight]
+    --          --,[FlooringType]
+    --          --,[Handrail]
+    --          --,[CarDoorOpening]
+    --          --,[CarDoorFinish]
+    --          --,[CarDoorWidth]
+    --          --,[CarDoorHeight]
+    --          --,[ProductAmount]
+    --          --,[FloorNameAmount]
+    --          --,[DoorTypeAmount]
+    --          --,[CarDoorTypeAmount]
+    --          --,[DoorFinishAmount]
+    --          --,[CabinTypeAmount]
+    --          --,[FlooringTypeAmount]
+    --          --,[AddnlFeatureAmount]
+    --          --,[PowerSupply]
+    --          --,[Machine]
+    --          --,[Drive]
+    --          --,[Controller]
+    --          --,[Operation]
+    --          --,[GuideRails]
+    --          --,[Rope]
+    --          --,[SOProdSplFeature]
+    --          --,[SOFalseCeilingType]
+    --          --,[GST]
+    --          --,[HSNCode]
+    --          ,[SOQty]
+    --          ,[SORate]
+    --          ,[SOProductAmount]
+    --          --,[IncreasePercentage]
+    --          --,[IncreaseAmount]
+    --          ,[DiscountPercentage]
+    --          ,[DiscountAmount]
+    --          --,[TaxableValue]
+    --          --,[TaxableCashAmount]
+    --          --,[TaxableChequeAmount]
+    --          --,[AMCPercentage]
+    --          --,[AMCAmount]
+    --          ,[SOSubTotal]
+    --          ,[SOTaxAmount]
+    --          ,[SOTotalAmount]
+    --          ,[SOGrandTotal]
+    --          --,[Deleted]
+    --          --,[CustomerStatus]
+    --          --,[OrderStatus]
+    --          --,[ApprovalStatus1]
+    --          --,[ApprovalStatus2]
+    --          --,[PassengerAmount]
+    --      FROM [dbo].[SoDtl]
+            
+    --        INNER JOIN dbo.SOHdr ON SOHdr.SOHdrId = SODtl.SOHdrId
+    --        WHERE SOHdr.OrdClientHdrId = @OrdClientHdrId
+    --    FOR JSON PATH
+    --)
+
+
+    SET @ProformaInv = (
+        SELECT
+            JSON_QUERY(@OrdClientHdr)  AS OrdClientHdr,
+            JSON_QUERY(@OrdClientAddr) AS OrdClientAddr,
+            JSON_QUERY(@SOHdr) AS SOHdr
+            --JSON_QUERY(@SODtl) AS SODtl
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    )
+
+    Select @ProformaInv
+
+END TRY
+BEGIN CATCH
+    DECLARE
+        @ErrMsg       VARCHAR(4000),
+        @ErrSeverity  INT,
+        @ErrProcedure VARCHAR(100)
+    SET @ErrMsg       = ERROR_MESSAGE()
+    SET @ErrSeverity  = ERROR_SEVERITY()
+    SET @ErrProcedure = ERROR_PROCEDURE()
+    SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
+    RAISERROR(@ErrMsg, @ErrSeverity, 1)
+END CATCH
+
+
+--,[CompanyId]
               --,[BranchId]
               --,[EnqHdrId]
               --,[QuoteHdrId]
               --,[OrdClientHdrId]
               --,[OrdClientAddrId]
-              ,[SOHNo]
-              ,[SOHSlNo]
-              ,[SOHDate]
-              ,[SOConsultant]
-              ,[SOCustComp]
-              --,[SOBillingAddr]
+  --,[SOBillingAddr]
               --,[SOContPerson]
               --,[SOMobileNo]
               --,[ProjectName]
@@ -113,124 +244,3 @@ BEGIN TRY
               --,[CreatedDate]
               --,[ModifiedUserId]
               --,[ModifiedDate]
-        FROM dbo.SOHdr
-        WHERE OrdClientHdrId = @OrdClientHdrId
-        FOR JSON PATH
-    )
-
-    SET @SODtl = (
-      SELECT [SODtlId]
-              --,[SOHdrId]
-              --,[EnqHdrId]
-              --,[EnqDtlId]
-              --,[QuoteHdrId]
-              --,[TaxId]
-              --,[DDProductId]
-              --,[ShaftType]
-              --,[ShaftWidth]
-              --,[ShaftDepth]
-              --,[OverheadHeight]
-              --,[ElevatorPit]
-              --,[ElevatorSpeed]
-              ,[SOProduct]
-              ,[NoOfPassengers]
-              ,[SOProductType]
-              ,[Capacity]
-              ,[TotalFloors]
-              ,[FloorDetails]
-              --,[NoStop]
-              --,[NoStopDetails]
-              --,[TotalStops]
-              --,[NoOfOpenings]
-              --,[PriceLess]
-              --,[ApproxFloorHeight]
-              --,[DoorOpening]
-              --,[DoorFinish]
-              --,[DoorWidth]
-              --,[DoorHeight]
-              --,[DoubleEntrance]
-              --,[DoubleEntranceType]
-              --,[DoubleEntranceTypeDetails]
-              --,[NoOfDoorOpenings]
-              --,[EnqCabinType]
-              --,[CabinWidth]
-              --,[CabinDepth]
-              --,[CabinHeight]
-              --,[FlooringType]
-              --,[Handrail]
-              --,[CarDoorOpening]
-              --,[CarDoorFinish]
-              --,[CarDoorWidth]
-              --,[CarDoorHeight]
-              --,[ProductAmount]
-              --,[FloorNameAmount]
-              --,[DoorTypeAmount]
-              --,[CarDoorTypeAmount]
-              --,[DoorFinishAmount]
-              --,[CabinTypeAmount]
-              --,[FlooringTypeAmount]
-              --,[AddnlFeatureAmount]
-              --,[PowerSupply]
-              --,[Machine]
-              --,[Drive]
-              --,[Controller]
-              --,[Operation]
-              --,[GuideRails]
-              --,[Rope]
-              --,[SOProdSplFeature]
-              --,[SOFalseCeilingType]
-              --,[GST]
-              --,[HSNCode]
-              ,[SOQty]
-              ,[SORate]
-              ,[SOProductAmount]
-              --,[IncreasePercentage]
-              --,[IncreaseAmount]
-              ,[DiscountPercentage]
-              ,[DiscountAmount]
-              --,[TaxableValue]
-              --,[TaxableCashAmount]
-              --,[TaxableChequeAmount]
-              --,[AMCPercentage]
-              --,[AMCAmount]
-              ,[SOSubTotal]
-              ,[SOTaxAmount]
-              ,[SOTotalAmount]
-              ,[SOGrandTotal]
-              --,[Deleted]
-              --,[CustomerStatus]
-              --,[OrderStatus]
-              --,[ApprovalStatus1]
-              --,[ApprovalStatus2]
-              --,[PassengerAmount]
-          FROM [dbo].[SoDtl]
-            
-            INNER JOIN dbo.SOHdr ON SOHdr.SOHdrId = SODtl.SOHdrId
-            WHERE SOHdr.OrdClientHdrId = @OrdClientHdrId
-        FOR JSON PATH
-    )
-
-
-    SET @ProformaInv = (
-        SELECT
-            JSON_QUERY(@OrdClientHdr)  AS OrdClientHdr,
-            JSON_QUERY(@OrdClientAddr) AS OrdClientAddr,
-            JSON_QUERY(@SOHdr) AS SOHdr,
-            JSON_QUERY(@SODtl) AS SODtl
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    )
-
-    Select @ProformaInv
-
-END TRY
-BEGIN CATCH
-    DECLARE
-        @ErrMsg       VARCHAR(4000),
-        @ErrSeverity  INT,
-        @ErrProcedure VARCHAR(100)
-    SET @ErrMsg       = ERROR_MESSAGE()
-    SET @ErrSeverity  = ERROR_SEVERITY()
-    SET @ErrProcedure = ERROR_PROCEDURE()
-    SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
-    RAISERROR(@ErrMsg, @ErrSeverity, 1)
-END CATCH

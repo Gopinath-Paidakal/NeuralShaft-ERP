@@ -43,6 +43,16 @@ namespace NeuralShaft.Server.Controllers.ProformaInvoice
             //return Ok(json);
         }
 
+        [HttpGet("GetOrdClientByIdSoDtl/{SOHdrId}")]
+        public async Task<ActionResult> GetOrdClientByIdSoDtl(int SOHdrId)
+        {
+
+            var GetOrdClientByIdSODtl = await _proInvService.GetOrdClientByIdSODtl(SOHdrId);
+            //int len = json.ToString().Length;
+            return Content(GetOrdClientByIdSODtl, "application/json");
+            //return Ok(json);
+        }
+
         //[Authorize(Roles = "admin")]
         [HttpGet("GetProformaInv/{fromDate}/{toDate}")]
         public async Task<ActionResult> GetProformaInv(string fromDate, string toDate)

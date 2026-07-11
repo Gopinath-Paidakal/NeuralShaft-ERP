@@ -73,7 +73,7 @@ BEGIN TRY
   --              + CONVERT(nvarchar(20), @SOHNo) + '/'
   --              + CONVERT(nvarchar(8), GETDATE(), 105)
 
-		set @SOHSlNo = @Prefix + RIGHT('0000' + CAST(@SOHNo AS VARCHAR(10)), 5) + '/'            
+		set @SOHSlNo = @Prefix + RIGHT('00' + CAST(@SOHNo AS VARCHAR(10)), 5) + '/'            
 	                 + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
 					

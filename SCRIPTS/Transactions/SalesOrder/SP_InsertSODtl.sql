@@ -237,7 +237,7 @@ BEGIN TRY
 			update SODtl set SORate = @SOProductAmount, SOProductAmount = @SOProductAmount, SOSubTotal = @SOProductAmount, 
 												 SOTaxAmount = @TaxAmount, SOTotalAmount = @TotalAmount, SOGrandTotal = @TotalAmount,
 												 PassengerAmount = @PassengerAmount
-				   where SODtl.SODtlId = @SODtlId
+				  where SODtl.SODtlId = @SODtlId
 
 			
 			-------------------------------------------

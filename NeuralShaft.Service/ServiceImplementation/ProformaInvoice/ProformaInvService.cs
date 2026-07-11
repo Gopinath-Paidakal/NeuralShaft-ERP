@@ -19,9 +19,16 @@ namespace NeuralShaft.Service.ServiceImplementation.ProformaInvoice
         }
         public async Task<string> GetOrdClientByIdProInv(int ordClientHdrId)
         {
-            var enqGetOrdClientHdrById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdProInv",
+            var proGetOrdClientHdrById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdProInv",
                                    new { @ordClientHdrId = ordClientHdrId }); //@EnqDtlId = enqDtlId
-            return enqGetOrdClientHdrById;
+            return proGetOrdClientHdrById;
+        }
+
+        public async Task<string> GetOrdClientByIdSODtl(int SOHdrId)
+        {
+            var proGetOrdClientHdrByIdSODtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdSODtl",
+                                   new { @SOHdrId = SOHdrId }); //@EnqDtlId = enqDtlId
+            return proGetOrdClientHdrByIdSODtl;
         }
 
         public async Task<string> GetProformaInv(string fromDate, string toDate)
@@ -46,16 +53,18 @@ namespace NeuralShaft.Service.ServiceImplementation.ProformaInvoice
             return (insertProformaInv);
         }
 
-        public async Task<string> UpdateProformaInv(int ProformaInvHdrId, object proformaInv)
+        public async Task<string> UpdateProformaInv(int proformaInvHdrId, object proformaInv)
+        {
+            var updateProformaInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateProformaInv", 
+                                new {@ProformaInvHdrId = proformaInvHdrId,  @ProformaInvUpdate = proformaInv.ToString() });
+            return (updateProformaInv);
+        }
+
+        public async Task<string> DeleteProformaInv(int proformaInvHdrId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<string> DeleteProformaInv(int ProformaInvHdrId)
-        {
-            throw new NotImplementedException();
-        }
-
-      
+        
     }
 }

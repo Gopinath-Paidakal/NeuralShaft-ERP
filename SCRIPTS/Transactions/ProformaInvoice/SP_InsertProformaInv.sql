@@ -38,7 +38,7 @@ BEGIN TRY
     set @CompanyId = (Select CompanyId from Company)
 	set @BranchId = (Select BranchId from Branch)
 
- --   set @Prefix = (select DefaultDataName from DefaultData where FormType = 'ProformaInv' and DefaultDataType = 'Prefix' and DefaultDataOrderBy = 1 )
+    set @Prefix = (select DefaultDataName from DefaultData where FormType = 'ProformaInv' and DefaultDataType = 'Prefix' and DefaultDataOrderBy = 1 )
  --   --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
 
 	select @ProformaInvNo = max(ProformaInvNo) from ProformaInvHdr where CompanyId = @CompanyId  and  BranchId = @BranchId
@@ -47,8 +47,8 @@ BEGIN TRY
 	else
 		set @ProformaInvNo = @ProformaInvNo + 1
 
-	--set @ProformaInvSlNo = @Prefix + RIGHT('0000' + CAST(@ProformaInvNo AS VARCHAR(10)), 5) + '/'            
-	--                 + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
+	set @ProformaInvSlNo = @Prefix + RIGHT('00' + CAST(@ProformaInvNo AS VARCHAR(10)), 5) + '/'            
+	                 + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
 	INSERT INTO dbo.ProformaInvHdr
         (
@@ -57,16 +57,22 @@ BEGIN TRY
 
             SOHdrId,
             OrdClientHdrId,
-           
+            
+            EmpId,
             ProformaType,
             ProformaInvNo,
             ProformaInvSLNo,
             ProformaInvDate,
 
+            BillingAddress,
             DeliveryAddress,
             DeliveryContactPerson,
             DeliveryMobileId,
-            
+
+            CustPONo,
+            CustPODate,
+            ProformaInvRemarks,
+
             ProformaProductAmount,
             ProformaDiscountPercentage,
             ProformaDiscountAmount,
@@ -87,15 +93,21 @@ BEGIN TRY
 
             SOHdrId,
             OrdClientHdrId,
+            EmpId,
             ProformaType,
             @ProformaInvNo,
 
-            ProformaInvSLNo,
+            @ProformaInvSlNo,             --ProformaInvSLNo,
             ProformaInvDate,
 
+            BillingAddress,
             DeliveryAddress,
             DeliveryContactPerson,
             DeliveryMobileId,
+
+            CustPONo,
+            CustPODate,
+            ProformaInvRemarks,
 
             ProformaProductAmount,
             ProformaDiscountPercentage,
@@ -115,14 +127,20 @@ BEGIN TRY
         (
             SOHdrId                     INT,
             OrdClientHdrId              INT,
+            EmpId                       INT,
             ProformaType                NVARCHAR(50), 
             ProformaInvNo               NVARCHAR(50),
             ProformaInvSLNo             INT,
             ProformaInvDate             DATE,
 
+            BillingAddress              NVARCHAR(200),
             DeliveryAddress             NVARCHAR(200), 
             DeliveryContactPerson       NVARCHAR(100), 
             DeliveryMobileId            NVARCHAR(100), 
+
+            CustPONo                    NVARCHAR(50),
+            CustPODate                  DATE,
+            ProformaInvRemarks          NVARCHAR(1000),
 
             ProformaProductAmount       DECIMAL(18,2),
             ProformaDiscountPercentage  DECIMAL(18,2),

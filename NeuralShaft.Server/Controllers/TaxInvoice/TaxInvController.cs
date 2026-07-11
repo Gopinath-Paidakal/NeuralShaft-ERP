@@ -4,14 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-//using NeuralShaft.Model;
-using NeuralShaft.Service.ServiceInterfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting;
 using NeuralShaft.Service.ServiceImplementation.Masters;
 using NeuralShaft.Service.ServiceImplementation.Previlege;
 using NeuralShaft.Service.ServiceImplementation.Upload;
 //using NeuralShaft.Model;
+using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.ProformaInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Upload;
 using Newtonsoft.Json;
@@ -22,6 +19,8 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
+
 using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
 
 namespace NeuralShaft.Server.Controllers.TaxInvoice
@@ -38,10 +37,21 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
 
         }
 
-        [HttpGet("GetTaxInv")]
-        public async Task<ActionResult> GetTaxInv()
+
+        [HttpGet("GetOrdClientByIdTaxInv/{ordClientHdrId}")]
+        public async Task<ActionResult> GetOrdClientByIdTaxInv(int ordClientHdrId)
         {
-            string getTaxInv = await _taxInvService.GetTaxInv();
+
+            var GetOrdClientByIdTaxInv = await _taxInvService.GetOrdClientByIdTaxInv(ordClientHdrId);
+            //int len = json.ToString().Length;
+            return Content(GetOrdClientByIdTaxInv, "application/json");
+            //return Ok(json);
+        }
+
+        [HttpGet("GetTaxInv")]
+        public async Task<ActionResult> GetTaxInv(string fromDate, string toDate)
+        {
+            string getTaxInv = await _taxInvService.GetTaxInv(fromDate, toDate);
             return Content(getTaxInv, "application/json");
             //return Ok(getTaxInv);
         }

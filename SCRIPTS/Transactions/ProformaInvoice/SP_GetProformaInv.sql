@@ -32,27 +32,27 @@ BEGIN TRY
 
 		SELECT 
 			  [ProformaInvHdrId]
-			  ,[SOHdr].[SOHdrId]
-			  ,[OrdClientHdr].[OrdClientHdrId]
+			  --,[SOHdr].[SOHdrId]
+			  --,[OrdClientHdr].[OrdClientHdrId]
 			  ,[ProformaType]
-			  ,[ProformaInvNo]
+			  --,[ProformaInvNo]
 			  ,[ProformaInvSLNo]
 			  
 			  --,[ProformaInvDate]
-			  ,FORMAT(ProformaInvDate, 'dd-MM-yyyy') as EnqDate
+			  ,FORMAT(ProformaInvDate, 'dd-MM-yyyy') as ProformaInvDate
 
-			  ,[DeliveryAddress]
-              ,[DeliveryContactPerson]
-              ,[DeliveryMobileId]
+			  --,[DeliveryAddress]
+     --         ,[DeliveryContactPerson]
+     --         ,[DeliveryMobileId]
 
-			  ,[ProformaProductAmount]
-			  ,[ProformaDiscountPercentage]
-			  ,[ProformaDiscountAmount]
-			  ,[ProformaTaxPercentage]
+			  --,[ProformaProductAmount]
+			  --,[ProformaDiscountPercentage]
+			  --,[ProformaDiscountAmount]
+			  --,[ProformaTaxPercentage]
 			  
-			  ,[ItemTotalAmount]
-			  ,[ProformaSubTotal]
-			  ,[ProformaTaxAmount]
+			  --,[ItemTotalAmount]
+			  --,[ProformaSubTotal]
+			  --,[ProformaTaxAmount]
 			  ,[ProformaGrandTotal]
 
 			  ,[SOHdr].[SOConsultant]
@@ -64,7 +64,7 @@ BEGIN TRY
 			  --,[ModifiedDate]
 
 			FROM [dbo].[ProformaInvHdr]		
-			INNER JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [ProformaInvHdr].[SOHdrId]
+			LEFT JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [ProformaInvHdr].[SOHdrId]
 			INNER JOIN [OrdClientHdr] ON [OrdClientHdr].[OrdClientHdrId] = [ProformaInvHdr].[OrdClientHdrId]
 
 			--- Both Date and Time-- best practice

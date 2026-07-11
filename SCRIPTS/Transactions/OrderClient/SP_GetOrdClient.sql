@@ -25,7 +25,8 @@ BEGIN TRY
             
             ISNULL(OrdConsultant, '') AS OrdConsultant,
             ISNULL(OrdClientTitle, '') AS OrdClientTitle,
-            ISNULL(OrdClientName, '') AS OrdClientName,
+            OrdClientTitle +  ' ' + OrdClientName as  'OrdClientName',
+            --ISNULL(OrdClientName, '') AS OrdClientName,
 
             ISNULL(OrdGstTradeName, '') AS OrdGstTradeName,
             ISNULL(OrdGstNo, '') AS OrdGstNo,
