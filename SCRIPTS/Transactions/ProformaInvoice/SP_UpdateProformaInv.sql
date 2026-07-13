@@ -45,8 +45,8 @@ BEGIN TRY
             H.DeliveryContactperson      = J.DeliveryContactperson,
             H.DeliveryMobileId           = J.DeliveryMobileId,
 
-            H.CustPONo                   = J.CustPONo,
-            H.CustPODate                 = J.CustPODate,
+            H.OrdClientPONo              = J.OrdClientPONo,
+            H.OrdClientPODate            = J.OrdClientPODate,
             H.ProformaInvRemarks         = J.ProformaInvRemarks,
 
             H.ProformaProductAmount      = J.ProformaProductAmount,
@@ -82,8 +82,8 @@ BEGIN TRY
                 DeliveryContactPerson      NVARCHAR(100), 
                 DeliveryMobileId           NVARCHAR(100), 
 
-                CustPONo                   NVARCHAR(50),
-                CustPODate                 DATE,
+                OrdClientPONo              NVARCHAR(50),
+                OrdClientPODate            DATE,
                 ProformaInvRemarks         NVARCHAR(1000),
 
                 ProformaProductAmount      DECIMAL(18,2),
@@ -144,8 +144,8 @@ BEGIN TRY
                 TaxAmount               DECIMAL(18,2),
                 ItemTotalAmount         DECIMAL(18,2),
 
-                ModifiedUserId             INT,
-                ModifiedDate               DATE
+                ModifiedUserId          INT,
+                ModifiedDate            DATE
             )
         ) J
         ON D.ProformaInvDtlId = J.ProformaInvDtlId;

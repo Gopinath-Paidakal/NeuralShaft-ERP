@@ -14,6 +14,7 @@ using NeuralShaft.Repository.RepoInterfaces;
 using NeuralShaft.Service.EMail;
 using NeuralShaft.Service.ServiceImplementation;
 using NeuralShaft.Service.ServiceImplementation.CRM;
+using NeuralShaft.Service.ServiceImplementation.DeliveryChallan;
 using NeuralShaft.Service.ServiceImplementation.Enquiry;
 using NeuralShaft.Service.ServiceImplementation.JobOrder;
 using NeuralShaft.Service.ServiceImplementation.Login;
@@ -27,6 +28,7 @@ using NeuralShaft.Service.ServiceImplementation.TaxInvoice;
 using NeuralShaft.Service.ServiceImplementation.Upload;
 using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.CRM;
+using NeuralShaft.Service.ServiceInterfaces.DeliveryChallan;
 using NeuralShaft.Service.ServiceInterfaces.Enquiry;
 using NeuralShaft.Service.ServiceInterfaces.JobOrder;
 using NeuralShaft.Service.ServiceInterfaces.Login;
@@ -124,6 +126,9 @@ builder.Services.AddScoped<IPTC, PTCService>();
 //--- Invoice
 builder.Services.AddScoped<IProformaInv, ProformaInvService>();
 builder.Services.AddScoped<ITaxInv, TaxInvoiceService>();
+
+//--- Delivery Challan
+builder.Services.AddScoped<IDeliveryChallan, DeliveryChallanService>();
 
 
 //----- SMTP Setting for email services

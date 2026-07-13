@@ -37,7 +37,6 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
 
         }
 
-
         [HttpGet("GetOrdClientByIdTaxInv/{ordClientHdrId}")]
         public async Task<ActionResult> GetOrdClientByIdTaxInv(int ordClientHdrId)
         {
@@ -48,7 +47,7 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
             //return Ok(json);
         }
 
-        [HttpGet("GetTaxInv")]
+        [HttpGet("GetTaxInv/{fromDate}/{toDate}")]
         public async Task<ActionResult> GetTaxInv(string fromDate, string toDate)
         {
             string getTaxInv = await _taxInvService.GetTaxInv(fromDate, toDate);
@@ -56,11 +55,11 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
             //return Ok(getTaxInv);
         }
 
-        [HttpGet("GetTaxInvdById/{taxInvId}")]
-        public async Task<ActionResult> GetTaxInvEmpById(int taxInvId)
+        [HttpGet("GetTaxInvdById/{taxInvHdrId}")]
+        public async Task<ActionResult> GetTaxInvEmpById(int taxInvHdrId)
         {
 
-            var getTaxInvById = await _taxInvService.GetTaxInvById(taxInvId);
+            var getTaxInvById = await _taxInvService.GetTaxInvById(taxInvHdrId);
             //int len = json.ToString().Length;
             return Content(getTaxInvById, "application/json");
             //return Ok(json);
@@ -75,10 +74,10 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
             return Ok(insertTaxInv);
         }
 
-        [HttpPost("UpdateTaxInv/{taxInvId}")]
-        public async Task<IActionResult> UpdateTaxInv(int taxInvId, [FromBody] object taxInv)
+        [HttpPost("UpdateTaxInv/{taxInvHdrId}")]
+        public async Task<IActionResult> UpdateTaxInv(int taxInvHdrId, [FromBody] object taxInv)
         {
-            var updateTaxInv = await _taxInvService.UpdateTaxInv(taxInvId, taxInv);
+            var updateTaxInv = await _taxInvService.UpdateTaxInv(taxInvHdrId, taxInv);
             return Ok(updateTaxInv);
 
         }

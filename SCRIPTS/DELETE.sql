@@ -58,8 +58,14 @@
 --Delete from JobOrderBOM
 
 
-Delete from ProformaInvHdr
-Delete from ProformaInvDtl
+--Delete from ProformaInvHdr
+--Delete from ProformaInvDtl
+
+Delete from TaxInvHdr
+Delete from TaxInvDtl
+
+Delete from DeliveryChallanHdr
+Delete from DeliveryChallanDtl
 
 --delete from Employee
 --delete From EmpAcademic

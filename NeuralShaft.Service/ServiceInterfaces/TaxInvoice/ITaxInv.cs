@@ -10,7 +10,7 @@ namespace NeuralShaft.Service.ServiceInterfaces.TaxInvoice
         Task<string> GetOrdClientByIdTaxInv(int ordClientHdrId);
         Task<string> GetTaxInvById(int taxInvHdrId);
         Task<string> InsertTaxInv(object taxInv);
-        Task<string> UpdateTaxInv(int taxInvHdrId, object TaxInv);
+        Task<string> UpdateTaxInv(int taxInvHdrId, object taxInv);
         Task<string> DeleteTaxInv(int taxInvHdrId);
     }
 }

@@ -24,6 +24,7 @@ BEGIN TRY
         SELECT [TaxInvHdrId]
               ,[SOHdrId]
               ,[OrdClientHdrId]
+              ,[EmpId]
               ,[TaxInvType]
               ,[TaxInvNo]
               ,[TaxInvSLNo]
@@ -31,6 +32,10 @@ BEGIN TRY
               ,[DeliveryAddress]
               ,[DeliveryContactPerson]
               ,[DeliveryMobileId]
+
+              ,[OrdClientPONo]
+              ,[OrdClientPODate]
+              ,[TaxInvRemarks]
 
               ,[TaxInvDate]
               ,[TaxInvProductAmount]

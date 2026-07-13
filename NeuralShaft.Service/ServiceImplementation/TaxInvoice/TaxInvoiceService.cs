@@ -20,35 +20,37 @@ namespace NeuralShaft.Service.ServiceImplementation.TaxInvoice
 
         public async Task<string> GetOrdClientByIdTaxInv(int ordClientHdrId)
         {
-            var enqGetOrdClientHdrById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdTaxInv",
+            var GetOrdClientHdrById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdTaxInv",
                                  new { @ordClientHdrId = ordClientHdrId }); //@EnqDtlId = enqDtlId
-            return enqGetOrdClientHdrById;
+            return GetOrdClientHdrById;
         }
 
         public async Task<string> GetTaxInv(string fromDate, string toDate)
         {
-            string TaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_TaxInv",
+            string TaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetTaxInv",
                                    new { @FromDate = fromDate, @ToDate = toDate });
             return TaxInv;
         }
 
         public async Task<string> GetTaxInvById(int taxInvHdrId)
         {
-            var TaxInvById = await _repoJSon.ExecuteJsonSPWithParameter("SP_TaxInvById",
+            var TaxInvById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetTaxInvById",
                                     new { @TaxInvHdrId = taxInvHdrId }); //@EnqDtlId = enqDtlId
             return TaxInvById;
-            ;
+            
         }
 
         public async Task<string> InsertTaxInv(object taxInv)
         {
-            var insertTaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertTaxInv", new { @ProformaInv = taxInv.ToString() });
+            var insertTaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertTaxInv", new { @TaxInv = taxInv.ToString() });
             return (insertTaxInv);
         }
 
-        public async Task<string> UpdateTaxInv(int taxInvHdrId, object TaxInv)
+        public async Task<string> UpdateTaxInv(int taxInvHdrId, object taxInv)
         {
-            throw new NotImplementedException();
+            var updateTaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateTaxInv",
+                               new { @TaxInvHdrId = taxInvHdrId, @TaxInvUpdate = taxInv.ToString() });
+            return (updateTaxInv);
         }
 
         public async Task<string> DeleteTaxInv(int taxInvHdrId)

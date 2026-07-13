@@ -69,8 +69,8 @@ BEGIN TRY
             DeliveryContactPerson,
             DeliveryMobileId,
 
-            CustPONo,
-            CustPODate,
+            OrdClientPONo,
+            OrdClientPODate,
             ProformaInvRemarks,
 
             ProformaProductAmount,
@@ -105,8 +105,8 @@ BEGIN TRY
             DeliveryContactPerson,
             DeliveryMobileId,
 
-            CustPONo,
-            CustPODate,
+            OrdClientPONo,
+            OrdClientPODate,
             ProformaInvRemarks,
 
             ProformaProductAmount,
@@ -138,8 +138,8 @@ BEGIN TRY
             DeliveryContactPerson       NVARCHAR(100), 
             DeliveryMobileId            NVARCHAR(100), 
 
-            CustPONo                    NVARCHAR(50),
-            CustPODate                  DATE,
+            OrdClientPONo                    NVARCHAR(50),
+            OrdClientPODate                  DATE,
             ProformaInvRemarks          NVARCHAR(1000),
 
             ProformaProductAmount       DECIMAL(18,2),

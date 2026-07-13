@@ -98,8 +98,8 @@ BEGIN TRY
               
               ,[DeliveryContactPerson]
               ,[DeliveryMobileId]
-              ,[CustPONo]
-              ,[CustPODate]
+              ,[OrdClientPONo]
+              ,[OrdClientPODate]
               ,[ProformaInvRemarks]
               
               ,[ProformaProductAmount]

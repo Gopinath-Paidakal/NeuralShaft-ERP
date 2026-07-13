@@ -102,9 +102,17 @@ Select * from BOMMst
 
 Select * from JobOrderBOM
 
+--delete from ProformaInvHdr
+--delete from ProformaInvDtl
+
 Select * from ProformaInvHdr
 Select * from ProformaInvDtl
 
+Select * from TaxInvHdr
+Select * from TaxInvDtl
+
+select * from DeliveryChallanHdr
+select * from DeliveryChallanDtl
 
 
 
