@@ -22,10 +22,12 @@ using NeuralShaft.Service.ServiceImplementation.Masters;
 using NeuralShaft.Service.ServiceImplementation.OrderApprove;
 using NeuralShaft.Service.ServiceImplementation.Previlege;
 using NeuralShaft.Service.ServiceImplementation.ProformaInvoice;
+using NeuralShaft.Service.ServiceImplementation.Purchase;
 using NeuralShaft.Service.ServiceImplementation.Quotation;
 using NeuralShaft.Service.ServiceImplementation.SalesOrder;
 using NeuralShaft.Service.ServiceImplementation.TaxInvoice;
 using NeuralShaft.Service.ServiceImplementation.Upload;
+using NeuralShaft.Service.ServiceImplementation.Vendor;
 using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.CRM;
 using NeuralShaft.Service.ServiceInterfaces.DeliveryChallan;
@@ -36,10 +38,12 @@ using NeuralShaft.Service.ServiceInterfaces.Masters;
 using NeuralShaft.Service.ServiceInterfaces.OrderApprove;
 using NeuralShaft.Service.ServiceInterfaces.Previlege;
 using NeuralShaft.Service.ServiceInterfaces.ProformaInvoice;
+using NeuralShaft.Service.ServiceInterfaces.Purchase;
 using NeuralShaft.Service.ServiceInterfaces.Quotation;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrder;
 using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Upload;
+using NeuralShaft.Service.ServiceInterfaces.Vendor;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -88,6 +92,7 @@ builder.Services.AddScoped<IMenuPermissions, MenuPermissionService>();
 
 builder.Services.AddScoped<IContact, ContactService>();
 builder.Services.AddScoped<IAssembly, AssemblyService>();
+builder.Services.AddScoped<IWareHouse, WareHouseService>();
 
 // -------- Upload Files
 builder.Services.AddScoped<IUpload, UploadService>();
@@ -130,6 +135,9 @@ builder.Services.AddScoped<ITaxInv, TaxInvoiceService>();
 //--- Delivery Challan
 builder.Services.AddScoped<IDeliveryChallan, DeliveryChallanService>();
 
+//--- Purchase
+builder.Services.AddScoped<IVendor, VendorService>();
+builder.Services.AddScoped<IPurchaseOrder, PurchaseOrderService>();
 
 //----- SMTP Setting for email services
 builder.Services.Configure<SmtpSettings>(

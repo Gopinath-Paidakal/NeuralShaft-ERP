@@ -4,6 +4,8 @@ using NeuralShaft.Service.ServiceInterfaces.Masters;
 
 namespace NeuralShaft.Server.Controllers.Masters
 {
+    [ApiController]
+    [Route("[controller]")]
     public class DepartmentController : Controller
     {
         private readonly IDepartment _deptService;
