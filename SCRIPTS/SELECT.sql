@@ -114,7 +114,19 @@ Select * from TaxInvDtl
 select * from DeliveryChallanHdr
 select * from DeliveryChallanDtl
 
+select * from WareHouse
 
+Select * from VendorHdr
+Select * from VendorDtl
+
+Select * from InwardStockHdr
+Select * from InwardStockDtl
+
+Select * from PurchaseOrderHdr
+Select * from PurchaseOrderDtl
+
+Select * from StocksInwardHdr
+Select * from StocksInwardDtl
 
 
 

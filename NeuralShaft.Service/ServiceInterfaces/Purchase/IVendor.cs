@@ -7,9 +7,13 @@ namespace NeuralShaft.Service.ServiceInterfaces.Vendor
     public interface IVendor
     {
         Task<string> GetVendor();
-        Task<string> GetVendorById(int vendorHdrId);
-        Task<string> InsertVendor(object vendor);
-        Task<string> UpdateVendor(int vendorHdrId, object vendor);
-        Task<string> DeleteVendor(int vendorHdrId);
+        Task<string> GetVendorById(int VendorHdrId);
+
+        Task<string> InsertVendorHdrDtl(object vendor);
+        Task<string> UpdateVendorHdr(int vendorHdrId, object vendorHdr);
+
+        Task<string> InsertVendorDtl(int VendorHdrId, object VendorDtl);
+        Task<string> UpdateVendorDtl(int VendorDtlId, object VendorDtl);
+        Task<string> DeleteVendorDtl(int VendorAddrId);
     }
 }

@@ -29,15 +29,15 @@ namespace NeuralShaft.Service.ServiceImplementation.Purchase
 
         public async Task<string> InsertPurchaseOrder(object purchaseOrder)
         {
-            var insertDC = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertPurchaseOrder", new { @PurchaseOrder = purchaseOrder.ToString() });
-            return (insertDC);
+            var insertPO = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertPurchaseOrder", new { @PurchaseOrderHdr = purchaseOrder.ToString() });
+            return (insertPO);
         }
 
         public async Task<string> UpdatePurchaseOrder(int purchaseOrderHdrId, object purchaseOrder)
         {
-            var updateDC = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdatePurchaseOrder",
+            var updatePO = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdatePurchaseOrder",
                                new { @PurchaseOrderHdrId = purchaseOrderHdrId, @PurchaseOrderUpdate = purchaseOrder.ToString() });
-            return (updateDC);
+            return (updatePO);
         }
 
         public async Task<string> DeletePurchaseOrder(int purchaseOrderHdrId)

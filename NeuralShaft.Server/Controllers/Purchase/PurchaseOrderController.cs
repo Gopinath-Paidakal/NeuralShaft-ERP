@@ -34,7 +34,7 @@ namespace NeuralShaft.Server.Controllers.Purchase
             //return Ok(getPurchaseOrder);
         }
 
-        [HttpGet("GetPurchaseOrderdById/{purchaseOrderHdrId}")]
+        [HttpGet("GetPurchaseOrderById/{purchaseOrderHdrId}")]
         public async Task<ActionResult> GetPurchaseOrderEmpById(int purchaseOrderHdrId)
         {
 
@@ -47,8 +47,6 @@ namespace NeuralShaft.Server.Controllers.Purchase
         [HttpPost("InsertPurchaseOrder")]
         public async Task<IActionResult> InsertPurchaseOrder([FromBody] object purchaseOrder)
         {
-            //await _service.InsertEnquiry(data);
-            //return Ok();
             var insertPurchaseOrder = await _poService.InsertPurchaseOrder(purchaseOrder);
             return Ok(insertPurchaseOrder);
         }

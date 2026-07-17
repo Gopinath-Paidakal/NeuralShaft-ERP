@@ -22,19 +22,22 @@ namespace NeuralShaft.Service.ServiceImplementation.Masters
 
         public async Task<string> GetWareHouseById(int wareHouseId)
         {
-            string GetWareHouseById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetWareHouseById", new { @WareHouseHdrId = wareHouseId });
+            string GetWareHouseById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetWareHouseById", 
+                                new { @WareHouseId = wareHouseId });
             return GetWareHouseById;
         }
 
         public async Task<string> InsertWareHouse(object wareHouse)
         {
-            string insertWareHouse = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertWareHouse", new { @WareHouse = wareHouse.ToString() });
+            string insertWareHouse = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertWareHouse", 
+                                    new { @WareHouse = wareHouse.ToString() });
             return (insertWareHouse);
         }
 
         public async Task<string> UpdateWareHouse(int wareHouseId, object wareHouse)
         {
-            string updateWareHouse = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateWareHouse", new { @WareHouseId = wareHouseId, @WareHouse = wareHouse.ToString() });
+            string updateWareHouse = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateWareHouse", 
+                            new { @WareHouseId = wareHouseId, @WareHouseUpdate = wareHouse.ToString() });
             return (updateWareHouse);
         }
     }

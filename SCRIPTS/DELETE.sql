@@ -61,11 +61,20 @@
 --Delete from ProformaInvHdr
 --Delete from ProformaInvDtl
 
-Delete from TaxInvHdr
-Delete from TaxInvDtl
+--Delete from TaxInvHdr
+--Delete from TaxInvDtl
 
-Delete from DeliveryChallanHdr
-Delete from DeliveryChallanDtl
+--Delete from DeliveryChallanHdr
+--Delete from DeliveryChallanDtl
+
+--Delete from PurchaseOrderHdr
+--Delete from PurchaseOrderDtl
+
+--Delete from StocksInwardHdr
+--Delete from StocksInwardDtl
+
+--Delete from StockBatch
+--Delete from StockTrn
 
 --delete from Employee
 --delete From EmpAcademic

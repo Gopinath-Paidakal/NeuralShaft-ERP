@@ -1,4 +1,5 @@
 ﻿using NeuralShaft.Repository.RepoInterfaces;
+using NeuralShaft.Service.ServiceInterfaces.Masters;
 using NeuralShaft.Service.ServiceInterfaces.Vendor;
 using System;
 using System.Collections.Generic;
@@ -8,38 +9,50 @@ namespace NeuralShaft.Service.ServiceImplementation.Vendor
 {
     public class VendorService : IVendor
     {
-        private readonly IJsonRepository _repoJSon;
+        private readonly IJsonRepository _venodrJSon;
 
         public VendorService(IJsonRepository repoJson)
         {
-            _repoJSon = repoJson;
+            _venodrJSon = repoJson;
         }
 
         public async Task<string> GetVendor()
         {
-            string GetVendor = await _repoJSon.ExecuteJsonSPWithoutParameter("SP_GetVendor");
-            return GetVendor;
+            string getVendor = await _venodrJSon.ExecuteJsonSPWithoutParameter("SP_GetVendor");
+            return getVendor;
         }
 
         public async Task<string> GetVendorById(int vendorHdrId)
         {
-            string GetVendorById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetVendorById", new { @vendorHdrId = vendorHdrId });
-            return GetVendorById;
+            return await _venodrJSon.ExecuteJsonSPWithParameter("SP_GetVendorById",
+                                                        new { @VendorHdrId = vendorHdrId });
         }
 
-        public async Task<string> InsertVendor(object vendor)
+        public async Task<string> InsertVendorDtl(int vendorHdrId, object vendorDtl)
         {
-            string insertVendor = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertVendor", new { @Vendor = vendor.ToString() });
-            return (insertVendor);
+            return await _venodrJSon.ExecuteJsonSPWithParameter("SP_InsertVendorDtl",
+                                                    new { @VendorHdrId = vendorHdrId, @VendorDtl = vendorDtl.ToString() });
         }
 
-        public async Task<string> UpdateVendor(int vendorHdrId, object vendor)
+        public async Task<string> InsertVendorHdrDtl(object vendor)
         {
-            string updateVendor = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateVendor", new { @VendorHdrId = vendorHdrId, @Vendor = vendor.ToString() });
-            return (updateVendor);
+            return await _venodrJSon.ExecuteJsonSPWithParameter("SP_InsertVendorHdr",
+                                                    new { @VendorHdr = vendor.ToString() });
         }
 
-        public Task<string> DeleteVendor(int vendorHdrId)
+        public async Task<string> UpdateVendorDtl(int vendorDtlId, object vendorDtl)
+        {
+            return await _venodrJSon.ExecuteJsonSPWithParameter("SP_UpdateVendorDtl",
+                                                   new { @VendorDtlId = vendorDtlId, @VendorDtl = vendorDtl.ToString() });
+        }
+
+        public async Task<string> UpdateVendorHdr(int vendorHdrId, object vendorHdr)
+        {
+            return await _venodrJSon.ExecuteJsonSPWithParameter("SP_UpdateVendorHdr",
+                                        new { @VendorHdrId = vendorHdrId, @VendorHdrUpdate = vendorHdr.ToString() });
+        }
+
+        public Task<string> DeleteVendorDtl(int VendorDtlId)
         {
             throw new NotImplementedException();
         }

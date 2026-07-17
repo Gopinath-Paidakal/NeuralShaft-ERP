@@ -25,6 +25,7 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 	DECLARE @DCHdrId INT
+    DECLARE @DCDtlId INT
 
 	BEGIN TRANSACTION
 
@@ -211,6 +212,120 @@ BEGIN TRY
             CreatedUserId               INT,
             CreatedDate                 DATE
         );
+
+        Set @DCDtlId = SCOPE_IDENTITY()
+
+    ------====================================================
+    ------ Insert in StockTrn
+    ----------------------------------------------------------
+    Declare @ItemId Numeric(18,2)
+    Declare @ItemQty Numeric(18,2)
+    Declare @ItemRate Numeric(18,2)
+    Declare @WareHouseId int
+    Declare @CreatedUserId int
+    Declare @CreatedDate date
+    Declare @BatchId int
+
+    --Set @WareHouseId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.WareHouseId')
+    Set @CreatedUserId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.CreatedUserId')
+    Set @CreatedDate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.CreatedDate')
+
+    Set @ItemId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemId')
+    Set @ItemQty = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemQty')
+    Set @ItemRate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemRate')
+
+    ---====================================================
+    ---- Setting the BatchId for LIFO
+    ---=====================================================
+    Set @BatchId = (SELECT TOP (1) BatchId           --, BalanceQty, PurchaseRate
+            FROM StockBatch
+            WHERE ItemId = @ItemId
+              --AND WareHouseId = @WareHouseId
+              AND BalanceQty > 0
+            ORDER BY StocksInwardDate DESC,
+                     BatchId DESC)
+     ---====================================================
+     ---====================================================
+    ---- Setting the WarehouseId for LIFO
+    ---=====================================================
+    Set @WareHouseId = (SELECT TOP (1) WareHouseId           --, BalanceQty, PurchaseRate
+            FROM StockBatch
+            WHERE ItemId = @ItemId
+              --AND WareHouseId = @WareHouseId
+              AND BalanceQty > 0
+            ORDER BY StocksInwardDate DESC,
+                     BatchId DESC)
+     ---====================================================
+
+     INSERT INTO dbo.StockTrn
+        (
+            CompanyId,
+            BranchId,
+            WareHouseId,
+
+            TrnDate,
+            TrnType,
+
+            RefType,
+            RefHdrId,
+            RefDtlId,
+
+            BatchId,
+            ItemId,
+
+            RecdQty,
+            IssuedQty,
+            BalanceQty,
+
+            PurchaseRate,
+            IssueRate,
+            Amount,
+
+            Remarks,
+
+            CreatedUserId,
+            CreatedDate
+        )
+        VALUES
+        (
+            @CompanyId,
+            @BranchId,
+            @WareHouseId,
+
+            @CreatedDate,
+            'DC',
+
+            'Stock Outward',
+            @DCHdrId,
+            @DCDtlId,
+
+            @BatchId,
+            @ItemId,
+
+            0,               --@ItemQty,
+            @ItemQty,
+            0,
+
+            @ItemRate,
+            NULL,
+
+            @ItemQty * @ItemRate,
+
+            '',       ---@Remarks,
+
+            @CreatedUserId,
+            @CreatedDate
+        );
+
+        ----- ======================================================
+        ------ Updating BalanceQty in StockBatch
+        ----========================================================
+         UPDATE StockBatch
+                SET BalanceQty = BalanceQty - @ItemQty
+                WHERE BatchId = @BatchId;
+
+        ----- =====================================================
+
 
     Select @DCHdrId
 
