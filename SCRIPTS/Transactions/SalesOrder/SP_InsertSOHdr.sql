@@ -503,12 +503,29 @@ BEGIN TRY
 	------==============================================
 	------- Inserting into Job Order
 	----------------------------------------------------
+	--Declare @PrefixJO nvarchar(50)
+
+	--set @PrefixJO = (select DefaultDataName from DefaultData where FormType = 'Job Order' and DefaultDataType = 'Prefix' and  DefaultDataOrderBy = 1)
+
+	--	--select @SOHNo = max(SOHNo) from [SOHdr] where CompanyId = @CompanyId  and  BranchId = @BranchId
+	--	--if @SOHNo = 0 or @SOHNo is NULL
+	--	--	set @SOHNo = 1
+	--	--else
+	--	--	set @SOHNo =@SOHNo + 1
+
+	--	--set @SOSlNo = 'SO'+ '/'
+ -- --              + CONVERT(nvarchar(20), @SOHNo) + '/'
+ -- --              + CONVERT(nvarchar(8), GETDATE(), 105)
+
+	--	set @SOHSlNo = @PrefixJO + RIGHT('00' + CAST(@SOHNo AS VARCHAR(10)), 5) + '/'            
+	--                 + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
 	INSERT INTO [dbo].[JobOrder]
            (
 
 		   [SOHdrId]
 		   ,[SODtlId]
+
 		   ,[SONo]
            ,[JobOrderNo]
 		   ,[JobOrderDate]
@@ -524,16 +541,19 @@ BEGIN TRY
       SELECT
 			 [SOHdr].[SOHdrId]
 			,(Select SODtlId from SoDtl where SoHdrId = @SOHdrId)
+
             ,[SOHdr].[SOHNo]
 			,Convert(nvarchar(100), 'JO' + RIGHT('0000' + Convert(nvarchar(20),[SOHdr].[SOHNo]),5) + 'BE') as 'Job Ord No'
+			--,@SOHSlNo as 'Job Ord No'
 			,[SOHdr].[SOHdate]
             ,[SOHdr].[ProjectName]    
+			
 			,[SOHdr].[SOConsultant]    
             ,[SOHdr].[SOCustComp]
-
             ,[SOHdr].[SOContPerson]
             ,[SOHdr].[SOMobileNo]
 			,[SoHdr].[CreatedUserId]
+
 			,GETDATE()
            
 		  FROM SoHdr   

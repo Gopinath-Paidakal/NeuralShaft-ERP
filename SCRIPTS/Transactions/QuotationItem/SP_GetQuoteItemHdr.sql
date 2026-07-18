@@ -36,6 +36,7 @@ BEGIN TRY
           --,[CompanyId]
           --,[BranchId]
         
+		  ,[QuoteHdrItem].[OrdClientHdrId]
           ,[QuoteHdrItem].[ItemQuoteNo]
            --[QuoteHdr].[QuoteDate]
 	      ,FORMAT(ItemQuoteDate, 'dd-MM-yyyy') as QuoteDate   -- + ' ' + FORMAT(QuoteDate, 'HH:mm:ss') as QuoteDate

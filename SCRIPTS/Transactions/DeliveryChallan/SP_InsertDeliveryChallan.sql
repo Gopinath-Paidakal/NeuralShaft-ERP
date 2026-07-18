@@ -234,6 +234,113 @@ BEGIN TRY
     Set @ItemQty = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemQty')
     Set @ItemRate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemRate')
 
+    
+    -----====================================================
+    ------ Check Stock in Batch
+    -----=====================================================
+
+    --DECLARE @AvailableQty DECIMAL(18,2);
+
+    --    SELECT @AvailableQty = SUM(BalanceQty)
+    --    FROM StockBatch
+    --    WHERE ItemId = @ItemId
+    --    AND WareHouseId = @WareHouseId;
+
+    --    IF @AvailableQty < @ItemQty
+    --    BEGIN
+    --        End_Prog:
+    --        --THROW 50001,'Insufficient Stock.',1;
+    --    END
+
+    -----====================================================
+    ------ Select Batches
+    -----=====================================================
+    --    SELECT
+    --        BatchId,
+    --        BalanceQty,
+    --        PurchaseRate 
+
+    --    FROM StockBatch
+    --    WHERE ItemId = @ItemId
+    --    AND WareHouseId = @WareHouseId
+    --    AND BalanceQty > 0
+    --    ORDER BY BatchId DESC;
+
+
+    -----====================================================
+    ------ Select Batches LOOP
+    -----=====================================================
+    --    DECLARE @Qty DECIMAL(18,2)= @ItemQty;
+    --    DECLARE @Balance DECIMAL(18,2)
+    --    DECLARE @Rate DECIMAL(18,2)
+
+    --    WHILE @Qty>0
+    --    BEGIN
+
+    --        SELECT TOP(1)
+    --               @BatchId = BatchId,
+    --               @Balance = BalanceQty,
+    --               @Rate = PurchaseRate
+
+    --        FROM StockBatch
+    --        WHERE ItemId = @ItemId
+    --        AND WareHouseId = @WareHouseId
+    --        AND BalanceQty > 0
+    --        ORDER BY BatchId DESC;
+
+    --        IF @Balance >= @Qty
+    --        BEGIN
+
+    --            UPDATE StockBatch
+    --            SET BalanceQty = BalanceQty-@Qty
+    --            WHERE BatchId = @BatchId;
+
+    --            INSERT INTO StockTrn
+    --            (
+    --                BatchId,
+    --                ItemId,
+    --                IssuedQty,
+    --                PurchaseRate
+    --            )
+    --            VALUES
+    --            (
+    --                @BatchId,
+    --                @ItemId,
+    --                @Qty,
+    --                @Rate
+    --            );
+
+    --            SET @Qty=0;
+
+    --        END
+    --        ELSE
+    --        BEGIN
+
+    --            UPDATE StockBatch
+    --            SET BalanceQty = 0
+    --            WHERE BatchId = @BatchId;
+
+    --            INSERT INTO StockTrn
+    --            (
+    --                BatchId,
+    --                ItemId,
+    --                IssuedQty,
+    --                PurchaseRate
+    --            )
+    --            VALUES
+    --            (
+    --                @BatchId,
+    --                @ItemId,
+    --                @Balance,
+    --                @Rate
+    --            );
+
+    --            SET @Qty = @Qty - @Balance;
+
+    --        END
+
+    --    END
+
     ---====================================================
     ---- Setting the BatchId for LIFO
     ---=====================================================
@@ -255,6 +362,7 @@ BEGIN TRY
               AND BalanceQty > 0
             ORDER BY StocksInwardDate DESC,
                      BatchId DESC)
+
      ---====================================================
 
      INSERT INTO dbo.StockTrn
@@ -330,6 +438,7 @@ BEGIN TRY
     Select @DCHdrId
 
 	COMMIT TRANSACTION
+
 END TRY
 
 	BEGIN CATCH

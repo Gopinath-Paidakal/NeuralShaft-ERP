@@ -69,6 +69,7 @@ BEGIN TRY
 
                (CompanyId
                ,BranchId
+               ,OrdClientHdrId
                ,ItemQuoteNo
                ,ItemQuoteDate
                ,ItemQuoteSlNo
@@ -99,6 +100,7 @@ BEGIN TRY
          SELECT
                 @CompanyId
                ,@BranchId
+               ,OrdClientHdrId
                ,@ItemQuoteNo
                ,ItemQuoteDate
                ,@ItemQuoteSlNo
@@ -129,6 +131,7 @@ BEGIN TRY
             FROM OPENJSON(@QuoteHdrItem,'$.QuoteHdrItem')
             WITH
             (
+                 OrdClientHdrId int,
 	             ItemQuoteDate   date   ,
 	             ItemQuoteSlNo   nvarchar (50)  ,
 

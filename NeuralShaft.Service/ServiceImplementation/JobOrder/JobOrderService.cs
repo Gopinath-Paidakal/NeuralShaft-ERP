@@ -15,13 +15,18 @@ namespace NeuralShaft.Service.ServiceImplementation.JobOrder
             _repoJSon = repoJson;
         }
 
-       
-
         public async Task<string> GetJobOrder(string fromDate, string toDate)
         {
             string jobOrderList = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetJobOrder",
                                   new { @FromDate = fromDate, @ToDate = toDate });
             return jobOrderList;
+        }
+
+        public async Task<string> GetJobOrderByOrdClientHdrId(int OrdClientHdrId)
+        {
+            string jobOrderNosList = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetJOByOrdClientHdrId",
+                                 new { @OrdClientHdrId = OrdClientHdrId});
+            return jobOrderNosList;
         }
 
         public async Task<string> GetJobOrderBOM(int ddProdctId, int soDtlId)

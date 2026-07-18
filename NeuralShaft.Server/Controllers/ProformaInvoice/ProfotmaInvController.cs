@@ -34,12 +34,22 @@ namespace NeuralShaft.Server.Controllers.ProformaInvoice
         }
 
         [HttpGet("GetOrdClientByIdProInv/{ordClientHdrId}")]
-        public async Task<ActionResult> GetOrdClientByIdProInv(int ordClientHdrId)
+        public async Task<ActionResult> GetOrdClientByIdProInv(int ordClientHdrId)  //, string proformaType)
         {
 
-            var GetOrdClientByIdProInv = await _proInvService.GetOrdClientByIdProInv(ordClientHdrId);
+            var GetOrdClientByIdProInv = await _proInvService.GetOrdClientByIdProInv(ordClientHdrId);  // , proformaType);
             //int len = json.ToString().Length;
             return Content(GetOrdClientByIdProInv, "application/json");
+            //return Ok(json);
+        }
+
+        [HttpGet("GetOrdClientByProformaType/{ordClientHdrId}/{proformaType}")]
+        public async Task<ActionResult> GetOrdClientByProformaType(int ordClientHdrId, string proformaType)
+        {
+
+            var GetOrdClientByIdProInvType = await _proInvService.GetOrdClientByProformaType(ordClientHdrId, proformaType);
+            //int len = json.ToString().Length;
+            return Content(GetOrdClientByIdProInvType, "application/json");
             //return Ok(json);
         }
 
@@ -50,6 +60,16 @@ namespace NeuralShaft.Server.Controllers.ProformaInvoice
             var GetOrdClientByIdSODtl = await _proInvService.GetOrdClientByIdSODtl(SOHdrId);
             //int len = json.ToString().Length;
             return Content(GetOrdClientByIdSODtl, "application/json");
+            //return Ok(json);
+        }
+
+        [HttpGet("GetOrdClientQuoteItem/{itemQuoteHdrId}")]
+        public async Task<ActionResult> GetOrdClientQuoteItem(int itemQuoteHdrId)
+        {
+
+            var GetOrdClientQuoteItem = await _proInvService.GetOrdClientQuoteItem(itemQuoteHdrId);
+            //int len = json.ToString().Length;
+            return Content(GetOrdClientQuoteItem, "application/json");
             //return Ok(json);
         }
 

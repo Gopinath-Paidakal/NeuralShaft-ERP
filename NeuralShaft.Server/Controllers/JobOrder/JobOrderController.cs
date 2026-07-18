@@ -23,6 +23,13 @@ namespace NeuralShaft.Server.Controllers.JobOrder
             return Content(jobOrderList, "application/json");
         }
 
+        [HttpGet("GetJobOrderByOrdClientHdrId/{ordClientHdrId}")]
+        public async Task<ActionResult> GetJobOrderByOrdClientHdrId(int ordClientHdrId)
+        {
+            string jobOrderNosList = await _JobOrderService.GetJobOrderByOrdClientHdrId(ordClientHdrId);
+            return Content(jobOrderNosList, "application/json");
+        }
+
         [HttpGet("GetJobOrderBOM/{ddProductId}/{soDtlId}")]
         public async Task<ActionResult> GetJobOrderBOM(int ddProductId, int soDtlId)
         {

@@ -1,105 +1,108 @@
 USE [NSERPLIVE]
 GO
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetOrdClientByIdProInv]') AND type IN (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_GetOrdClientByIdProInv]
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetOrdClientByProformaType]') AND type IN (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_GetOrdClientByProformaType]
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_GetOrdClientByIdProInv]
+CREATE PROCEDURE [dbo].[SP_GetOrdClientByProformaType]
 (
-    @OrdClientHdrId INT
-    --@ProformaType NVARCHAR(50)
+    @OrdClientHdrId INT,
+    @ProformaType NVARCHAR(50)
 )
 ----With Encryption
 AS
 SET NOCOUNT ON;
-DECLARE @OrdClientHdr   NVARCHAR(MAX)
-DECLARE @OrdClientAddr  NVARCHAR(MAX)
+--DECLARE @OrdClientHdr   NVARCHAR(MAX)
+--DECLARE @OrdClientAddr  NVARCHAR(MAX)
 
---DECLARE @JobOrderDtl NVARCHAR(MAX)
+DECLARE @JobOrderDtl NVARCHAR(MAX)
 
---DECLARE @QuoteHdrItem NVARCHAR(MAX)
+DECLARE @QuoteHdrItem NVARCHAR(MAX)
 
-DECLARE @ProformaInvOrdClient NVARCHAR(MAX)
+DECLARE @ProformaType1 NVARCHAR(MAX)
 BEGIN TRY
 
---DECLARE @SOHDrId Int
+DECLARE @SOHDrId Int
 
---set @SOHDrId = (select SOHDrId from SOHdr where OrdClientHdrId = @OrdClientHdrId)
+set @SOHDrId = (select SOHDrId from SOHdr where OrdClientHdrId = @OrdClientHdrId)
     
-    SET @OrdClientHdr = (
-        SELECT
+    if (@ProformaType = upper('PRODUCT'))
+    BEGIN 
+             SET @JobOrderDtl = (
 
-            OrdClientHdrId,
-            ISNULL(OrdConsultant,   '') AS OrdConsultant,
-            OrdClientTitle +  ' ' + OrdClientName as  'OrdClientName',
-            --ISNULL(OrdClientTitle,  '') AS OrdClientTitle,
+               SELECT 
+                    [JobOrder].SOHdrId,
+                    [JobOrder].JobOrderNo
 
-            ISNULL(OrdGstTradeName, '') AS OrdGstTradeName,
-            ISNULL(OrdGstNo,        '') AS OrdGstNo,
-            ISNULL(OrdClientStatus, '') AS OrdClientStatus
+               FROM [dbo].[JobOrder]
+               where SOHdrId = @SOHDrId
 
-        FROM dbo.OrdClientHdr
-        WHERE OrdClientHdrId = @OrdClientHdrId
-        FOR JSON PATH
-    )
+                FOR JSON PATH   
+            )
+    END
 
-    SET @OrdClientAddr = (
-        SELECT
-            ISNULL(OrdClientHdrId,          0) AS OrdClientHdrId,
-            ISNULL(OrdClientAddrId,         0) AS OrdClientAddrId,
-            ISNULL(OrdClientAddr1,         '') AS OrdClientAddr1,
-            ISNULL(OrdClientAddr2,         '') AS OrdClientAddr2,
-            ISNULL(OrdClientPostalCode,    '') AS OrdClientPostalCode,
-            ISNULL(OrdClientState,         '') AS OrdClientState,
+    if (@ProformaType = upper('SPARE'))
+    BEGIN 
 
-            ISNULL(OrdClientCity,          '') AS OrdClientCity,
-            ISNULL(OrdClientPhNo,          '') AS OrdClientPhNo,
-            ISNULL(OrdClientCompanyMailId, '') AS OrdClientCompanyMailId,
-            ISNULL(OrdClientWebsite,       '') AS OrdClientWebsite,
-            --ISNULL(OrdClientPan,           '') AS OrdClientPan,
+        SET @QuoteHdrItem = (
+            SELECT [ItemQuoteHdrId]
+              
+                  ,[ItemQuoteNo]
+                  --,[SOHSlNo]
+                  ,[ItemQuoteDate]
 
-            ISNULL(OrdClientGstNo,         '') AS OrdClientGstNo,
-            ISNULL(OrdClientAdhaarNo,      '') AS OrdClientAdhaarNo,
-            ISNULL(OrdClientAddrType,      '') AS OrdClientAddrType,
-            --ISNULL(OrdClientPriSalutation, '') AS OrdClientPriSalutation,
-            ISNULL(OrdClientPriContPerson, '') AS OrdClientPriContPerson,
-
-            ISNULL(OrdClientPriMailId,     '') AS OrdClientPriMailId,
-            ISNULL(OrdClientPriMobileNo,   '') AS OrdClientPriMobileNo
-            --ISNULL(OrdClientSecSalutation, '') AS OrdClientSecSalutation,
-            --ISNULL(OrdClientSecContPerson, '') AS OrdClientSecContPerson,
-            --ISNULL(OrdClientSecMailId,     '') AS OrdClientSecMailId,
-
-            --ISNULL(OrdClientSecMobileNo,   '') AS OrdClientSecMobileNo,
-            --ISNULL(OrdClientLatitude,      '') AS OrdClientLatitude,
-            --ISNULL(OrdClientLongitude,     '') AS OrdClientLongitude,
-            --ISNULL(OrdClientTravelDistance,'') AS OrdClientTravelDistance,
-            --ISNULL(OrdStatus,              '') AS OrdStatus
+                  ,[ItemQuoteConsultant]
+                  ,[ItemQuoteCustComp]
+              
+                  --[QuoteHdr].QuoteHdrId,
+                  --[QuoteHdr].QuoteNo
 
 
-        FROM dbo.OrdClientAddr
-        WHERE OrdClientHdrId = @OrdClientHdrId
-        FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
-    )
+            FROM dbo.QuoteHdrItem
+            --INNER JOIN [QuoteHdr] On [QuoteHdr].QuoteHdrId = [SOHdr].QuoteHdrId
+            WHERE OrdClientHdrId =  @OrdClientHdrId
+            FOR JSON PATH
+        )
+    END
 
-    --if (@ProformaType = upper('PRODUCT'))
-    --BEGIN 
 
+    
+ if (@ProformaType = upper('PRODUCT'))
+    BEGIN 
+        SET @ProformaType1 = (
+            SELECT
+                JSON_QUERY(@JobOrderDtl) AS JobOrderDtl
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        )
+    END
 
-    --         SET @JobOrderDtl = (
+    if (@ProformaType = upper('SPARE'))
+    BEGIN 
+            SET @ProformaType1 = (
+            SELECT
+                JSON_QUERY(@QuoteHdrItem) AS QuoteHdrItem
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        )
+    END   
 
-    --           SELECT 
-    --                [JobOrder].SOHdrId,
-    --                [JobOrder].JobOrderNo
+    Select @ProformaType1
 
-    --           FROM [dbo].[JobOrder]
-    --           where SOHdrId = @SOHDrId
+END TRY
+BEGIN CATCH
+    DECLARE
+        @ErrMsg       VARCHAR(4000),
+        @ErrSeverity  INT,
+        @ErrProcedure VARCHAR(100)
+    SET @ErrMsg       = ERROR_MESSAGE()
+    SET @ErrSeverity  = ERROR_SEVERITY()
+    SET @ErrProcedure = ERROR_PROCEDURE()
+    SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
+    RAISERROR(@ErrMsg, @ErrSeverity, 1)
+END CATCH
 
-    --            FOR JSON PATH   
-    --        )
 
 
         --SET @SOHdr = (
@@ -121,56 +124,62 @@ BEGIN TRY
         --    WHERE OrdClientHdrId = @OrdClientHdrId
         --    FOR JSON PATH
         --)
-    --END
 
-    --if (@ProformaType = upper('SPARE'))
-    --BEGIN 
+ --SET @OrdClientHdr = (
+    --    SELECT
 
-    --    SET @QuoteHdrItem = (
-    --        SELECT [ItemQuoteHdrId]
-              
-    --              ,[ItemQuoteNo]
-    --              --,[SOHSlNo]
-    --              ,[ItemQuoteDate]
+    --        OrdClientHdrId,
+    --        ISNULL(OrdConsultant,   '') AS OrdConsultant,
+    --        OrdClientTitle +  ' ' + OrdClientName as  'OrdClientName',
+    --        --ISNULL(OrdClientTitle,  '') AS OrdClientTitle,
 
-    --              ,[ItemQuoteConsultant]
-    --              ,[ItemQuoteCustComp]
-              
-    --              --[QuoteHdr].QuoteHdrId,
-    --              --[QuoteHdr].QuoteNo
+    --        ISNULL(OrdGstTradeName, '') AS OrdGstTradeName,
+    --        ISNULL(OrdGstNo,        '') AS OrdGstNo,
+    --        ISNULL(OrdClientStatus, '') AS OrdClientStatus
+
+    --    FROM dbo.OrdClientHdr
+    --    WHERE OrdClientHdrId = @OrdClientHdrId
+    --    FOR JSON PATH
+    --)
+
+    --SET @OrdClientAddr = (
+    --    SELECT
+    --        ISNULL(OrdClientHdrId,          0) AS OrdClientHdrId,
+    --        ISNULL(OrdClientAddrId,         0) AS OrdClientAddrId,
+    --        ISNULL(OrdClientAddr1,         '') AS OrdClientAddr1,
+    --        ISNULL(OrdClientAddr2,         '') AS OrdClientAddr2,
+    --        ISNULL(OrdClientPostalCode,    '') AS OrdClientPostalCode,
+    --        ISNULL(OrdClientState,         '') AS OrdClientState,
+
+    --        ISNULL(OrdClientCity,          '') AS OrdClientCity,
+    --        ISNULL(OrdClientPhNo,          '') AS OrdClientPhNo,
+    --        ISNULL(OrdClientCompanyMailId, '') AS OrdClientCompanyMailId,
+    --        ISNULL(OrdClientWebsite,       '') AS OrdClientWebsite,
+    --        --ISNULL(OrdClientPan,           '') AS OrdClientPan,
+
+    --        ISNULL(OrdClientGstNo,         '') AS OrdClientGstNo,
+    --        ISNULL(OrdClientAdhaarNo,      '') AS OrdClientAdhaarNo,
+    --        ISNULL(OrdClientAddrType,      '') AS OrdClientAddrType,
+    --        --ISNULL(OrdClientPriSalutation, '') AS OrdClientPriSalutation,
+    --        ISNULL(OrdClientPriContPerson, '') AS OrdClientPriContPerson,
+
+    --        ISNULL(OrdClientPriMailId,     '') AS OrdClientPriMailId,
+    --        ISNULL(OrdClientPriMobileNo,   '') AS OrdClientPriMobileNo
+    --        --ISNULL(OrdClientSecSalutation, '') AS OrdClientSecSalutation,
+    --        --ISNULL(OrdClientSecContPerson, '') AS OrdClientSecContPerson,
+    --        --ISNULL(OrdClientSecMailId,     '') AS OrdClientSecMailId,
+
+    --        --ISNULL(OrdClientSecMobileNo,   '') AS OrdClientSecMobileNo,
+    --        --ISNULL(OrdClientLatitude,      '') AS OrdClientLatitude,
+    --        --ISNULL(OrdClientLongitude,     '') AS OrdClientLongitude,
+    --        --ISNULL(OrdClientTravelDistance,'') AS OrdClientTravelDistance,
+    --        --ISNULL(OrdStatus,              '') AS OrdStatus
 
 
-    --        FROM dbo.QuoteHdrItem
-    --        --INNER JOIN [QuoteHdr] On [QuoteHdr].QuoteHdrId = [SOHdr].QuoteHdrId
-    --        WHERE OrdClientHdrId =  @OrdClientHdrId
-    --        FOR JSON PATH
-    --    )
-    --END
-
-
-    SET @ProformaInvOrdClient = (
-            SELECT
-                JSON_QUERY(@OrdClientHdr)  AS OrdClientHdr,
-                JSON_QUERY(@OrdClientAddr) AS OrdClientAddr
-            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    )
-
-    Select @ProformaInvOrdClient
-
-END TRY
-BEGIN CATCH
-    DECLARE
-        @ErrMsg       VARCHAR(4000),
-        @ErrSeverity  INT,
-        @ErrProcedure VARCHAR(100)
-    SET @ErrMsg       = ERROR_MESSAGE()
-    SET @ErrSeverity  = ERROR_SEVERITY()
-    SET @ErrProcedure = ERROR_PROCEDURE()
-    SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
-    RAISERROR(@ErrMsg, @ErrSeverity, 1)
-END CATCH
-
-
+    --    FROM dbo.OrdClientAddr
+    --    WHERE OrdClientHdrId = @OrdClientHdrId
+    --    FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
+    --)
 
 
  --if (@ProformaType = upper('PRODUCT'))

@@ -8,6 +8,8 @@ namespace NeuralShaft.Service.ServiceInterfaces.JobOrder
     {
         Task<string> GetJobOrder(string fromDate, string toDate);
 
+        Task<string> GetJobOrderByOrdClientHdrId(int OrdClientHdrId);
+
         Task<string> GetJobOrderBOM(int ddProdctId, int soDtlId);
 
         Task<string> GetJobOrderBOMUpdate(int soDtlId);

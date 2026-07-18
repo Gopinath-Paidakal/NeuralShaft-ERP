@@ -128,6 +128,10 @@ Select * from PurchaseOrderDtl
 Select * from StocksInwardHdr
 Select * from StocksInwardDtl
 
+Select * from StockBatch
+Select * from StockTrn
+
+
 
 
 
