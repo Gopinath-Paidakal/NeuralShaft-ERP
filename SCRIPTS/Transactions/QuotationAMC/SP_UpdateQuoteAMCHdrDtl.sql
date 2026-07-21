@@ -1,21 +1,21 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdrDtl]    Script Date: 01/07/20266 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteItemHdrDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateQuoteItemHdrDtl]
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteAMCHdrDtl]    Script Date: 20/07/20266 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteAMCHdrDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateQuoteAMCHdrDtl]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdrDtl]    Script Date: 01/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteAMCHdrDtl]    Script Date: 20/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_UpdateQuoteItemHdrDtl]
+CREATE PROCEDURE [dbo].[SP_UpdateQuoteAMCHdrDtl]
 (
-	@QuoteItemHdrId int,	
-	@QuoteItemHdrDtl nvarchar(Max)
+	@QuoteAMCHdrId int,	
+	@QuoteAMCHdrDtl nvarchar(Max)
    
 )
 ----With Encryption
@@ -29,43 +29,43 @@ BEGIN TRY
 
 
     ------------------------------------------------
-    -- UPDATE QuoteHdrItem
+    -- UPDATE QuoteHdrAMC
     ------------------------------------------------
 	  UPDATE H
         SET
            
-            H.ItemQuoteConsultant      = J.ItemQuoteConsultant,
-            --H.ItemProjectName          = J.ItemProjectName,
-            H.ItemExpectedClosingDate  = J.ItemExpectedClosingDate,
-            H.ItemDeliveryBy           = J.ItemDeliveryBy,
-			H.ItemQuoteValidity        = J.ItemQuoteValidity,
+            H.AMCQuoteConsultant      = J.AMCQuoteConsultant,
+            H.AMCProjectName          = J.AMCProjectName,
+            H.AMCExpectedClosingDate  = J.AMCExpectedClosingDate,
+            H.AMCDeliveryBy           = J.AMCDeliveryBy,
+			H.AMCQuoteValidity        = J.AMCQuoteValidity,
 
-            H.ItemGSTExempted          = J.ItemGSTExempted,
-            H.ItemQuotePaymentTerms    = J.ItemQuotePaymentTerms,
+            H.AMCGSTExempted          = J.AMCGSTExempted,
+            H.AMCQuotePaymentTerms    = J.AMCQuotePaymentTerms,
 
-            H.ItemQuoteAmount          = J.ItemQuoteAmount,
-            H.ItemQuoteTaxAmount       = J.ItemQuoteTaxAmount,
-            H.ItemQuoteTotalAmount     = J.ItemQuoteTotalAmount
+            H.AMCQuoteAmount          = J.AMCQuoteAmount,
+            H.AMCQuoteTaxAmount       = J.AMCQuoteTaxAmount,
+            H.AMCQuoteTotalAmount     = J.AMCQuoteTotalAmount
 
-        FROM QuoteHdrItem H
+        FROM QuoteHdrAMC H
 
-        CROSS APPLY OPENJSON(@QuoteItemHdrDtl,'$.QuoteItemHdr')
+        CROSS APPLY OPENJSON(@QuoteAMCHdrDtl,'$.QuoteAMCHdr')
         WITH
         (
-            ItemQuoteConsultant NVARCHAR(100),
-            --ItemProjectName NVARCHAR(100),
-            ItemExpectedClosingDate date ,
-            ItemDeliveryBy NVARCHAR(100),
-		    ItemQuoteValidity NVARCHAR(100),
+            AMCQuoteConsultant NVARCHAR(100),
+            AMCProjectName NVARCHAR(100),
+            AMCExpectedClosingDate date ,
+            AMCDeliveryBy NVARCHAR(100),
+		    AMCQuoteValidity NVARCHAR(100),
 
-            ItemGSTExempted bit ,
-            ItemQuotePaymentTerms NVARCHAR(100),
-            ItemQuoteAmount  numeric(18, 2) ,
-            ItemQuoteTaxAmount  numeric(18, 2) ,
-            ItemQuoteTotalAmount  numeric(18, 2)
+            AMCGSTExempted bit ,
+            AMCQuotePaymentTerms NVARCHAR(100),
+            AMCQuoteAmount  numeric(18, 2) ,
+            AMCQuoteTaxAmount  numeric(18, 2) ,
+            AMCQuoteTotalAmount  numeric(18, 2)
 		
         ) J
-        WHERE H.ItemQuoteHdrId = @QuoteItemHdrId;
+        WHERE H.AMCQuoteHdrId = @QuoteAMCHdrId;
 
         --------------------------------------------------------
 		--- UPdating Detail QuoteDtlItem

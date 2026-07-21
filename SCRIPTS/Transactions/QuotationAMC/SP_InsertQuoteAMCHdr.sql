@@ -1,20 +1,20 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertQuoteItemHdr]    Script Date: 01/07/20266 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertQuoteItemHdr]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_InsertQuoteItemHdr]
+/****** Object:  StoredProcedure [dbo].[SP_InsertQuoteAMCHdr]    Script Date: 20/07/20266 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertQuoteAMCHdr]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_InsertQuoteAMCHdr]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertQuoteItemHdr]    Script Date: 01/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertQuoteAMCHdr]    Script Date: 20/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].SP_InsertQuoteItemHdr
+CREATE PROCEDURE [dbo].[SP_InsertQuoteAMCHdr]
 (
-	@QuoteHdrItem  nvarchar(Max)
+	@QuoteHdrAMC  nvarchar(Max)
 )
 ----With Encryption
 AS
@@ -26,10 +26,10 @@ BEGIN TRY
 
 	Declare @CompanyId int
 	Declare @BranchId int
-	Declare @ItemQuoteNo int
-	Declare @ItemQuoteSlNo nvarchar(50)
-    Declare @ItemClosingDays smallint
-    Declare @ItemQuoteHdrId int   
+	Declare @QuoteAMCNo int
+	Declare @QuoteAMCSlNo nvarchar(50)
+    Declare @AMCClosingDays smallint
+    Declare @QuoteAMCHdrId int   
     
     --- default Data
     Declare @QuotePaymentTerms nvarchar(500)
@@ -47,53 +47,60 @@ BEGIN TRY
         set @CompanyId = (Select CompanyId from Company)
 	    set @BranchId = (Select BranchId from Branch)
 
-        set @Prefix = 'BE/QTN/'
+        --set @Prefix = 'BE/QTN/'
         --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
 
-	    select @ItemQuoteNo = max(ItemQuoteNo) from QuoteHdrItem where CompanyId = @CompanyId  and  BranchId = @BranchId
-	    if @ItemQuoteNo = 0 or @ItemQuoteNo is NULL
-		    set @ItemQuoteNo = 1
+	    select @QuoteAMCNo = max(QuoteAMCNo) from QuoteAMCHdr where CompanyId = @CompanyId  and  BranchId = @BranchId
+	    if @QuoteAMCNo = 0 or @QuoteAMCNo is NULL
+		    set @QuoteAMCNo = 1
 	    else
-		    set @ItemQuoteNo =@ItemQuoteNo + 1
+		    set @QuoteAMCNo =@QuoteAMCNo + 1
 
-	    set @ItemQuoteSlNo = @Prefix + RIGHT('0000' + CAST(@ItemQuoteNo AS VARCHAR(10)), 5) + '/'            
+	    set @QuoteAMCSlNo = @Prefix + RIGHT('0000' + CAST(@QuoteAMCNo AS VARCHAR(10)), 5) + '/'            
 	                     + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
         --- Setting the values from default data for quotation Header
-        set @QuoteValidity = (Select DefaultDataName from DefaultData where FormType = 'Quotation' and DefaultDataType = 'QuoteValidity' and DefaultDataOrderBy = 1)
-        set @DeliveryBy = (Select DefaultDataName from DefaultData where FormType = 'Quotation' and DefaultDataType = 'DeliveryBy' and DefaultDataOrderBy = 1)
+        set @QuoteValidity = (Select DefaultDataName from DefaultData where FormType = 'QuotationAMC' and DefaultDataType = 'QuoteValidity' and DefaultDataOrderBy = 1)
+        set @DeliveryBy = (Select DefaultDataName from DefaultData where FormType = 'QuotationAMC' and DefaultDataType = 'DeliveryBy' and DefaultDataOrderBy = 1)
       --  set @ComplementaryAMC = (Select DefaultDataName from DefaultData where FormType = 'Quotation' and DefaultDataType = 'ComplementaryAMC' and DefaultDataOrderBy = 1)
         --set @QuoteSpecialFeatures = (Select DefaultDataName from DefaultData where FormType = 'Quotation' and DefaultDataType = 'SpecialFeatures' and DefaultDataOrderBy = 1)
     
-        INSERT INTO QuoteHdrItem
+        INSERT INTO QuoteHdrAMC
 
                (CompanyId
                ,BranchId
                ,OrdClientHdrId
-               ,ItemQuoteNo
-               ,ItemQuoteDate
-               ,ItemQuoteSlNo
+               ,QuoteAMCNo
+               ,QuoteAMCDate
+               ,QuoteAMCSlNo
 
-               ,ItemQuoteConsultant
-               ,ItemQuoteClientSalutation
-               ,ItemQuoteCustComp
-               ,ItemQuoteBillingAddr
-               ,ItemQuoteContPerson
+               ,QuoteAMCConsultant
+               ,QuoteAMCClientSalutation
+               ,QuoteAMCCustComp
+               ,QuoteAMCBillingAddr
+               ,QuoteAMCContPerson
 
-               ,ItemQuoteMobileNo
-              -- ,ItemProjectName
-               ,ItemExpectedClosingDate
-               ,ItemQuoteEmailId
-               ,ItemDeliveryBy
+               ,QuoteAMCMobileNo
+               ,AMCProjectName
+               ,AMCExpectedClosingDate
+               ,QuoteAMCEmailId
+               ,AMCDeliveryBy
 
-               ,ItemQuoteValidity
-               ,ItemGSTExempted
-               ,ItemQuotePaymentTerms
-               ,ItemQuoteAmount
-               ,ItemQuoteTaxAmount
+               ,QuoteAMCValidity
+               ,AMCGSTExempted
+               ,QuoteAMCPaymentTerms
+               ,QuoteAMCAmount
+               ,QuoteAMCTaxAmount
            
-               ,ItemQuoteTotalAmount
-               ,ItemQuoteStatus
+               ,QuoteAMCTotalAmount
+               ,QuoteAMCRenewalCount
+               ,QuoteAMCRevisionNo
+               ,QuoteAMCStartDate
+               ,QuoteAMCCloseDate
+
+               ,QuoteAMCStatus
+
+
                ,CreatedUserId
                ,CreatedDate)
 
@@ -101,70 +108,83 @@ BEGIN TRY
                 @CompanyId
                ,@BranchId
                ,OrdClientHdrId
-               ,@ItemQuoteNo
-               ,ItemQuoteDate
-               ,@ItemQuoteSlNo
+               ,@QuoteAMCNo
+               ,QuoteAMCDate
+               ,@QuoteAMCSlNo
 
-               ,ItemQuoteConsultant
-               ,ItemQuoteClientSalutation
-               ,ItemQuoteCustComp
-               ,ItemQuoteBillingAddr
-               ,ItemQuoteContPerson
+               ,QuoteAMCConsultant
+               ,QuoteAMCClientSalutation
+               ,QuoteAMCCustComp
+               ,QuoteAMCBillingAddr
+               ,QuoteAMCContPerson
 
-               ,ItemQuoteMobileNo
-              -- ,ItemProjectName
-               ,ItemExpectedClosingDate
-               ,ItemQuoteEmailId
+               ,QuoteAMCMobileNo
+               ,AMCProjectName
+               ,AMCExpectedClosingDate
+               ,QuoteAMCEmailId
                ,@DeliveryBy
 
                ,@QuoteValidity
-               ,ItemGSTExempted
-               ,ItemQuotePaymentTerms
-               ,ItemQuoteAmount
-               ,ItemQuoteTaxAmount
+               ,AMCGSTExempted
+               ,QuoteAMCPaymentTerms
+               ,QuoteAMCAmount
+               ,QuoteAMCTaxAmount
            
-               ,ItemQuoteTotalAmount
-               ,ItemQuoteStatus
+               ,QuoteAMCTotalAmount
+               ,QuoteAMCRenewalCount
+               ,QuoteAMCRevisionNo
+               ,QuoteAMCStartDate
+               ,QuoteAMCCloseDate
+
+               ,QuoteAMCStatus
                ,CreatedUserId
                ,CreatedDate
 
-            FROM OPENJSON(@QuoteHdrItem,'$.QuoteHdrItem')
+            FROM OPENJSON(@QuoteHdrAMC,'$.QuoteHdrAMC')
             WITH
             (
                  OrdClientHdrId int,
-	             ItemQuoteDate   date   ,
-	             ItemQuoteSlNo   nvarchar (50)  ,
+	             QuoteAMCDate   date   ,
+	             QuoteAMCSlNo   nvarchar (50)  ,
 
-	             ItemQuoteConsultant   nvarchar (100),
-	             ItemQuoteClientSalutation   nvarchar (15),
-	             ItemQuoteCustComp   nvarchar (100),
-	             ItemQuoteBillingAddr   nvarchar (100),
-	             ItemQuoteContPerson   nvarchar (100),
+	             QuoteAMCConsultant   nvarchar (100),
+	             QuoteAMCClientSalutation   nvarchar (15),
+	             QuoteAMCCustComp   nvarchar (100),
+	             QuoteAMCBillingAddr   nvarchar (100),
+	             QuoteAMCContPerson   nvarchar (100),
 
-	             ItemQuoteMobileNo   nvarchar (100),
-	            -- ItemProjectName   nvarchar (100),
-	             ItemExpectedClosingDate   date,
-	             ItemQuoteEmailId   nvarchar (100),
-	            -- ItemDeliveryBy   nvarchar (100),
+	             QuoteAMCMobileNo   nvarchar (100),
+	             AMCProjectName   nvarchar (100),
+	             AMCExpectedClosingDate   date,
+	             QuoteAMCEmailId   nvarchar (100),
+	            -- AMCDeliveryBy   nvarchar (100),
 
-	            -- ItemQuoteValidity   nvarchar (100),
-	             ItemGSTExempted   bit   ,
-	             ItemQuotePaymentTerms   nvarchar (500),
-	             ItemQuoteAmount   numeric (18, 2),
-	             ItemQuoteTaxAmount   numeric (18, 2),
+	            -- QuoteAMCValidity   nvarchar (100),
+	             AMCGSTExempted   bit   ,
+	             QuoteAMCPaymentTerms   nvarchar (500),
+	             QuoteAMCAmount   numeric (18, 2),
+	             QuoteAMCTaxAmount   numeric (18, 2),
 
-	             ItemQuoteTotalAmount   numeric (18, 2),
-	             ItemQuoteStatus   nvarchar (50),
+	             QuoteAMCTotalAmount   numeric (18, 2),
+
+                 QuoteAMCRenewalCount smallint,
+                 QuoteAMCRevisionNo smallint,
+                 QuoteAMCStartDate date,
+                 QuoteAMCCloseDate date,
+
+	             QuoteAMCStatus   nvarchar (50),
 	             CreatedUserId   int,
 	             CreatedDate   date   
 
             );
     
-        set @ItemQuoteHdrId = SCOPE_IDENTITY()
+        set @QuoteAMCHdrId = SCOPE_IDENTITY()
 
-           INSERT INTO QuoteDtlItem
+        ----======================== Insert Detail
+
+           INSERT INTO QuoteAMCDtl
             (
-                ItemQuoteHdrId
+                QuoteAMCHdrId
 
                ,ItemName
                ,ItemId
@@ -185,14 +205,14 @@ BEGIN TRY
 
                ,CreatedUserId
                ,CreatedDate
-               ,ModifiedUserId
-               ,ModifiedDate
+               --,ModifiedUserId
+               --,ModifiedDate
              
             
             )
             SELECT
 
-               @ItemQuoteHdrId
+               @QuoteAMCHdrId
 
                ,ItemName
                ,ItemId
@@ -212,16 +232,17 @@ BEGIN TRY
                ,CrudType
                ,CreatedUserId
                ,CreatedDate
-               ,ModifiedUserId
-               ,ModifiedDate
+               --,ModifiedUserId
+               --,ModifiedDate
              
 
-            FROM OPENJSON(@QuoteHdrItem,'$.QuoteDtlItem')
+            FROM OPENJSON(@QuoteHdrAMC,'$.QuoteAMCDtl')
             WITH
             (
 
+                ItemId int ,
                 ItemName nvarchar (100) ,
-	            ItemId int ,
+	            
 	            ItemHSNCode nvarchar(100),
 	            ItemCode int,
 	            ItemDesc nvarchar(100) ,
@@ -237,12 +258,12 @@ BEGIN TRY
 
                 CrudType nvarchar(50),
 	            CreatedUserId int ,
-	            CreatedDate date,
-	            ModifiedUserId int,
-	            ModifiedDate date 
+	            CreatedDate date
+	            --ModifiedUserId int,
+	            --ModifiedDate date 
             );
 
-    Select @ItemQuoteHdrId
+    Select @QuoteAMCHdrId
 
     COMMIT TRANSACTION
 END TRY

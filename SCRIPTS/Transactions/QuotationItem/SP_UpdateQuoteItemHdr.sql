@@ -1,21 +1,21 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdrDtl]    Script Date: 01/07/20266 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteItemHdrDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateQuoteItemHdrDtl]
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdr]    Script Date: 01/07/20266 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteItemHdr]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateQuoteItemHdr]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdrDtl]    Script Date: 01/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdr]    Script Date: 01/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_UpdateQuoteItemHdrDtl]
+CREATE PROCEDURE [dbo].[SP_UpdateQuoteItemHdr]
 (
-	@QuoteItemHdrId int,	
-	@QuoteItemHdrDtl nvarchar(Max)
+	@QuoteItemHdrId int,
+	@QuoteHdrItem nvarchar(Max)
    
 )
 ----With Encryption
@@ -35,7 +35,6 @@ BEGIN TRY
         SET
            
             H.ItemQuoteConsultant      = J.ItemQuoteConsultant,
-            --H.ItemProjectName          = J.ItemProjectName,
             H.ItemExpectedClosingDate  = J.ItemExpectedClosingDate,
             H.ItemDeliveryBy           = J.ItemDeliveryBy,
 			H.ItemQuoteValidity        = J.ItemQuoteValidity,
@@ -49,7 +48,7 @@ BEGIN TRY
 
         FROM QuoteHdrItem H
 
-        CROSS APPLY OPENJSON(@QuoteItemHdrDtl,'$.QuoteItemHdr')
+        CROSS APPLY OPENJSON(@QuoteHdrItem,'$.QuoteHdrItem')
         WITH
         (
             ItemQuoteConsultant NVARCHAR(100),
@@ -67,181 +66,7 @@ BEGIN TRY
         ) J
         WHERE H.ItemQuoteHdrId = @QuoteItemHdrId;
 
-        --------------------------------------------------------
-		--- UPdating Detail QuoteDtlItem
-		-----====================================================
-
-		--UPDATE D
-		--	SET
-		--		D.[ItemQuantity] = J.[ItemQuantity],
-		--		D.[ItemRate] = J.[ItemRate],
-  --              D.[ItemDiscountAmount] = J.[ItemDiscountAmount],
-  --              D.[ItemDiscountPercentage] = J.[ItemDiscountPercentage],
-  --              D.[ItemTotalAmount] = J.[ItemTotalAmount]
-
-		--	FROM QuoteDtlItem D
-		--	INNER JOIN OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
-		--	WITH
-		--	(
-		--		QuoteItemDtlId INT,
-
-		--		[ItemQuantity] numeric(18, 2) ,
-		--		[ItemRate] numeric(18, 2) ,
-  --              [ItemDiscountAmount] numeric(10, 2) ,
-		--		[ItemDiscountPercentage] numeric(10, 2) ,
-  --              [ItemTotalAmount] numeric(18, 2) 
-		--	) J
-		--	ON D.QuoteItemDtlId = J.QuoteItemDtlId;
-
-			------------------------------------------------
-            --=========================================
-            -- INSERT + UPDATE
-            --=========================================
-
-            MERGE QuoteDtlItem AS T
-            USING
-            (
-                 
-                SELECT [QuoteItemDtlId]
-                      ,[ItemQuoteHdrId]
-                      ,[ItemName]
-                      ,[ItemId]
-                      ,[ItemHSNCode]
-
-                      ,[ItemCode]
-                      ,[ItemDesc]
-                      ,[ItemQuantity]
-                      ,[ItemRate]
-                      ,[ItemAmount]
-                      
-                      ,[ItemDiscountAmount]
-                      ,[ItemDiscountPercentage]
-                      ,[ItemTaxValue]
-                      ,[ItemTotalAmount]
-                      ,UPPER(CrudType) AS CrudType
-                      
-                      ,[CreatedUserId]
-                      ,[CreatedDate]
-                      ,[ModifiedUserId]
-                      ,[ModifiedDate]
-
-                FROM OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
-                WITH
-                (
-                    QuoteItemDtlId            INT,
-                    ItemQuoteHdrId            INT,
-                    ItemName                  NVARCHAR(200),
-                    ItemId                    INT,
-                    ItemHSNCode               NVARCHAR(100),
-                    ItemCode                  NVARCHAR(100),
-                    ItemDesc                  NVARCHAR(200),
-                    ItemQuantity              DECIMAL(18,2),
-                    ItemRate                  DECIMAL(18,2),
-                    ItemAmount                DECIMAL(18,2),
-                    ItemDiscountAmount        DECIMAL(18,2),
-                    ItemDiscountPercentage    DECIMAL(18,2),
-                    ItemTaxValue              DECIMAL(18,2),
-                    ItemTotalAmount           DECIMAL(18,2),
-                    CreatedUserId             INT,
-                    CreatedDate               Date,
-                    ModifiedUserId            INT,
-                    ModifiedDate              Date,
-                    CrudType                  NVARCHAR(50) 
-                )
-            ) AS S
-            ON T.QuoteItemDtlId = S.QuoteItemDtlId
-
-            -- 1. Action: DELETE (If matched and incoming status is 'DELETE')
-		    WHEN MATCHED AND S.CrudType = 'DELETE' THEN
-			DELETE
-
-           -- 2. Action: UPDATE (If matched and NOT marked for deletion)
-            WHEN MATCHED THEN
-            UPDATE SET
-                --T.ItemName               = S.ItemName,
-                --T.ItemId                 = S.ItemId,
-                --T.ItemHSNCode            = S.ItemHSNCode,
-                --T.ItemCode               = S.ItemCode,
-                --T.ItemDesc               = S.ItemDesc,
-                T.ItemQuantity           = S.ItemQuantity,
-                T.ItemRate               = S.ItemRate,
-                T.ItemAmount             = S.ItemAmount,
-                T.ItemDiscountAmount     = S.ItemDiscountAmount,
-                T.ItemDiscountPercentage = S.ItemDiscountPercentage,
-                T.ItemTaxValue           = S.ItemTaxValue,
-                T.ItemTotalAmount        = S.ItemTotalAmount,
-                T.ModifiedUserId         = S.ModifiedUserId,
-                T.CrudType               = S.CrudType
-                
-
-           	-- 3. Action: INSERT (If new record and not flagged as a phantom delete)
-		    WHEN NOT MATCHED BY TARGET AND S.CrudType <> 'DELETE' THEN
-                INSERT
-                (
-                    ItemQuoteHdrId,
-                    ItemName,
-                    ItemId,
-                    ItemHSNCode,
-                    ItemCode,
-                    ItemDesc,
-                    ItemQuantity,
-                    ItemRate,
-                    ItemAmount,
-                    ItemDiscountAmount,
-                    ItemDiscountPercentage,
-                    ItemTaxValue,
-                    ItemTotalAmount,
-                    CreatedUserId,
-                    CreatedDate,
-                    CrudType
-                )
-                VALUES
-                (
-                    S.ItemQuoteHdrId,
-                    S.ItemName,
-                    S.ItemId,
-                    S.ItemHSNCode,
-                    S.ItemCode,
-                    S.ItemDesc,
-                    S.ItemQuantity,
-                    S.ItemRate,
-                    S.ItemAmount,
-                    S.ItemDiscountAmount,
-                    S.ItemDiscountPercentage,
-                    S.ItemTaxValue,
-                    S.ItemTotalAmount,
-                    S.CreatedUserId,
-                    S.CreatedDate,
-                    S.CrudType
-                );
-
-            ----=========================================
-            ---- DELETE
-            ----=========================================
-            --DECLARE @QuoteItemDtlId INT;
-
-            --SELECT @QuoteItemDtlId = QuoteItemDtlId
-            --FROM OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
-            --WITH
-            --(
-            --    QuoteItemDtlId INT
-            --);
-
-            --DELETE D
-            --FROM QuoteDtlItem D
-            --WHERE D.QuoteItemDtlId = @QuoteItemDtlId
-            --AND NOT EXISTS
-            --(
-            --    SELECT 1
-            --    FROM OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
-            --    WITH
-            --    (
-            --        QuoteItemDtlId INT
-            --    ) J
-            --    WHERE J.QuoteItemDtlId = D.QuoteItemDtlId
-            --);
-
-            ----========================================
+      
 
 
     Select @QuoteItemHdrId
@@ -271,6 +96,183 @@ END TRY
 
 End_Prog:
         
+
+
+          --------------------------------------------------------
+		--- UPdating Detail QuoteDtlItem
+		-----====================================================
+
+		--UPDATE D
+		--	SET
+		--		D.[ItemQuantity] = J.[ItemQuantity],
+		--		D.[ItemRate] = J.[ItemRate],
+  --              D.[ItemDiscountAmount] = J.[ItemDiscountAmount],
+  --              D.[ItemDiscountPercentage] = J.[ItemDiscountPercentage],
+  --              D.[ItemTotalAmount] = J.[ItemTotalAmount]
+
+		--	FROM QuoteDtlItem D
+		--	INNER JOIN OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
+		--	WITH
+		--	(
+		--		QuoteItemDtlId INT,
+
+		--		[ItemQuantity] numeric(18, 2) ,
+		--		[ItemRate] numeric(18, 2) ,
+  --              [ItemDiscountAmount] numeric(10, 2) ,
+		--		[ItemDiscountPercentage] numeric(10, 2) ,
+  --              [ItemTotalAmount] numeric(18, 2) 
+		--	) J
+		--	ON D.QuoteItemDtlId = J.QuoteItemDtlId;
+
+			--------------------------------------------------
+   --         --=========================================
+   --         -- INSERT + UPDATE
+   --         --=========================================
+
+   --         MERGE QuoteDtlItem AS T
+   --         USING
+   --         (
+                 
+   --             SELECT [QuoteItemDtlId]
+   --                   ,[ItemQuoteHdrId]
+   --                   ,[ItemName]
+   --                   ,[ItemId]
+   --                   ,[ItemHSNCode]
+
+   --                   ,[ItemCode]
+   --                   ,[ItemDesc]
+   --                   ,[ItemQuantity]
+   --                   ,[ItemRate]
+   --                   ,[ItemAmount]
+                      
+   --                   ,[ItemDiscountAmount]
+   --                   ,[ItemDiscountPercentage]
+   --                   ,[ItemTaxValue]
+   --                   ,[ItemTotalAmount]
+   --                   ,UPPER(CrudType) AS CrudType
+                      
+   --                   ,[CreatedUserId]
+   --                   ,[CreatedDate]
+   --                   ,[ModifiedUserId]
+   --                   ,[ModifiedDate]
+
+   --             FROM OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
+   --             WITH
+   --             (
+   --                 QuoteItemDtlId            INT,
+   --                 ItemQuoteHdrId            INT,
+   --                 ItemName                  NVARCHAR(200),
+   --                 ItemId                    INT,
+   --                 ItemHSNCode               NVARCHAR(100),
+   --                 ItemCode                  NVARCHAR(100),
+   --                 ItemDesc                  NVARCHAR(200),
+   --                 ItemQuantity              DECIMAL(18,2),
+   --                 ItemRate                  DECIMAL(18,2),
+   --                 ItemAmount                DECIMAL(18,2),
+   --                 ItemDiscountAmount        DECIMAL(18,2),
+   --                 ItemDiscountPercentage    DECIMAL(18,2),
+   --                 ItemTaxValue              DECIMAL(18,2),
+   --                 ItemTotalAmount           DECIMAL(18,2),
+   --                 CreatedUserId             INT,
+   --                 CreatedDate               Date,
+   --                 ModifiedUserId            INT,
+   --                 ModifiedDate              Date,
+   --                 CrudType                  NVARCHAR(50) 
+   --             )
+   --         ) AS S
+   --         ON T.QuoteItemDtlId = S.QuoteItemDtlId
+
+   --         -- 1. Action: DELETE (If matched and incoming status is 'DELETE')
+		 --   WHEN MATCHED AND S.CrudType = 'DELETE' THEN
+			--DELETE
+
+   --        -- 2. Action: UPDATE (If matched and NOT marked for deletion)
+   --         WHEN MATCHED THEN
+   --         UPDATE SET
+   --             --T.ItemName               = S.ItemName,
+   --             --T.ItemId                 = S.ItemId,
+   --             --T.ItemHSNCode            = S.ItemHSNCode,
+   --             --T.ItemCode               = S.ItemCode,
+   --             --T.ItemDesc               = S.ItemDesc,
+   --             T.ItemQuantity           = S.ItemQuantity,
+   --             T.ItemRate               = S.ItemRate,
+   --             T.ItemAmount             = S.ItemAmount,
+   --             T.ItemDiscountAmount     = S.ItemDiscountAmount,
+   --             T.ItemDiscountPercentage = S.ItemDiscountPercentage,
+   --             T.ItemTaxValue           = S.ItemTaxValue,
+   --             T.ItemTotalAmount        = S.ItemTotalAmount,
+   --             T.ModifiedUserId         = S.ModifiedUserId,
+   --             T.CrudType               = S.CrudType
+                
+
+   --        	-- 3. Action: INSERT (If new record and not flagged as a phantom delete)
+		 --   WHEN NOT MATCHED BY TARGET AND S.CrudType <> 'DELETE' THEN
+   --             INSERT
+   --             (
+   --                 ItemQuoteHdrId,
+   --                 ItemName,
+   --                 ItemId,
+   --                 ItemHSNCode,
+   --                 ItemCode,
+   --                 ItemDesc,
+   --                 ItemQuantity,
+   --                 ItemRate,
+   --                 ItemAmount,
+   --                 ItemDiscountAmount,
+   --                 ItemDiscountPercentage,
+   --                 ItemTaxValue,
+   --                 ItemTotalAmount,
+   --                 CreatedUserId,
+   --                 CreatedDate,
+   --                 CrudType
+   --             )
+   --             VALUES
+   --             (
+   --                 S.ItemQuoteHdrId,
+   --                 S.ItemName,
+   --                 S.ItemId,
+   --                 S.ItemHSNCode,
+   --                 S.ItemCode,
+   --                 S.ItemDesc,
+   --                 S.ItemQuantity,
+   --                 S.ItemRate,
+   --                 S.ItemAmount,
+   --                 S.ItemDiscountAmount,
+   --                 S.ItemDiscountPercentage,
+   --                 S.ItemTaxValue,
+   --                 S.ItemTotalAmount,
+   --                 S.CreatedUserId,
+   --                 S.CreatedDate,
+   --                 S.CrudType
+   --             );
+
+            ----=========================================
+            ---- DELETE
+            ----=========================================
+            --DECLARE @QuoteItemDtlId INT;
+
+            --SELECT @QuoteItemDtlId = QuoteItemDtlId
+            --FROM OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
+            --WITH
+            --(
+            --    QuoteItemDtlId INT
+            --);
+
+            --DELETE D
+            --FROM QuoteDtlItem D
+            --WHERE D.QuoteItemDtlId = @QuoteItemDtlId
+            --AND NOT EXISTS
+            --(
+            --    SELECT 1
+            --    FROM OPENJSON(@QuoteItemHdrDtl, '$.QuoteDtlItem')
+            --    WITH
+            --    (
+            --        QuoteItemDtlId INT
+            --    ) J
+            --    WHERE J.QuoteItemDtlId = D.QuoteItemDtlId
+            --);
+
+            ----========================================
 
            ----------------------------------------------
            -- Updating the Enq detail with Quote Header Id

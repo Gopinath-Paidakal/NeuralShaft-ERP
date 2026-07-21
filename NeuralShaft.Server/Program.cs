@@ -24,6 +24,8 @@ using NeuralShaft.Service.ServiceImplementation.Previlege;
 using NeuralShaft.Service.ServiceImplementation.ProformaInvoice;
 using NeuralShaft.Service.ServiceImplementation.Purchase;
 using NeuralShaft.Service.ServiceImplementation.Quotation;
+using NeuralShaft.Service.ServiceImplementation.QuotationAMC;
+using NeuralShaft.Service.ServiceImplementation.QuoteItem;
 using NeuralShaft.Service.ServiceImplementation.SalesOrder;
 using NeuralShaft.Service.ServiceImplementation.Stocks;
 using NeuralShaft.Service.ServiceImplementation.TaxInvoice;
@@ -41,6 +43,8 @@ using NeuralShaft.Service.ServiceInterfaces.Previlege;
 using NeuralShaft.Service.ServiceInterfaces.ProformaInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Purchase;
 using NeuralShaft.Service.ServiceInterfaces.Quotation;
+using NeuralShaft.Service.ServiceInterfaces.QuotationAMC;
+using NeuralShaft.Service.ServiceInterfaces.QuoteItem;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrder;
 using NeuralShaft.Service.ServiceInterfaces.Stocks;
 using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
@@ -112,6 +116,12 @@ builder.Services.AddScoped<IEnqFollowUp, EnqFollowUpService>();
 
 //---- Quotation
 builder.Services.AddScoped<IQuoteService, QuoteService>();
+
+//---- QuotationItem
+builder.Services.AddScoped<IQuoteItem, QuoteItemService>();
+
+//---- QuotationAMC
+builder.Services.AddScoped<IQuoteAMC, QuoteAMCService>();
 
 //--- Order Approve
 builder.Services.AddScoped<IOrdApprove, OrdApproveService>();

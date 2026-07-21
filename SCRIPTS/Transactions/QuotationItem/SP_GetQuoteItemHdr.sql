@@ -48,19 +48,19 @@ BEGIN TRY
           ,[QuoteHdrItem].[ItemQuoteContPerson]
           ,[QuoteHdrItem].[ItemQuoteMobileNo]
 
-	      ,[QuoteHdrItem].[ItemProjectName]
-	      ,[QuoteHdrItem].[ItemExpectedClosingDate]
-	      ,[QuoteHdrItem].[ItemQuoteEmailId]
-          ,[QuoteHdrItem].[ItemDeliveryBy]
+	      --,[QuoteHdrItem].[ItemProjectName]
+	   --   ,[QuoteHdrItem].[ItemExpectedClosingDate]
+	   --   ,[QuoteHdrItem].[ItemQuoteEmailId]
+    --      ,[QuoteHdrItem].[ItemDeliveryBy]
 	      
 
-          ,[QuoteHdrItem].[ItemQuoteValidity]
-          ,[QuoteHdrItem].[ItemQuotePaymentTerms]
-	      ,[QuoteHdrItem].[ItemGSTExempted]
-	      ,[QuoteHdrItem].[ItemProductCount]
-		  ,[QuoteHdrItem].[ItemQuoteStatus]
+    --      ,[QuoteHdrItem].[ItemQuoteValidity]
+    --      ,[QuoteHdrItem].[ItemQuotePaymentTerms]
+	   --   ,[QuoteHdrItem].[ItemGSTExempted]
+	   --   ,[QuoteHdrItem].[ItemProductCount]
+		  --,[QuoteHdrItem].[ItemQuoteStatus]
 
-		  ,[QuoteHdrItem].[CreatedUserId]
+		  --,[QuoteHdrItem].[CreatedUserId]
 
 		  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 		  ,[Employee].[EmpMobileNo]
