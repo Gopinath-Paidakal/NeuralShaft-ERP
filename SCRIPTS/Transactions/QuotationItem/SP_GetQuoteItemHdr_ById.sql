@@ -44,19 +44,20 @@ SET @QuoteItemHdr = (
 	      ,[QuoteHdrItem].[ItemQuoteConsultant]
           ,[QuoteHdrItem].[ItemQuoteCustComp]
 		  ,[QuoteHdrItem].[ItemQuoteBillingAddr]
+          ,[QuoteHdrItem].[ItemQuoteJobOrderNo]
           ,[QuoteHdrItem].[ItemQuoteContPerson]
           ,[QuoteHdrItem].[ItemQuoteMobileNo]
 
 
 	      ,[QuoteHdrItem].[ItemExpectedClosingDate]
 	      ,[QuoteHdrItem].[ItemQuoteEmailId]
-          ,[QuoteHdrItem].[ItemDeliveryBy]
+          ,[QuoteHdrItem].[ItemDeliveryInDays]
 	      
 
           ,[QuoteHdrItem].[ItemQuoteValidity]
           ,[QuoteHdrItem].[ItemQuotePaymentTerms]
 	      ,[QuoteHdrItem].[ItemGSTExempted]
-	      ,[QuoteHdrItem].[ItemProductCount]
+	      --,[QuoteHdrItem].[ItemProductCount]
 		  ,[QuoteHdrItem].[ItemQuoteStatus]
 
 		  --,[QuoteHdrItem].[CreatedUserId]
@@ -92,7 +93,7 @@ SET @QuoteItemHdr = (
               ,[ItemRate]
 
               ,[ItemAmount]
-              ,[ItemTaxValue]
+              ,[ItemTaxPercentage]
               ,[ItemDiscountAmount]
               ,[ItemDiscountPercentage]
               ,[ItemTotalAmount]

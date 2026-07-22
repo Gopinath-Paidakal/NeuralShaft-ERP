@@ -14,7 +14,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[SP_InsertQuoteAMCHdr]
 (
-	@QuoteHdrAMC  nvarchar(Max)
+	@QuoteAMCHdr  nvarchar(Max)
 )
 ----With Encryption
 AS
@@ -47,7 +47,7 @@ BEGIN TRY
         set @CompanyId = (Select CompanyId from Company)
 	    set @BranchId = (Select BranchId from Branch)
 
-        --set @Prefix = 'BE/QTN/'
+        set @Prefix = 'BE/AMC/'
         --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
 
 	    select @QuoteAMCNo = max(QuoteAMCNo) from QuoteAMCHdr where CompanyId = @CompanyId  and  BranchId = @BranchId
@@ -56,7 +56,7 @@ BEGIN TRY
 	    else
 		    set @QuoteAMCNo =@QuoteAMCNo + 1
 
-	    set @QuoteAMCSlNo = @Prefix + RIGHT('0000' + CAST(@QuoteAMCNo AS VARCHAR(10)), 5) + '/'            
+	    set @QuoteAMCSlNo = @Prefix + RIGHT('00' + CAST(@QuoteAMCNo AS VARCHAR(10)), 5) + '/'            
 	                     + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
         --- Setting the values from default data for quotation Header
@@ -65,7 +65,7 @@ BEGIN TRY
       --  set @ComplementaryAMC = (Select DefaultDataName from DefaultData where FormType = 'Quotation' and DefaultDataType = 'ComplementaryAMC' and DefaultDataOrderBy = 1)
         --set @QuoteSpecialFeatures = (Select DefaultDataName from DefaultData where FormType = 'Quotation' and DefaultDataType = 'SpecialFeatures' and DefaultDataOrderBy = 1)
     
-        INSERT INTO QuoteHdrAMC
+        INSERT INTO QuoteAMCHdr
 
                (CompanyId
                ,BranchId
@@ -81,13 +81,13 @@ BEGIN TRY
                ,QuoteAMCContPerson
 
                ,QuoteAMCMobileNo
-               ,AMCProjectName
+               ,QuoteAMCProjectName
                ,AMCExpectedClosingDate
                ,QuoteAMCEmailId
-               ,AMCDeliveryBy
+               ,QuoteAMCDeliveryBy
 
                ,QuoteAMCValidity
-               ,AMCGSTExempted
+               ,QuoteAMCGSTExempted
                ,QuoteAMCPaymentTerms
                ,QuoteAMCAmount
                ,QuoteAMCTaxAmount
@@ -119,13 +119,13 @@ BEGIN TRY
                ,QuoteAMCContPerson
 
                ,QuoteAMCMobileNo
-               ,AMCProjectName
+               ,QuoteAMCProjectName
                ,AMCExpectedClosingDate
                ,QuoteAMCEmailId
-               ,@DeliveryBy
+               ,QuoteAMCDeliveryBy
 
-               ,@QuoteValidity
-               ,AMCGSTExempted
+               ,QuoteAMCValidity
+               ,QuoteAMCGSTExempted
                ,QuoteAMCPaymentTerms
                ,QuoteAMCAmount
                ,QuoteAMCTaxAmount
@@ -140,7 +140,7 @@ BEGIN TRY
                ,CreatedUserId
                ,CreatedDate
 
-            FROM OPENJSON(@QuoteHdrAMC,'$.QuoteHdrAMC')
+            FROM OPENJSON(@QuoteAMCHdr,'$.QuoteAMCHdr')
             WITH
             (
                  OrdClientHdrId int,
@@ -154,13 +154,13 @@ BEGIN TRY
 	             QuoteAMCContPerson   nvarchar (100),
 
 	             QuoteAMCMobileNo   nvarchar (100),
-	             AMCProjectName   nvarchar (100),
+	             QuoteAMCProjectName   nvarchar (100),
 	             AMCExpectedClosingDate   date,
 	             QuoteAMCEmailId   nvarchar (100),
-	            -- AMCDeliveryBy   nvarchar (100),
+	             QuoteAMCDeliveryBy   nvarchar (100),
 
-	            -- QuoteAMCValidity   nvarchar (100),
-	             AMCGSTExempted   bit   ,
+	             QuoteAMCValidity   nvarchar (100),
+	             QuoteAMCGSTExempted   bit   ,
 	             QuoteAMCPaymentTerms   nvarchar (500),
 	             QuoteAMCAmount   numeric (18, 2),
 	             QuoteAMCTaxAmount   numeric (18, 2),
@@ -236,7 +236,7 @@ BEGIN TRY
                --,ModifiedDate
              
 
-            FROM OPENJSON(@QuoteHdrAMC,'$.QuoteAMCDtl')
+            FROM OPENJSON(@QuoteAMCHdr,'$.QuoteAMCDtl')
             WITH
             (
 
@@ -244,7 +244,7 @@ BEGIN TRY
                 ItemName nvarchar (100) ,
 	            
 	            ItemHSNCode nvarchar(100),
-	            ItemCode int,
+	            ItemCode nvarchar(50),
 	            ItemDesc nvarchar(100) ,
 
 	            ItemQuantity numeric(18, 2) ,

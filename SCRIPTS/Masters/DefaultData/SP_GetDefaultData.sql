@@ -93,6 +93,7 @@ DECLARE @TotDefaultData NVARCHAR(MAX)
         ISNULL([DoorTechWidth], 0) AS [DoorTechWidth],
         
         ISNULL([DoorTechDepth], 0) AS [DoorTechDepth],
+        ISNULL([TaxValue], 0) AS [TaxValue],
         ISNULL([GST], 0) AS [GST],
         ISNULL([HSNCode], '') AS [HSNCode],
         ISNULL([CabinLeftPanel], '') AS [CabinLeftPanel],

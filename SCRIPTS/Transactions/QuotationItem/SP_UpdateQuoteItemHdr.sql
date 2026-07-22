@@ -36,15 +36,14 @@ BEGIN TRY
            
             H.ItemQuoteConsultant      = J.ItemQuoteConsultant,
             H.ItemExpectedClosingDate  = J.ItemExpectedClosingDate,
-            H.ItemDeliveryBy           = J.ItemDeliveryBy,
+            H.ItemDeliveryInDays           = J.ItemDeliveryInDays,
 			H.ItemQuoteValidity        = J.ItemQuoteValidity,
 
             H.ItemGSTExempted          = J.ItemGSTExempted,
             H.ItemQuotePaymentTerms    = J.ItemQuotePaymentTerms,
 
             H.ItemQuoteAmount          = J.ItemQuoteAmount,
-            H.ItemQuoteTaxAmount       = J.ItemQuoteTaxAmount,
-            H.ItemQuoteTotalAmount     = J.ItemQuoteTotalAmount
+            H.ItemQuoteTaxAmount       = J.ItemQuoteTaxAmount
 
         FROM QuoteHdrItem H
 
@@ -54,7 +53,7 @@ BEGIN TRY
             ItemQuoteConsultant NVARCHAR(100),
             --ItemProjectName NVARCHAR(100),
             ItemExpectedClosingDate date ,
-            ItemDeliveryBy NVARCHAR(100),
+            ItemDeliveryInDays NVARCHAR(100),
 		    ItemQuoteValidity NVARCHAR(100),
 
             ItemGSTExempted bit ,

@@ -75,16 +75,17 @@ BEGIN TRY
                ,ItemQuoteSlNo
 
                ,ItemQuoteConsultant
-               ,ItemQuoteClientSalutation
+               
                ,ItemQuoteCustComp
                ,ItemQuoteBillingAddr
+               ,ItemQuoteJobOrderNo
                ,ItemQuoteContPerson
 
                ,ItemQuoteMobileNo
               -- ,ItemProjectName
                ,ItemExpectedClosingDate
                ,ItemQuoteEmailId
-               ,ItemDeliveryBy
+               ,ItemDeliveryInDays
 
                ,ItemQuoteValidity
                ,ItemGSTExempted
@@ -106,16 +107,17 @@ BEGIN TRY
                ,@ItemQuoteSlNo
 
                ,ItemQuoteConsultant
-               ,ItemQuoteClientSalutation
+               
                ,ItemQuoteCustComp
                ,ItemQuoteBillingAddr
+               ,ItemQuoteJobOrderNo
                ,ItemQuoteContPerson
 
                ,ItemQuoteMobileNo
               -- ,ItemProjectName
                ,ItemExpectedClosingDate
                ,ItemQuoteEmailId
-               ,@DeliveryBy
+               ,ItemDeliveryInDays
 
                ,@QuoteValidity
                ,ItemGSTExempted
@@ -136,16 +138,17 @@ BEGIN TRY
 	             ItemQuoteSlNo   nvarchar (50)  ,
 
 	             ItemQuoteConsultant   nvarchar (100),
-	             ItemQuoteClientSalutation   nvarchar (15),
+	             
 	             ItemQuoteCustComp   nvarchar (100),
 	             ItemQuoteBillingAddr   nvarchar (100),
+                 ItemQuoteJobOrderNo nvarchar (50),
 	             ItemQuoteContPerson   nvarchar (100),
 
 	             ItemQuoteMobileNo   nvarchar (100),
 	            -- ItemProjectName   nvarchar (100),
 	             ItemExpectedClosingDate   date,
 	             ItemQuoteEmailId   nvarchar (100),
-	            -- ItemDeliveryBy   nvarchar (100),
+	             ItemDeliveryInDays   smallint,
 
 	            -- ItemQuoteValidity   nvarchar (100),
 	             ItemGSTExempted   bit   ,
@@ -166,8 +169,8 @@ BEGIN TRY
             (
                 ItemQuoteHdrId
 
-               ,ItemName
                ,ItemId
+               ,ItemName
                ,ItemHSNCode
                ,ItemCode
                ,ItemDesc
@@ -175,27 +178,22 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
                ,ItemTotalAmount
 
-               ,CrudType
-
                ,CreatedUserId
                ,CreatedDate
-               ,ModifiedUserId
-               ,ModifiedDate
-             
             
             )
             SELECT
 
                @ItemQuoteHdrId
 
-               ,ItemName
                ,ItemId
+               ,ItemName
                ,ItemHSNCode
                ,ItemCode
                ,ItemDesc
@@ -203,44 +201,70 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
                ,ItemTotalAmount
 
-               ,CrudType
+            
                ,CreatedUserId
                ,CreatedDate
-               ,ModifiedUserId
-               ,ModifiedDate
              
 
             FROM OPENJSON(@QuoteHdrItem,'$.QuoteDtlItem')
             WITH
             (
 
+                ItemId int ,
                 ItemName nvarchar (100) ,
-	            ItemId int ,
 	            ItemHSNCode nvarchar(100),
-	            ItemCode int,
+	            ItemCode nvarchar(50),
 	            ItemDesc nvarchar(100) ,
 
-	            ItemQuantity numeric(18, 2) ,
+	            ItemQuantity numeric(18, 2),
 	            ItemRate numeric (18, 2),
-	            ItemAmount numeric (18, 2) ,
-	            ItemTaxValue numeric (10, 2) ,
-	            ItemDiscountAmount numeric(18, 2) ,
+	            ItemAmount numeric (18, 2),
+	            ItemTaxPercentage numeric (10, 2),
+	            ItemDiscountAmount numeric(18, 2),
 
-	            ItemDiscountPercentage numeric(10, 2) ,
-	            ItemTotalAmount numeric(18, 2) ,
+	            ItemDiscountPercentage numeric(10, 2),
+	            ItemTotalAmount numeric(18, 2),
 
-                CrudType nvarchar(50),
+          
 	            CreatedUserId int ,
-	            CreatedDate date,
-	            ModifiedUserId int,
-	            ModifiedDate date 
+	            CreatedDate date
+	           
             );
+
+
+            ---==============================================
+            ---- Updating the Hdr Amounts
+            --===============================================
+
+           UPDATE H
+                SET
+                    H.ItemQuoteAmount         = ISNULL(T.ItemAmount,0),
+                    H.ItemDiscountAmount      = ISNULL(T.ItemDiscountAmount,0),
+                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxAmount,0),
+                    H.ItemQuoteTotalAmount    = ISNULL(T.ItemTotalAmount,0)
+                    
+                    FROM QuoteHdrItem H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)         AS ItemAmount,
+                        SUM(ItemDiscountAmount) AS ItemDiscountAmount,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                        SUM(ItemTotalAmount)    AS ItemTotalAmount
+
+                    FROM QuoteDtlItem D
+                    WHERE D.ItemQuoteHdrId =  @ItemQuoteHdrId  -- H.ItemQuoteHdrId
+                ) T
+
+                WHERE H.ItemQuoteHdrId = @ItemQuoteHdrId;  
+                --===============================================
 
     Select @ItemQuoteHdrId
 

@@ -24,77 +24,79 @@ AS
 SET NOCOUNT ON;
 BEGIN TRY
 
-   if upper(@ItemType) = 'PRODUCT'
-	BEGIN 
+ --  if upper(@ItemType) = 'PRODUCT'
+	--BEGIN 
 
-      SELECT (
-        SELECT 
-                --[ItemId],
-                --ISNULL([ItemType], '') AS [ItemType],
-                --ISNULL([ItemCode], '') AS [ItemCode],
-                --ISNULL([ItemName], '') AS [ItemName],
-                --ISNULL([HSNCode], '') AS [HSNCode]
-                   [ItemId]
-              ,[CatgId]
-              ,[ItemGrpId]
-              ,[UomId]
-              ,[WareHouseId]
-              ,[TaxId]
-              ,[ItemType]
-              ,[ItemCode]
-              ,[Item].[HSNCode]
-              ,[ItemName]
-              ,[SuppItemName]
-              ,[ItemDesc]
-              ,[ItemRemarks]
-              ,[ItemStockQty]
-              ,[ItemMinQty]
-              ,[ItemMaxQty]
-              ,[ItemReOrderQty]
-              ,[ItemOrdPriority]
-              ,[ItemLocation]
-              ,[ItemIsActive]
-              ,[ItemSellingPrice]
-              ,[ItemStage]
-              ,[LevelNo]
-              ,[Height]
-              ,[Width]
-              ,[Depth]
-              ,[Speed]
-              ,[TravelHeight]
-              ,[Finish]
-              ,[OpeningType]
-              ,[Weight]
-              ,[ParentItemId]
-              ,[ChildItemId]
+ --     SELECT (
+ --       SELECT 
+ --               --[ItemId],
+ --               --ISNULL([ItemType], '') AS [ItemType],
+ --               --ISNULL([ItemCode], '') AS [ItemCode],
+ --               --ISNULL([ItemName], '') AS [ItemName],
+ --               --ISNULL([HSNCode], '') AS [HSNCode]
+ --              [ItemId]
+ --             ,[CatgId]
+ --             ,[ItemGrpId]
+ --             ,[UomId]
+ --             ,[WareHouseId]
+ --             ,[Item].[TaxId]
+ --             ,[DDTax].[TaxValue]
+ --             ,[ItemType]
+ --             ,[ItemCode]
+ --             ,[Item].[HSNCode]
+ --             ,[ItemName]
+ --             ,[SuppItemName]
+ --             ,[ItemDesc]
+ --             ,[ItemRemarks]
+ --             ,[ItemStockQty]
+ --             ,[ItemMinQty]
+ --             ,[ItemMaxQty]
+ --             ,[ItemReOrderQty]
+ --             ,[ItemOrdPriority]
+ --             ,[ItemLocation]
+ --             ,[ItemIsActive]
+ --             ,[ItemSellingPrice]
+ --             ,[ItemStage]
+ --             ,[LevelNo]
+ --             ,[Height]
+ --             ,[Width]
+ --             ,[Depth]
+ --             ,[Speed]
+ --             ,[TravelHeight]
+ --             ,[Finish]
+ --             ,[OpeningType]
+ --             ,[Weight]
+ --             ,[ParentItemId]
+ --             ,[ChildItemId]
 
-              ,[ItemWeight]
-              ,[ItemSpeed]
-              ,[ItemTravelHeight]
-              ,[ItemHeight]
-              ,[ItemWidth]
-              ,[ItemDepth]
-              ,[ItemCapacity]
-              ,[ItemFinish]
-              ,[ItemOpeningType]
-              ,[ItemDBG]
-              ,[ItemSubType]
+ --             ,[ItemWeight]
+ --             ,[ItemSpeed]
+ --             ,[ItemTravelHeight]
+ --             ,[ItemHeight]
+ --             ,[ItemWidth]
+ --             ,[ItemDepth]
+ --             ,[ItemCapacity]
+ --             ,[ItemFinish]
+ --             ,[ItemOpeningType]
+ --             ,[ItemDBG]
+ --             ,[ItemSubType]
 
-              ,[DefaultData].[DefaultDataName] as 'UOM'
+ --             ,[DefaultData].[DefaultDataName] as 'UOM'
 
-              ,[Item].[CreatedUserId]
-              ,[Item].[CreatedDate]
+ --             ,[Item].[CreatedUserId]
+ --             ,[Item].[CreatedDate]
 
-            FROM [dbo].[Item]
-            INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+ --           FROM [dbo].[Item]
+ --           INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+ --           INNER JOIN [DefaultData] [DDTax] ON [DDTax].[DefaultDataId] = [Item].[TaxId]
 
-            WHERE ItemType = upper('Item')
+ --           WHERE ItemType = upper('Item')
 
-            Order By ItemType
-            FOR JSON PATH, ROOT('Item')
+ --           Order By ItemType
+ --           FOR JSON PATH, ROOT('Item')
 
-        ) AS ItemData;
-    END
+ --       ) AS ItemData;
+ --   END
 
     if upper(@ItemType) = 'RAW-MATERIAL'
 	BEGIN 
@@ -109,9 +111,10 @@ BEGIN TRY
               ,[WareHouseId]
 
               ,[TaxId]
+              ,[DDTax].[TaxValue]
               ,[ItemType]
               ,[ItemCode]
-             -- ,[HSNCode]
+              ,[Item].[HSNCode]
               ,[ItemName]
               
               ,[SuppItemName]
@@ -162,6 +165,7 @@ BEGIN TRY
 
             FROM [dbo].[Item]
             INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+            INNER JOIN [DefaultData] [DDTax] ON [DDTax].[DefaultDataId] = [Item].[TaxId]
             --WHERE ItemType = upper(@ItemType)
 
             Order By ItemType
@@ -170,55 +174,55 @@ BEGIN TRY
         ) AS ItemData;
     END
 
-    if upper(@ItemType) = 'ASSEMBLY'
-	BEGIN 
+ --   if upper(@ItemType) = 'ASSEMBLY'
+	--BEGIN 
 
-      SELECT (
-        SELECT 
+ --     SELECT (
+ --       SELECT 
                 
-               [ItemId]
-              ,[CatgId]
-              ,[ItemGrpId]
-              ,[UomId]
-              ,[WareHouseId]
-              ,[TaxId]
-              ,[ItemType]
-              ,[ItemCode]
-              ,[HSNCode]
-              ,[ItemName]
-              ,[SuppItemName]
-              ,[ItemDesc]
-              ,[ItemRemarks]
-              ,[ItemStockQty]
-              ,[ItemMinQty]
-              ,[ItemMaxQty]
-              ,[ItemReOrderQty]
-              ,[ItemOrdPriority]
-              ,[ItemLocation]
-              ,[ItemIsActive]
-              ,[ItemSellingPrice]
-              ,[ItemStage]
-              ,[LevelNo]
-              ,[Height]
-              ,[Width]
-              ,[Depth]
-              ,[Speed]
-              ,[TravelHeight]
-              ,[Finish]
-              ,[OpeningType]
-              ,[Weight]
-              ,[ParentItemId]
-              ,[ChildItemId]
-              ,[CreatedUserId]
-              ,[CreatedDate]
+ --              [ItemId]
+ --             ,[CatgId]
+ --             ,[ItemGrpId]
+ --             ,[UomId]
+ --             ,[WareHouseId]
+ --             ,[TaxId]
+ --             ,[ItemType]
+ --             ,[ItemCode]
+ --             ,[HSNCode]
+ --             ,[ItemName]
+ --             ,[SuppItemName]
+ --             ,[ItemDesc]
+ --             ,[ItemRemarks]
+ --             ,[ItemStockQty]
+ --             ,[ItemMinQty]
+ --             ,[ItemMaxQty]
+ --             ,[ItemReOrderQty]
+ --             ,[ItemOrdPriority]
+ --             ,[ItemLocation]
+ --             ,[ItemIsActive]
+ --             ,[ItemSellingPrice]
+ --             ,[ItemStage]
+ --             ,[LevelNo]
+ --             ,[Height]
+ --             ,[Width]
+ --             ,[Depth]
+ --             ,[Speed]
+ --             ,[TravelHeight]
+ --             ,[Finish]
+ --             ,[OpeningType]
+ --             ,[Weight]
+ --             ,[ParentItemId]
+ --             ,[ChildItemId]
+ --             ,[CreatedUserId]
+ --             ,[CreatedDate]
 
-            FROM [dbo].[Item]
-             WHERE ItemType = upper('ASSEMBLY')
-            Order By ItemType
-            FOR JSON PATH, ROOT('Assembly')
+ --           FROM [dbo].[Item]
+ --            WHERE ItemType = upper('ASSEMBLY')
+ --           Order By ItemType
+ --           FOR JSON PATH, ROOT('Assembly')
 
-        ) AS ItemData;
-    END
+ --       ) AS ItemData;
+ --   END
 
 END TRY
 

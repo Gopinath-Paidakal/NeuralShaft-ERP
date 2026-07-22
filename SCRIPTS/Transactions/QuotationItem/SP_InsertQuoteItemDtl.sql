@@ -47,13 +47,11 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
                ,ItemTotalAmount
-
-               ,CrudType
 
                ,CreatedUserId
                ,CreatedDate
@@ -75,13 +73,13 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
                ,ItemTotalAmount
 
-               ,CrudType
+           
                ,CreatedUserId
                ,CreatedDate
 
@@ -98,18 +96,18 @@ BEGIN TRY
 	            ItemId int ,
 	            ItemHSNCode nvarchar(100),
 	            ItemCode int,
-	            ItemDesc nvarchar(100) ,
+	            ItemDesc nvarchar(100),
 
-	            ItemQuantity numeric(18, 2) ,
+	            ItemQuantity numeric(18, 2),
 	            ItemRate numeric (18, 2),
 	            ItemAmount numeric (18, 2) ,
-	            ItemTaxValue numeric (10, 2) ,
-	            ItemDiscountAmount numeric(18, 2) ,
+	            ItemTaxPercentage numeric (10, 2),
+	            ItemDiscountAmount numeric(18, 2),
 
-	            ItemDiscountPercentage numeric(10, 2) ,
-	            ItemTotalAmount numeric(18, 2) ,
+	            ItemDiscountPercentage numeric(10, 2),
+	            ItemTotalAmount numeric(18, 2),
 
-                CrudType nvarchar(50),
+              
 	            CreatedUserId int ,
 	            CreatedDate date,
 	            ModifiedUserId int,
@@ -125,12 +123,9 @@ BEGIN TRY
            UPDATE H
                 SET
                     H.ItemQuoteAmount         = ISNULL(T.ItemAmount,0),
-                    --H.ItemQuoteAmount         = ISNULL(T.ItemDiscountAmount,0),
-                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxValue,0),
+                    H.ItemDiscountAmount      = ISNULL(T.ItemDiscountAmount,0),
+                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxAmount,0),
                     H.ItemQuoteTotalAmount    = ISNULL(T.ItemTotalAmount,0)
-
-                    --H.ModifiedUserId     = @ModifiedUserId,
-                    --H.ModifiedDate       = @ModifiedDate
                     
                     FROM QuoteHdrItem H
 
@@ -139,7 +134,7 @@ BEGIN TRY
                     SELECT
                         SUM(ItemAmount)         AS ItemAmount,
                         SUM(ItemDiscountAmount) AS ItemDiscountAmount,
-                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
                         SUM(ItemTotalAmount)    AS ItemTotalAmount
 
                     FROM QuoteDtlItem D
@@ -147,8 +142,6 @@ BEGIN TRY
                 ) T
 
                 WHERE H.ItemQuoteHdrId = @ItemQuoteHdrId;  
-
-
                 --===============================================
 
 

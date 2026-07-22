@@ -131,6 +131,19 @@ Select * from StocksInwardDtl
 Select * from StockBatch
 Select * from StockTrn
 
+--- Product Quotation
+select * from QuoteHdr
+--select * from QuoteDtl
+select * from EnqDtl
+
+-- Item Quotation
+Select * from QuoteHdrItem
+Select * from QuoteDtlItem
+
+-- AMC Quotation
+select * from QuoteAMCHdr
+select * from QuoteAMCDtl
+
 
 
 

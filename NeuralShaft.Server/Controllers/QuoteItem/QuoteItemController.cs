@@ -34,8 +34,6 @@ namespace NeuralShaft.Server.Controllers.QuoteItem
         [HttpPost("InsertQuoteItemHdr")]    // Inserts both hdr and item in add
         public async Task<IActionResult> InsertQuoteItemHdr([FromBody] object QuoteHdrItem)
         {
-            //await _service.InsertEnquiry(data);
-            //return Ok();
             var insertQuoteHdrItem = await _quoteItemService.InsertQuoteItemHdr(QuoteHdrItem);
             return Ok(insertQuoteHdrItem);
 
@@ -78,3 +76,7 @@ namespace NeuralShaft.Server.Controllers.QuoteItem
 
     }
 }
+
+
+//await _service.InsertEnquiry(data);
+//return Ok();

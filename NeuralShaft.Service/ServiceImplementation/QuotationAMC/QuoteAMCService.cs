@@ -26,7 +26,7 @@ namespace NeuralShaft.Service.ServiceImplementation.QuotationAMC
 
         public async Task<string> GetQuoteAMCHdrById(int quoteAMCHdrId)
         {
-            var QuoteAMCGetById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetQuoteAMCDtl_ById",
+            var QuoteAMCGetById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetQuoteAMC_ById",
                                     new { @QuoteAMCHdrId = quoteAMCHdrId });
             return QuoteAMCGetById;
         }
@@ -52,14 +52,13 @@ namespace NeuralShaft.Service.ServiceImplementation.QuotationAMC
             return (insertQuoteAMCDtl);
         }
         
-
-        
+               
         public async Task<string> UpdateQuoteAMCDtl(int quoteAMCDtlId, object quoteAMCDtl)
         {
             try
             {
                 //return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteAMCDtl", new { @QuoteAMCHdrId = QuoteAMCHdrId, @QuoteAMCHdrDtl = QuoteAMCHdrDtl.ToString() });
-                return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteAMCHdrDtl", new { @QuoteAMCDtlId = quoteAMCDtlId, @QuoteAMCHdrDtl = quoteAMCDtl.ToString() });
+                return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteAMCDtl", new { @QuoteAMCDtlId = quoteAMCDtlId, @QuoteAMCDtl = quoteAMCDtl.ToString() });
             }
             catch (Exception ex)
             {
@@ -71,7 +70,7 @@ namespace NeuralShaft.Service.ServiceImplementation.QuotationAMC
 
         public async Task<string> DeleteQuoteAMCDtl(int quoteAMCDtlId)
         {
-            var deleteQuoteAMCById = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteQuoteAMC",
+            var deleteQuoteAMCById = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteQuoteAMCDtl",
                                    new { @QuoteAMCDtlId = quoteAMCDtlId });
 
             return deleteQuoteAMCById;

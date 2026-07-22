@@ -42,28 +42,28 @@ BEGIN TRY
               --QAH.QuoteAMCConsultant    = J.QuoteAMCConsultant,
 
 
-              QAH.QuoteAMCClientSalutation = J.QuoteAMCClientSalutation,
+              
               QAH.QuoteAMCCustComp      = J.QuoteAMCCustComp,
-              QAH.QuoteAMCBillingAddr   = J.QuoteAMCBillingAddr,
+             -- QAH.QuoteAMCBillingAddr   = J.QuoteAMCBillingAddr,
               QAH.QuoteAMCContPerson    = J.QuoteAMCContPerson,
               QAH.QuoteAMCMobileNo      = J.QuoteAMCMobileNo,
 
-              QAH.AMCProjectName        = J.AMCProjectName,
-              QAH.AMCExpectedClosingDate= J.AMCExpectedClosingDate,
-              QAH.QuoteAMCEmailId       = J.QuoteAMCEmailId,
-              QAH.AMCDeliveryBy         = J.AMCDeliveryBy,
-              QAH.QuoteAMCValidity      = J.QuoteAMCValidity,
+              --QAH.QuoteAMCProjectName        = J.QuoteAMCProjectName,
+              QAH.AMCExpectedClosingDate = J.AMCExpectedClosingDate,
+              QAH.QuoteAMCEmailId        = J.QuoteAMCEmailId,
+              QAH.QuoteAMCDeliveryInDays = J.QuoteAMCDeliveryInDays,
+              QAH.QuoteAMCValidity       = J.QuoteAMCValidity,
               
-              QAH.AMCGSTExempted        = J.AMCGSTExempted,
+              QAH.QuoteAMCGSTExempted   = J.QuoteAMCGSTExempted,
               QAH.QuoteAMCPaymentTerms  = J.QuoteAMCPaymentTerms,
               QAH.QuoteAMCAmount        = J.QuoteAMCAmount,
               QAH.QuoteAMCTaxAmount     = J.QuoteAMCTaxAmount,
               QAH.QuoteAMCTotalAmount   = J.QuoteAMCTotalAmount,
               
               QAH.QuoteAMCRenewalCount  = J.QuoteAMCRenewalCount,
-              QAH.QuoteAMCRevisionNo    = J.QuoteAMCRevisionNo,
+              --QAH.QuoteAMCRevisionNo    = J.QuoteAMCRevisionNo,
               QAH.QuoteAMCStartDate     = J.QuoteAMCStartDate,
-              QAH.QuoteAMCCloseDate     = J.QuoteAMCCloseDate,
+              QAH.QuoteAMCEndDate     = J.QuoteAMCEndDate,
               QAH.QuoteAMCStatus        = J.QuoteAMCStatus,
 
               QAH.ModifiedUserId        = J.ModifiedUserId,
@@ -81,19 +81,19 @@ BEGIN TRY
               --QuoteAMCSlNo              NVARCHAR(50),
               --QuoteAMCDate              DATE,
               QuoteAMCConsultant        NVARCHAR(200),
-              QuoteAMCClientSalutation  NVARCHAR(50),
+              
               QuoteAMCCustComp          NVARCHAR(200),
               QuoteAMCBillingAddr       NVARCHAR(MAX),
               QuoteAMCContPerson        NVARCHAR(200),
 
               QuoteAMCMobileNo          NVARCHAR(20),
-              AMCProjectName            NVARCHAR(500),
+              QuoteAMCProjectName            NVARCHAR(500),
               AMCExpectedClosingDate    DATE,
               QuoteAMCEmailId           NVARCHAR(200),
-              AMCDeliveryBy             NVARCHAR(200),
+              QuoteAMCDeliveryInDays    NVARCHAR(200),
               
               QuoteAMCValidity          NVARCHAR(200),
-              AMCGSTExempted            BIT,
+              QuoteAMCGSTExempted       BIT,
               QuoteAMCPaymentTerms      NVARCHAR(MAX),
               QuoteAMCAmount            DECIMAL(18,2),
               QuoteAMCTaxAmount         DECIMAL(18,2),
@@ -102,7 +102,7 @@ BEGIN TRY
               QuoteAMCRenewalCount      INT,
               QuoteAMCRevisionNo        INT,
               QuoteAMCStartDate         DATE,
-              QuoteAMCCloseDate         DATE,
+              QuoteAMCEndDate         DATE,
 
               QuoteAMCStatus            NVARCHAR(50),
               ModifiedUserId            INT,

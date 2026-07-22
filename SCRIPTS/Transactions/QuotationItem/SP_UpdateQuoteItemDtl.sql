@@ -1,18 +1,18 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdrDtl]    Script Date: 01/07/20266 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteItemHdrDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateQuoteItemHdrDtl]
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemDtl]    Script Date: 01/07/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteItemDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateQuoteItemDtl]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemHdrDtl]    Script Date: 01/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteItemDtl]    Script Date: 01/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_UpdateQuoteItemHdrDtl]
+CREATE PROCEDURE [dbo].[SP_UpdateQuoteItemDtl]
 (
 	@QuoteItemDtlId int,	
 	@QuoteDtlItem nvarchar(Max)
@@ -47,7 +47,7 @@ BEGIN TRY
               QDI.ItemAmount              = J.ItemAmount,
               QDI.ItemDiscountAmount      = J.ItemDiscountAmount,
               QDI.ItemDiscountPercentage  = J.ItemDiscountPercentage,
-              QDI.ItemTaxValue            = J.ItemTaxValue,
+              QDI.ItemTaxPercentage       = J.ItemTaxPercentage,
               QDI.ItemTotalAmount         = J.ItemTotalAmount,
 
               QDI.ModifiedUserId          = J.ModifiedUserId,
@@ -70,7 +70,7 @@ BEGIN TRY
             ItemAmount                 DECIMAL(18,2),
             ItemDiscountAmount         DECIMAL(18,2),
             ItemDiscountPercentage     DECIMAL(18,2),
-            ItemTaxValue               DECIMAL(18,2),
+            ItemTaxPercentage               DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
             ModifiedUserId             INT,
             ModifiedDate               DATE
@@ -78,19 +78,16 @@ BEGIN TRY
         ON QDI.QuoteItemDtlId = J.QuoteItemDtlId;
     
 
-            ---==============================================
+           ---==============================================
             ---- Updating the Hdr Amounts
             --===============================================
 
-             UPDATE H
+           UPDATE H
                 SET
                     H.ItemQuoteAmount         = ISNULL(T.ItemAmount,0),
-                    --H.ItemQuoteAmount         = ISNULL(T.ItemDiscountAmount,0),
-                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxValue,0),
+                    H.ItemDiscountAmount      = ISNULL(T.ItemDiscountAmount,0),
+                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxAmount,0),
                     H.ItemQuoteTotalAmount    = ISNULL(T.ItemTotalAmount,0)
-
-                    --H.ModifiedUserId     = @ModifiedUserId,
-                    --H.ModifiedDate       = @ModifiedDate
                     
                     FROM QuoteHdrItem H
 
@@ -99,7 +96,7 @@ BEGIN TRY
                     SELECT
                         SUM(ItemAmount)         AS ItemAmount,
                         SUM(ItemDiscountAmount) AS ItemDiscountAmount,
-                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
                         SUM(ItemTotalAmount)    AS ItemTotalAmount
 
                     FROM QuoteDtlItem D
@@ -107,11 +104,7 @@ BEGIN TRY
                 ) T
 
                 WHERE H.ItemQuoteHdrId = @ItemQuoteHdrId;  
-
                 --===============================================
-
-                --===============================================
-
 
     Select @QuoteItemDtlId
     

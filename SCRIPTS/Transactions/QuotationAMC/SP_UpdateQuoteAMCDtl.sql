@@ -1,18 +1,18 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteAMCHdrDtl]    Script Date: 01/07/20266 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteAMCHdrDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateQuoteAMCHdrDtl]
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteAMCDtl]    Script Date: 01/07/20266 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateQuoteAMCDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateQuoteAMCDtl]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteAMCHdrDtl]    Script Date: 01/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_UpdateQuoteAMCDtl]    Script Date: 01/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_UpdateQuoteAMCHdrDtl]
+CREATE PROCEDURE [dbo].[SP_UpdateQuoteAMCDtl]
 (
 	@QuoteAMCDtlId int,	
 	@QuoteAMCDtl nvarchar(Max)
@@ -23,7 +23,15 @@ AS
 SET NOCOUNT ON;
 BEGIN TRY
 
-    --Declare @EnqDtlId int
+    
+       Declare @QuoteAMCHdrId int
+       Declare @ItemQuoteHdrId int
+       Declare @ModifiedUserId int
+       Declare @ModifiedDate date
+
+       set @QuoteAMCHdrId = JSON_VALUE(@QuoteAMCDtl, '$.QuoteAMCHdrId')
+       set @ModifiedUserId = JSON_VALUE(@QuoteAMCDtl, '$.ModifiedUserId')
+       set @ModifiedDate = JSON_VALUE(@QuoteAMCDtl, '$.ModifiedDate')
 
 	BEGIN TRANSACTION
 
@@ -59,7 +67,7 @@ BEGIN TRY
             --ItemCode                   NVARCHAR(100),
             --ItemDesc                   NVARCHAR(MAX),
 
-            ItemQuantity               DECIMAL(18,3),
+            ItemQuantity               DECIMAL(18,2),
             ItemRate                   DECIMAL(18,2),
             ItemAmount                 DECIMAL(18,2),
             ItemDiscountAmount         DECIMAL(18,2),
@@ -71,6 +79,37 @@ BEGIN TRY
         ) J
         ON QDI.QuoteAMCDtlId = @QuoteAMCDtlId     ----- J.QuoteAMCDtlId;
     
+         ---==============================================
+            ---- Updating the Hdr Amounts
+            --===============================================
+
+           UPDATE H
+                SET
+                    H.QuoteAMCAmount         = ISNULL(T.ItemAmount,0),
+                    --H.ItemQuoteAmount      = ISNULL(T.ItemDiscountAmount,0),
+                    H.QuoteAMCTaxAmount      = ISNULL(T.ItemTaxValue,0),
+                    H.QuoteAMCTotalAmount    = ISNULL(T.ItemTotalAmount,0)
+
+                    --H.ModifiedUserId     = @ModifiedUserId,
+                    --H.ModifiedDate       = @ModifiedDate
+                    
+                    FROM QuoteAMCHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)         AS ItemAmount,
+                        SUM(ItemDiscountAmount) AS ItemDiscountAmount,
+                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTotalAmount)    AS ItemTotalAmount
+
+                    FROM QuoteAMCDtl D
+                    WHERE D.QuoteAMCHdrId =  @QuoteAMCHdrId  -- H.ItemQuoteHdrId
+                ) T
+
+                WHERE H.QuoteAMCHdrId = @QuoteAMCHdrId;  
+                --===============================================
+
 
     Select @QuoteAMCDtlId
     

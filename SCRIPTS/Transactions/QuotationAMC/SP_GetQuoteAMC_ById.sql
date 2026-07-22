@@ -45,19 +45,18 @@ DECLARE @QuoteAMC   NVARCHAR(MAX)
           ,[QuoteAMCContPerson]
       
           ,[QuoteAMCMobileNo]
-          ,[AMCProjectName]
+          ,[QuoteAMCProjectName]
           ,[AMCExpectedClosingDate]
           ,[QuoteAMCEmailId]
-          ,[AMCDeliveryBy]
+          ,[QuoteAMCDeliveryBy]
       
           ,[QuoteAMCValidity]
-          ,[AMCGSTExempted]
+          ,[QuoteAMCGSTExempted]
           ,[QuoteAMCPaymentTerms]
           ,[QuoteAMCAmount]
           ,[QuoteAMCTaxAmount]
-      
+        
           ,[QuoteAMCRenewalCount]
-          ,[AMCProductCount]
           ,[QuoteAMCRevisionNo]
           ,[QuoteAMCStartDate]
           ,[QuoteAMCCloseDate]

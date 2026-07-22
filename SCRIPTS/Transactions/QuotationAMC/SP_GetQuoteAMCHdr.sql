@@ -48,17 +48,17 @@ BEGIN TRY
           ,[QuoteAMCHdr].[QuoteAMCContPerson]
           ,[QuoteAMCHdr].[QuoteAMCMobileNo]
 
-	      ,[QuoteAMCHdr].[AMCProjectName]
+	      ,[QuoteAMCHdr].[QuoteAMCProjectName]
 	      ,[QuoteAMCHdr].[AMCExpectedClosingDate]
 	      ,[QuoteAMCHdr].[QuoteAMCEmailId]
-          ,[QuoteAMCHdr].[AMCDeliveryBy]
+          ,[QuoteAMCHdr].[QuoteAMCDeliveryBy]
 	      
 
           ,[QuoteAMCHdr].[QuoteAMCValidity]
           ,[QuoteAMCHdr].[QuoteAMCPaymentTerms]
-	      ,[QuoteAMCHdr].[AMCGSTExempted]
+	      ,[QuoteAMCHdr].[QuoteAMCGSTExempted]
 	      
-		  ,[QuoteAMCHdr].[AMCProductCount]
+		  ,[QuoteAMCHdr].[QuoteAMCRenewalCount]
 		  ,[QuoteAMCHdr].[QuoteAMCRevisionNo]
 		  ,[QuoteAMCHdr].[QuoteAMCStartDate]
 	      ,[QuoteAMCHdr].[QuoteAMCCloseDate]

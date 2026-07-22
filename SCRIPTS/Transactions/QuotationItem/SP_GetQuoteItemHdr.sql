@@ -45,6 +45,7 @@ BEGIN TRY
 	      ,[QuoteHdrItem].[ItemQuoteConsultant]
           ,[QuoteHdrItem].[ItemQuoteCustComp]
 		  ,[QuoteHdrItem].[ItemQuoteBillingAddr]
+		  ,[QuoteHdrItem].[ItemQuoteJobOrderNo]
           ,[QuoteHdrItem].[ItemQuoteContPerson]
           ,[QuoteHdrItem].[ItemQuoteMobileNo]
 

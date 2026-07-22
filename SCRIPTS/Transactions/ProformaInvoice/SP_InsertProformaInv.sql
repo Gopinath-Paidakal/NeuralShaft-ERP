@@ -85,19 +85,19 @@ BEGIN TRY
             
             CreatedUserId,
             CreatedDate
-
         )
         SELECT
+
             @CompanyId,
             @BranchId,
 
             SOHdrId,
             OrdClientHdrId,
+            
             EmpId,
             ProformaType,
             @ProformaInvNo,
-
-            @ProformaInvSlNo,             --ProformaInvSLNo,
+            @ProformaInvSlNo,
             ProformaInvDate,
 
             BillingAddress,
@@ -113,12 +113,12 @@ BEGIN TRY
             ProformaDiscountPercentage,
             ProformaDiscountAmount,
             ProformaTaxPercentage,
-            ItemTotalAmount,
             
+            ItemTotalAmount,
             ProformaSubTotal,
             ProformaTaxAmount,
             ProformaGrandTotal,
-
+            
             CreatedUserId,
             CreatedDate
 
@@ -127,10 +127,11 @@ BEGIN TRY
         (
             SOHdrId                     INT,
             OrdClientHdrId              INT,
+
             EmpId                       INT,
             ProformaType                NVARCHAR(50), 
-            ProformaInvNo               NVARCHAR(50),
-            ProformaInvSLNo             INT,
+            --ProformaInvNo               NVARCHAR(50),
+            --ProformaInvSLNo             NVARCHAR(50),
             ProformaInvDate             DATE,
 
             BillingAddress              NVARCHAR(200),
@@ -158,62 +159,64 @@ BEGIN TRY
 
         SET @ProformaInvHdrId = SCOPE_IDENTITY();
 
-        ------------------------------------------------------------
-        -- Insert Details
-        ------------------------------------------------------------
-        INSERT INTO dbo.ProformaInvDtl
-        (
-            ProformaInvHdrId,
-            ItemId,
-            ItemDescription,
-            ItemQty,
-            ItemRate,
+        --------------------------------------------------------------
+        ---- Insert Details
+        --------------------------------------------------------------
+        --INSERT INTO dbo.ProformaInvDtl
+        --(
+        --    ProformaInvHdrId,
+        --    ItemId,
+        --    ItemDescription,
+        --    ItemQty,
+        --    ItemRate,
             
-            ItemAmount,
-            ItemDiscountPercentage,
-            ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+        --    ItemAmount,
+        --    ItemDiscountPercentage,
+        --    ItemDiscountAmount,
+        --    TaxPercentage,
+        --    TaxAmount,
 
-            ItemTotalAmount,
-            CreatedUserId,
-            CreatedDate
-        )
-        SELECT
-            @ProformaInvHdrId,
-            ItemId,
-            ItemDescription,
-            ItemQty,
-            ItemRate,
+        --    ItemTotalAmount,
+        --    CreatedUserId,
+        --    CreatedDate
+        --)
 
-            ItemAmount,
-            ItemDiscountPercentage,
-            ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+        --SELECT
+        --    @ProformaInvHdrId,
 
-            ItemTotalAmount,
-            CreatedUserId,
-            CreatedDate
+        --    ItemId,
+        --    ItemDescription,
+        --    ItemQty,
+        --    ItemRate,
 
-        FROM OPENJSON(@ProformaInv,'$.ProformaInvDtl')
-        WITH
-        (
-            ItemId                     INT,
-            ItemDescription            NVARCHAR(500),
-            ItemQty                    DECIMAL(18,2),
-            ItemRate                   DECIMAL(18,2),
-            ItemAmount                 DECIMAL(18,2),
+        --    ItemAmount,
+        --    ItemDiscountPercentage,
+        --    ItemDiscountAmount,
+        --    0,  --TaxPercentage,
+        --    TaxAmount,
+
+        --    ItemTotalAmount,
+        --    CreatedUserId,
+        --    CreatedDate
+
+        --FROM OPENJSON(@ProformaInv,'$.ProformaInvDtl')
+        --WITH
+        --(
+        --    ItemId                     INT,
+        --    ItemDescription            NVARCHAR(500),
+        --    ItemQty                    DECIMAL(18,2),
+        --    ItemRate                   DECIMAL(18,2),
+        --    ItemAmount                 DECIMAL(18,2),
             
-            ItemDiscountPercentage     DECIMAL(18,2),
-            ItemDiscountAmount         DECIMAL(18,2),
-            TaxPercentage              DECIMAL(18,2),
-            TaxAmount                  DECIMAL(18,2),
-            ItemTotalAmount            DECIMAL(18,2),
+        --    ItemDiscountPercentage     DECIMAL(18,2),
+        --    ItemDiscountAmount         DECIMAL(18,2),
+        --    TaxPercentage              DECIMAL(18,2),
+        --    TaxAmount                  DECIMAL(18,2),
+        --    ItemTotalAmount            DECIMAL(18,2),
             
-            CreatedUserId               INT,
-            CreatedDate                 DATE
-        );
+        --    CreatedUserId               INT,
+        --    CreatedDate                 DATE
+        --);
 
     Select @ProformaInvHdrId
 
@@ -238,3 +241,40 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+ --SELECT
+        --    @CompanyId,
+        --    @BranchId,
+
+        --    SOHdrId,
+        --    OrdClientHdrId,
+        --    EmpId,
+        --    'Spare',             ---ProformaType,
+        --    @ProformaInvNo,
+
+        --    @ProformaInvSlNo,             --ProformaInvSLNo,
+        --    ItemQuoteDate,
+
+        --    ItemQuoteBillingAddr,
+        --    '',                 ---DeliveryAddress,
+        --    ItemQuoteContPerson,
+        --    ItemQuoteMobileNo,
+
+        --    0,   --OrdClientPONo,
+        --    '',  --OrdClientPODate,
+        --    '',  --ProformaInvRemarks,
+
+        --    ItemQuoteAmount,
+        --    0,  --ProformaDiscountPercentage,
+        --    0,  --ProformaDiscountAmount,
+        --    0,  --ProformaTaxPercentage,
+        --    0,  --ItemTotalAmount,
+            
+        --    0,  --ProformaSubTotal,
+        --    ItemQuoteTaxAmount,
+        --    ItemQuoteTotalAmount,
+
+        --    CreatedUserId,
+        --    CreatedDate
+
+        --from QuoteHdrItem

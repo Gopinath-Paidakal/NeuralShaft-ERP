@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NeuralShaft.Service.ServiceInterfaces.QuotationAMC;
 
-namespace NeuralShaft.Server.Controllers
+namespace NeuralShaft.Server.Controllers.QuoteAMC
 {
     [ApiController]
     [Route("[controller]")]
@@ -68,7 +68,7 @@ namespace NeuralShaft.Server.Controllers
 
         }
 
-        [HttpGet("DeleteQuoteAMCById/{quoteAMCDtlId}")]
+        [HttpPost("DeleteQuoteAMCById/{quoteAMCDtlId}")]
         public async Task<ActionResult> DeleteQuoteAMCById(int quoteAMCDtlId)
         {
             var deleteQuoteAMCById = await _quoteAMCService.DeleteQuoteAMCDtl(quoteAMCDtlId);

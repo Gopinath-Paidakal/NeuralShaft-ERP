@@ -14,7 +14,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[SP_InsertQuoteAMCDtl]
 (
-	@QuoteDtlAMC  nvarchar(Max)
+	@QuoteAMCDtl  nvarchar(Max)
 )
 ----With Encryption
 AS
@@ -24,6 +24,15 @@ SET NOCOUNT ON;
 BEGIN TRY
 
        Declare @QuoteAMCDtlId int
+
+       Declare @QuoteAMCHdrId int
+       Declare @ItemQuoteHdrId int
+       Declare @ModifiedUserId int
+       Declare @ModifiedDate date
+
+       set @QuoteAMCHdrId = JSON_VALUE(@QuoteAMCDtl, '$.QuoteAMCHdrId')
+       set @ModifiedUserId = JSON_VALUE(@QuoteAMCDtl, '$.ModifiedUserId')
+       set @ModifiedDate = JSON_VALUE(@QuoteAMCDtl, '$.ModifiedDate')
 
            INSERT INTO QuoteAMCDtl
             (
@@ -79,7 +88,7 @@ BEGIN TRY
                --,ModifiedDate
              
 
-            FROM OPENJSON(@QuoteDtlAMC,'$.QuoteAMCDtl')
+            FROM OPENJSON(@QuoteAMCDtl,'$.QuoteAMCDtl')
             WITH
             (
 
@@ -107,6 +116,40 @@ BEGIN TRY
             );
 
             Set @QuoteAMCDtlId = SCOPE_IDENTITY()
+
+            ---==============================================
+            ---- Updating the Hdr Amounts
+            --===============================================
+
+           UPDATE H
+                SET
+                    H.QuoteAMCAmount         = ISNULL(T.ItemAmount,0),
+                    --H.ItemQuoteAmount      = ISNULL(T.ItemDiscountAmount,0),
+                    H.QuoteAMCTaxAmount      = ISNULL(T.ItemTaxValue,0),
+                    H.QuoteAMCTotalAmount    = ISNULL(T.ItemTotalAmount,0)
+
+                    --H.ModifiedUserId     = @ModifiedUserId,
+                    --H.ModifiedDate       = @ModifiedDate
+                    
+                    FROM QuoteAMCHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)         AS ItemAmount,
+                        SUM(ItemDiscountAmount) AS ItemDiscountAmount,
+                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTotalAmount)    AS ItemTotalAmount
+
+                    FROM QuoteAMCDtl D
+                    WHERE D.QuoteAMCHdrId =  @QuoteAMCHdrId  -- H.ItemQuoteHdrId
+                ) T
+
+                WHERE H.QuoteAMCHdrId = @QuoteAMCHdrId;  
+
+
+                --===============================================
+
 
     Select @QuoteAMCDtlId
 

@@ -88,3 +88,9 @@
 
 --delete from filepath
 --delete from Users where EmpId < '1000'
+
+delete from QuoteHdrItem
+delete from QuoteDtlItem
+
+--delete from QuoteAMCHdr
+--delete from QuoteAMCDtl

@@ -38,15 +38,12 @@ BEGIN TRY
             ---- Updating the Hdr Amounts
             --===============================================
 
-            UPDATE H
+           UPDATE H
                 SET
                     H.ItemQuoteAmount         = ISNULL(T.ItemAmount,0),
-                    --H.ItemQuoteAmount         = ISNULL(T.ItemDiscountAmount,0),
-                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxValue,0),
+                    H.ItemDiscountAmount      = ISNULL(T.ItemDiscountAmount,0),
+                    H.ItemQuoteTaxAmount      = ISNULL(T.ItemTaxAmount,0),
                     H.ItemQuoteTotalAmount    = ISNULL(T.ItemTotalAmount,0)
-
-                    --H.ModifiedUserId     = @ModifiedUserId,
-                    --H.ModifiedDate       = @ModifiedDate
                     
                     FROM QuoteHdrItem H
 
@@ -55,7 +52,7 @@ BEGIN TRY
                     SELECT
                         SUM(ItemAmount)         AS ItemAmount,
                         SUM(ItemDiscountAmount) AS ItemDiscountAmount,
-                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
                         SUM(ItemTotalAmount)    AS ItemTotalAmount
 
                     FROM QuoteDtlItem D
@@ -63,8 +60,8 @@ BEGIN TRY
                 ) T
 
                 WHERE H.ItemQuoteHdrId = @ItemQuoteHdrId;  
-
                 --===============================================
+
 
 
     Select @QuoteItemDtlId
