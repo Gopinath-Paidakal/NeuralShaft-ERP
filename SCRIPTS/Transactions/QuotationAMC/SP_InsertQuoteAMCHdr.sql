@@ -75,16 +75,17 @@ BEGIN TRY
                ,QuoteAMCSlNo
 
                ,QuoteAMCConsultant
-               ,QuoteAMCClientSalutation
+               --,QuoteAMCClientSalutation
                ,QuoteAMCCustComp
                ,QuoteAMCBillingAddr
+               ,QuoteAMCJobOrderNo
                ,QuoteAMCContPerson
 
                ,QuoteAMCMobileNo
-               ,QuoteAMCProjectName
+             --  ,QuoteAMCProjectName
                ,AMCExpectedClosingDate
                ,QuoteAMCEmailId
-               ,QuoteAMCDeliveryBy
+               ,QuoteAMCDeliveryInDays
 
                ,QuoteAMCValidity
                ,QuoteAMCGSTExempted
@@ -94,9 +95,9 @@ BEGIN TRY
            
                ,QuoteAMCTotalAmount
                ,QuoteAMCRenewalCount
-               ,QuoteAMCRevisionNo
+               --,QuoteAMCRevisionNo
                ,QuoteAMCStartDate
-               ,QuoteAMCCloseDate
+               ,QuoteAMCEndDate
 
                ,QuoteAMCStatus
 
@@ -113,16 +114,18 @@ BEGIN TRY
                ,@QuoteAMCSlNo
 
                ,QuoteAMCConsultant
-               ,QuoteAMCClientSalutation
+               --,QuoteAMCClientSalutation
                ,QuoteAMCCustComp
+              
                ,QuoteAMCBillingAddr
+               ,QuoteAMCJobOrderNo
                ,QuoteAMCContPerson
 
                ,QuoteAMCMobileNo
-               ,QuoteAMCProjectName
+              -- ,QuoteAMCProjectName
                ,AMCExpectedClosingDate
                ,QuoteAMCEmailId
-               ,QuoteAMCDeliveryBy
+               ,QuoteAMCDeliveryInDays
 
                ,QuoteAMCValidity
                ,QuoteAMCGSTExempted
@@ -132,9 +135,9 @@ BEGIN TRY
            
                ,QuoteAMCTotalAmount
                ,QuoteAMCRenewalCount
-               ,QuoteAMCRevisionNo
+             --  ,QuoteAMCRevisionNo
                ,QuoteAMCStartDate
-               ,QuoteAMCCloseDate
+               ,QuoteAMCEndDate
 
                ,QuoteAMCStatus
                ,CreatedUserId
@@ -148,16 +151,17 @@ BEGIN TRY
 	             QuoteAMCSlNo   nvarchar (50)  ,
 
 	             QuoteAMCConsultant   nvarchar (100),
-	             QuoteAMCClientSalutation   nvarchar (15),
+	             --QuoteAMCClientSalutation   nvarchar (15),
 	             QuoteAMCCustComp   nvarchar (100),
 	             QuoteAMCBillingAddr   nvarchar (100),
+                 QuoteAMCJobOrderNo nvarchar (100),
 	             QuoteAMCContPerson   nvarchar (100),
 
 	             QuoteAMCMobileNo   nvarchar (100),
-	             QuoteAMCProjectName   nvarchar (100),
+	          --   QuoteAMCProjectName   nvarchar (100),
 	             AMCExpectedClosingDate   date,
 	             QuoteAMCEmailId   nvarchar (100),
-	             QuoteAMCDeliveryBy   nvarchar (100),
+	             QuoteAMCDeliveryInDays   smallint,
 
 	             QuoteAMCValidity   nvarchar (100),
 	             QuoteAMCGSTExempted   bit   ,
@@ -168,9 +172,9 @@ BEGIN TRY
 	             QuoteAMCTotalAmount   numeric (18, 2),
 
                  QuoteAMCRenewalCount smallint,
-                 QuoteAMCRevisionNo smallint,
+                 --QuoteAMCRevisionNo smallint,
                  QuoteAMCStartDate date,
-                 QuoteAMCCloseDate date,
+                 QuoteAMCEndDate date,
 
 	             QuoteAMCStatus   nvarchar (50),
 	             CreatedUserId   int,
@@ -195,7 +199,7 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
@@ -262,6 +266,36 @@ BEGIN TRY
 	            --ModifiedUserId int,
 	            --ModifiedDate date 
             );
+
+             ---==============================================
+            ---- Updating the Hdr Amounts from dtl
+            --===============================================
+
+           UPDATE H
+                SET
+                    H.QuoteAMCAmount             = ISNULL(T.ItemAmount,0),
+                    H.QuoteAMCDiscountAmount     = ISNULL(T.ItemDiscountAmount,0),
+                    H.QuoteAMCTaxAmount          = ISNULL(T.ItemTaxAmount,0),
+                    H.QuoteAMCTotalAmount        = ISNULL(T.ItemTotalAmount,0)
+                    
+                    FROM QuoteAMCHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)         AS ItemAmount,
+                        SUM(ItemDiscountAmount) AS ItemDiscountAmount,
+                        SUM(ItemTaxAmount)      AS ItemTaxAmount,
+                        SUM(ItemTotalAmount)    AS ItemTotalAmount
+
+                    FROM QuoteAMCDtl D
+                    WHERE D.QuoteAMCHdrId =  @QuoteAMCHdrId  -- H.ItemQuoteHdrId
+                ) T
+
+                WHERE H.QuoteAMCHdrId = @QuoteAMCHdrId;  
+
+
+                --===============================================
 
     Select @QuoteAMCHdrId
 

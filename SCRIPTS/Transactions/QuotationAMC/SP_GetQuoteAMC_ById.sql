@@ -36,19 +36,21 @@ DECLARE @QuoteAMC   NVARCHAR(MAX)
           ,[OrdClientHdrId]
           ,[QuoteAMCNo]
           ,[QuoteAMCSlNo]
-          ,[QuoteAMCDate]
+          --,[QuoteAMCDate]
+          ,FORMAT([QuoteAMCDate], 'dd-MM-yyyy') as [QuoteAMCDate]    -- + ' ' + FORMAT(SOHDate, 'HH:mm:ss') 
           ,[QuoteAMCConsultant]
 
-          ,[QuoteAMCClientSalutation]
+          --,[QuoteAMCClientSalutation]
           ,[QuoteAMCCustComp]
           ,[QuoteAMCBillingAddr]
+          ,[QuoteAMCJobOrderNo]
           ,[QuoteAMCContPerson]
       
           ,[QuoteAMCMobileNo]
-          ,[QuoteAMCProjectName]
+        --  ,[QuoteAMCProjectName]
           ,[AMCExpectedClosingDate]
           ,[QuoteAMCEmailId]
-          ,[QuoteAMCDeliveryBy]
+          ,[QuoteAMCDeliveryInDays]
       
           ,[QuoteAMCValidity]
           ,[QuoteAMCGSTExempted]
@@ -57,9 +59,9 @@ DECLARE @QuoteAMC   NVARCHAR(MAX)
           ,[QuoteAMCTaxAmount]
         
           ,[QuoteAMCRenewalCount]
-          ,[QuoteAMCRevisionNo]
+         -- ,[QuoteAMCRevisionNo]
           ,[QuoteAMCStartDate]
-          ,[QuoteAMCCloseDate]
+          ,[QuoteAMCEndDate]
           ,[QuoteAMCStatus]
 
           --,[CreatedUserId]
@@ -89,7 +91,7 @@ DECLARE @QuoteAMC   NVARCHAR(MAX)
               ,[ItemDiscountAmount]
 
               ,[ItemDiscountPercentage]
-              ,[ItemTaxValue]
+              ,[ItemTaxPercentage]
               ,[ItemTotalAmount]
               --,[CrudType]
               

@@ -179,10 +179,13 @@ BEGIN TRY
                ,ItemRate
                ,ItemAmount
                ,ItemTaxPercentage
-               ,ItemDiscountAmount
+            
 
+               ,ItemDiscountAmount
                ,ItemDiscountPercentage
                ,ItemTotalAmount
+
+               ,ItemTaxAmount
 
                ,CreatedUserId
                ,CreatedDate
@@ -190,7 +193,7 @@ BEGIN TRY
             )
             SELECT
 
-               @ItemQuoteHdrId
+                @ItemQuoteHdrId
 
                ,ItemId
                ,ItemName
@@ -202,12 +205,13 @@ BEGIN TRY
                ,ItemRate
                ,ItemAmount
                ,ItemTaxPercentage
-               ,ItemDiscountAmount
 
+               ,ItemDiscountAmount
                ,ItemDiscountPercentage
                ,ItemTotalAmount
 
-            
+               ,(ItemTotalAmount * ItemDiscountPercentage/100)   ----ItemTaxAmount
+                           
                ,CreatedUserId
                ,CreatedDate
              
@@ -231,7 +235,6 @@ BEGIN TRY
 	            ItemDiscountPercentage numeric(10, 2),
 	            ItemTotalAmount numeric(18, 2),
 
-          
 	            CreatedUserId int ,
 	            CreatedDate date
 	           
@@ -254,10 +257,10 @@ BEGIN TRY
                 OUTER APPLY
                 (
                     SELECT
-                        SUM(ItemAmount)         AS ItemAmount,
-                        SUM(ItemDiscountAmount) AS ItemDiscountAmount,
+                        SUM(ItemAmount)          AS ItemAmount,
+                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
                         SUM(ItemTaxAmount)       AS ItemTaxAmount,
-                        SUM(ItemTotalAmount)    AS ItemTotalAmount
+                        SUM(ItemTotalAmount)     AS ItemTotalAmount
 
                     FROM QuoteDtlItem D
                     WHERE D.ItemQuoteHdrId =  @ItemQuoteHdrId  -- H.ItemQuoteHdrId

@@ -50,6 +50,8 @@ BEGIN TRY
               QDI.ItemTaxPercentage       = J.ItemTaxPercentage,
               QDI.ItemTotalAmount         = J.ItemTotalAmount,
 
+              QDI.ItemTaxAmount = (J.ItemTotalAmount * J.ItemDiscountPercentage/100),     ----ItemTaxAmount
+
               QDI.ModifiedUserId          = J.ModifiedUserId,
               QDI.ModifiedDate            = J.ModifiedDate
 
@@ -70,10 +72,13 @@ BEGIN TRY
             ItemAmount                 DECIMAL(18,2),
             ItemDiscountAmount         DECIMAL(18,2),
             ItemDiscountPercentage     DECIMAL(18,2),
-            ItemTaxPercentage               DECIMAL(18,2),
+
+            ItemTaxPercentage          DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
+
             ModifiedUserId             INT,
             ModifiedDate               DATE
+
         ) J
         ON QDI.QuoteItemDtlId = J.QuoteItemDtlId;
     
@@ -94,10 +99,10 @@ BEGIN TRY
                 OUTER APPLY
                 (
                     SELECT
-                        SUM(ItemAmount)         AS ItemAmount,
-                        SUM(ItemDiscountAmount) AS ItemDiscountAmount,
+                        SUM(ItemAmount)          AS ItemAmount,
+                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
                         SUM(ItemTaxAmount)       AS ItemTaxAmount,
-                        SUM(ItemTotalAmount)    AS ItemTotalAmount
+                        SUM(ItemTotalAmount)     AS ItemTotalAmount
 
                     FROM QuoteDtlItem D
                     WHERE D.ItemQuoteHdrId =  @ItemQuoteHdrId  -- H.ItemQuoteHdrId

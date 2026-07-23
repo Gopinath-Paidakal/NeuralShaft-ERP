@@ -31,7 +31,7 @@ BEGIN TRY
 		(
 
 		SELECT 
-			  [ProformaInvHdrId]
+			  [ProformaInvHdr].[ProformaInvHdrId]
 			  --,[SOHdr].[SOHdrId]
 			  --,[OrdClientHdr].[OrdClientHdrId]
 			  ,[ProformaType]
@@ -40,30 +40,26 @@ BEGIN TRY
 			  
 			  --,[ProformaInvDate]
 			  ,FORMAT(ProformaInvDate, 'dd-MM-yyyy') as ProformaInvDate
+			  ,[ProformaTotalAmount]
 
-			  --,[DeliveryAddress]
-     --         ,[DeliveryContactPerson]
-     --         ,[DeliveryMobileId]
-
-			  --,[ProformaProductAmount]
-			  --,[ProformaDiscountPercentage]
-			  --,[ProformaDiscountAmount]
-			  --,[ProformaTaxPercentage]
-			  
-			  --,[ItemTotalAmount]
-			  --,[ProformaSubTotal]
-			  --,[ProformaTaxAmount]
-			  ,[ProformaGrandTotal]
-
+			  --- for SO Product
 			  ,[SOHdr].[SOConsultant]
 			  ,[SOHdr].[SOContPerson]
 			  ,[SOHdr].[SOCustComp]
-			  --,[CreatedUserId]
-			  --,[CreatedDate]
-			  --,[ModifiedUserId]
-			  --,[ModifiedDate]
+			  
+			  --- for QuoteItem
+			  ,[QuoteHdrItem].[ItemQuoteContPerson]
+			  ,[QuoteHdrItem].[ItemQuoteCustComp]
+			  ,[QuoteHdrItem].[ItemQuoteMobileNo]
 
-			FROM [dbo].[ProformaInvHdr]		
+			  --- for QuoteAMC
+			  ,[QuoteAMCHdr].[QuoteAMCCustComp]
+			  ,[QuoteAMCHdr].[QuoteAMCContPerson]
+			  ,[QuoteAMCHdr].[QuoteAMCMobileNo]
+
+			FROM [dbo].[ProformaInvHdr]	
+			LEFT JOIN [QuoteHdrItem] ON [QuoteHdrItem].[ItemQuoteHdrId] = [ProformaInvHdr].[ItemQuoteHdrId]
+			LEFT JOIN [QuoteAMCHdr] ON [QuoteAMCHdr].[QuoteAMCHdrId] = [QuoteAMCHdr].[QuoteAMCHdrId]
 			LEFT JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [ProformaInvHdr].[SOHdrId]
 			INNER JOIN [OrdClientHdr] ON [OrdClientHdr].[OrdClientHdrId] = [ProformaInvHdr].[OrdClientHdrId]
 
@@ -98,3 +94,23 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+
+--,[CreatedUserId]
+			  --,[CreatedDate]
+			  --,[ModifiedUserId]
+			  --,[ModifiedDate]
+
+
+			  			  --,[DeliveryAddress]
+     --         ,[DeliveryContactPerson]
+     --         ,[DeliveryMobileId]
+
+			  --,[ProformaProductAmount]
+			  --,[ProformaDiscountPercentage]
+			  --,[ProformaDiscountAmount]
+			  --,[ProformaTaxPercentage]
+			  
+			  --,[ItemTotalAmount]
+			  --,[ProformaSubTotal]
+			  --,[ProformaTaxAmount]

@@ -44,7 +44,7 @@ BEGIN TRY
 
               
               QAH.QuoteAMCCustComp      = J.QuoteAMCCustComp,
-             -- QAH.QuoteAMCBillingAddr   = J.QuoteAMCBillingAddr,
+              QAH.QuoteAMCBillingAddr   = J.QuoteAMCBillingAddr,
               QAH.QuoteAMCContPerson    = J.QuoteAMCContPerson,
               QAH.QuoteAMCMobileNo      = J.QuoteAMCMobileNo,
 
@@ -83,7 +83,7 @@ BEGIN TRY
               QuoteAMCConsultant        NVARCHAR(200),
               
               QuoteAMCCustComp          NVARCHAR(200),
-              QuoteAMCBillingAddr       NVARCHAR(MAX),
+              QuoteAMCBillingAddr       NVARCHAR(500),
               QuoteAMCContPerson        NVARCHAR(200),
 
               QuoteAMCMobileNo          NVARCHAR(20),

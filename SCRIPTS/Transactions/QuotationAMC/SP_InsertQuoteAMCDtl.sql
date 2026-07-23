@@ -47,7 +47,7 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
@@ -75,7 +75,7 @@ BEGIN TRY
                ,ItemQuantity
                ,ItemRate
                ,ItemAmount
-               ,ItemTaxValue
+               ,ItemTaxPercentage
                ,ItemDiscountAmount
 
                ,ItemDiscountPercentage
@@ -102,7 +102,7 @@ BEGIN TRY
 	            ItemQuantity numeric(18, 2) ,
 	            ItemRate numeric (18, 2),
 	            ItemAmount numeric (18, 2) ,
-	            ItemTaxValue numeric (10, 2) ,
+	            ItemTaxPercentage numeric (10, 2) ,
 	            ItemDiscountAmount numeric(18, 2) ,
 
 	            ItemDiscountPercentage numeric(10, 2) ,
@@ -118,18 +118,15 @@ BEGIN TRY
             Set @QuoteAMCDtlId = SCOPE_IDENTITY()
 
             ---==============================================
-            ---- Updating the Hdr Amounts
+            ---- Updating the Hdr Amounts from dtl
             --===============================================
 
            UPDATE H
                 SET
-                    H.QuoteAMCAmount         = ISNULL(T.ItemAmount,0),
-                    --H.ItemQuoteAmount      = ISNULL(T.ItemDiscountAmount,0),
-                    H.QuoteAMCTaxAmount      = ISNULL(T.ItemTaxValue,0),
-                    H.QuoteAMCTotalAmount    = ISNULL(T.ItemTotalAmount,0)
-
-                    --H.ModifiedUserId     = @ModifiedUserId,
-                    --H.ModifiedDate       = @ModifiedDate
+                    H.QuoteAMCAmount             = ISNULL(T.ItemAmount,0),
+                    H.QuoteAMCDiscountAmount     = ISNULL(T.ItemDiscountAmount,0),
+                    H.QuoteAMCTaxAmount          = ISNULL(T.ItemTaxAmount,0),
+                    H.QuoteAMCTotalAmount        = ISNULL(T.ItemTotalAmount,0)
                     
                     FROM QuoteAMCHdr H
 
@@ -138,7 +135,7 @@ BEGIN TRY
                     SELECT
                         SUM(ItemAmount)         AS ItemAmount,
                         SUM(ItemDiscountAmount) AS ItemDiscountAmount,
-                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTaxAmount)      AS ItemTaxAmount,
                         SUM(ItemTotalAmount)    AS ItemTotalAmount
 
                     FROM QuoteAMCDtl D

@@ -44,14 +44,14 @@ BEGIN TRY
 
 	      ,[QuoteAMCHdr].[QuoteAMCConsultant]
           ,[QuoteAMCHdr].[QuoteAMCCustComp]
-		  ,[QuoteAMCHdr].[QuoteAMCBillingAddr]
+		  --,[QuoteAMCHdr].[QuoteAMCBillingAddr]
           ,[QuoteAMCHdr].[QuoteAMCContPerson]
           ,[QuoteAMCHdr].[QuoteAMCMobileNo]
 
-	      ,[QuoteAMCHdr].[QuoteAMCProjectName]
+	      --,[QuoteAMCHdr].[QuoteAMCProjectName]
 	      ,[QuoteAMCHdr].[AMCExpectedClosingDate]
 	      ,[QuoteAMCHdr].[QuoteAMCEmailId]
-          ,[QuoteAMCHdr].[QuoteAMCDeliveryBy]
+          ,[QuoteAMCHdr].[QuoteAMCDeliveryInDays]
 	      
 
           ,[QuoteAMCHdr].[QuoteAMCValidity]
@@ -59,9 +59,9 @@ BEGIN TRY
 	      ,[QuoteAMCHdr].[QuoteAMCGSTExempted]
 	      
 		  ,[QuoteAMCHdr].[QuoteAMCRenewalCount]
-		  ,[QuoteAMCHdr].[QuoteAMCRevisionNo]
+		  --,[QuoteAMCHdr].[QuoteAMCRevisionNo]
 		  ,[QuoteAMCHdr].[QuoteAMCStartDate]
-	      ,[QuoteAMCHdr].[QuoteAMCCloseDate]
+	      ,[QuoteAMCHdr].[QuoteAMCEndDate]
 
 		  ,[QuoteAMCHdr].[QuoteAMCStatus]
 

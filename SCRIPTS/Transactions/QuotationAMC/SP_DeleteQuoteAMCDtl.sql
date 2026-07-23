@@ -43,15 +43,12 @@ BEGIN TRY
         ---- Updating the Hdr Amounts
         --===============================================
 
-           UPDATE H
+          UPDATE H
                 SET
-                    H.QuoteAMCAmount         = ISNULL(T.ItemAmount,0),
-                    --H.ItemQuoteAmount      = ISNULL(T.ItemDiscountAmount,0),
-                    H.QuoteAMCTaxAmount      = ISNULL(T.ItemTaxValue,0),
-                    H.QuoteAMCTotalAmount    = ISNULL(T.ItemTotalAmount,0)
-
-                    --H.ModifiedUserId     = @ModifiedUserId,
-                    --H.ModifiedDate       = @ModifiedDate
+                    H.QuoteAMCAmount             = ISNULL(T.QuoteAMCAmount,0),
+                    H.QuoteAMCDiscountAmount     = ISNULL(T.QuoteAMCDiscountAmount,0),
+                    H.QuoteAMCTaxAmount          = ISNULL(T.QuoteAMCTaxAmount,0),
+                    H.QuoteAMCTotalAmount        = ISNULL(T.QuoteAMCTotalAmount,0)
                     
                     FROM QuoteAMCHdr H
 
@@ -60,7 +57,7 @@ BEGIN TRY
                     SELECT
                         SUM(ItemAmount)         AS ItemAmount,
                         SUM(ItemDiscountAmount) AS ItemDiscountAmount,
-                        SUM(ItemTaxValue)       AS ItemTaxValue,
+                        SUM(ItemTaxAmount)      AS ItemTaxAmount,
                         SUM(ItemTotalAmount)    AS ItemTotalAmount
 
                     FROM QuoteAMCDtl D
@@ -68,7 +65,6 @@ BEGIN TRY
                 ) T
 
                 WHERE H.QuoteAMCHdrId = @QuoteAMCHdrId;  
-                --===============================================
 
 
     Select @QuoteAMCDtlId

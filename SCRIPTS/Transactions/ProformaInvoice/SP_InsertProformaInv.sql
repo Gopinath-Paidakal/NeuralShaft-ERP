@@ -57,6 +57,8 @@ BEGIN TRY
 
             SOHdrId,
             OrdClientHdrId,
+            ItemQuoteHdrId,
+            QuoteAMCHdrId,
             
             EmpId,
             ProformaType,
@@ -73,15 +75,15 @@ BEGIN TRY
             OrdClientPODate,
             ProformaInvRemarks,
 
-            ProformaProductAmount,
-            ProformaDiscountPercentage,
+            ProformaItemAmount,
+            --ProformaDiscountPercentage,
             ProformaDiscountAmount,
-            ProformaTaxPercentage,
+            --ProformaTaxPercentage,
             
-            ItemTotalAmount,
-            ProformaSubTotal,
+            --ItemTotalAmount,
+            --ProformaSubTotal,
             ProformaTaxAmount,
-            ProformaGrandTotal,
+            ProformaTotalAmount,
             
             CreatedUserId,
             CreatedDate
@@ -93,6 +95,8 @@ BEGIN TRY
 
             SOHdrId,
             OrdClientHdrId,
+            ItemQuoteHdrId,
+            QuoteAMCHdrId,
             
             EmpId,
             ProformaType,
@@ -109,15 +113,15 @@ BEGIN TRY
             OrdClientPODate,
             ProformaInvRemarks,
 
-            ProformaProductAmount,
-            ProformaDiscountPercentage,
+            ProformaItemAmount,
+            --ProformaDiscountPercentage,
             ProformaDiscountAmount,
-            ProformaTaxPercentage,
+            --ProformaTaxPercentage,
             
-            ItemTotalAmount,
-            ProformaSubTotal,
+            --ItemTotalAmount,
+            --ProformaSubTotal,
             ProformaTaxAmount,
-            ProformaGrandTotal,
+            ProformaTotalAmount,
             
             CreatedUserId,
             CreatedDate
@@ -127,6 +131,8 @@ BEGIN TRY
         (
             SOHdrId                     INT,
             OrdClientHdrId              INT,
+            ItemQuoteHdrId              INT,
+            QuoteAMCHdrId               INT,
 
             EmpId                       INT,
             ProformaType                NVARCHAR(50), 
@@ -139,25 +145,37 @@ BEGIN TRY
             DeliveryContactPerson       NVARCHAR(100), 
             DeliveryMobileId            NVARCHAR(100), 
 
-            OrdClientPONo                    NVARCHAR(50),
-            OrdClientPODate                  DATE,
-            ProformaInvRemarks          NVARCHAR(1000),
+            OrdClientPONo              NVARCHAR(50),
+            OrdClientPODate            DATE,
+            ProformaInvRemarks         NVARCHAR(1000),
 
-            ProformaProductAmount       DECIMAL(18,2),
-            ProformaDiscountPercentage  DECIMAL(18,2),
-            ProformaDiscountAmount      DECIMAL(18,2),
-            ProformaTaxPercentage       DECIMAL(18,2),
-            ItemTotalAmount             DECIMAL(18,2),
+            ProformaItemAmount           DECIMAL(18,2),
+            --ProformaDiscountPercentage  DECIMAL(18,2),
+            ProformaDiscountAmount       DECIMAL(18,2),
+            --ProformaTaxPercentage       DECIMAL(18,2),
+            --ItemTotalAmount             DECIMAL(18,2),
 
-            ProformaSubTotal            DECIMAL(18,2),
+            --ProformaSubTotal            DECIMAL(18,2),
             ProformaTaxAmount           DECIMAL(18,2),
-            ProformaGrandTotal          DECIMAL(18,2),
+            ProformaTotalAmount          DECIMAL(18,2),
 
             CreatedUserId               INT,
             CreatedDate                 DATE
         );
 
         SET @ProformaInvHdrId = SCOPE_IDENTITY();
+
+          ----===============================================
+          ------  Updating ProformaInvHdrId created in QuoteItem
+          -----================================================
+          --      Update QuoteHdrItem set ProformaInvHdrId = @ProformaInvHdrId where QuoteAMCHdrId = 
+
+          ----===============================================
+          ------  Updating ProformaInvHdrId created in QuoteAMC
+          -----================================================
+          --      Update QuoteAMCHdr set ProformaInvHdrId = @ProformaInvHdrId where QuoteAMCHdrId = 
+
+
 
         --------------------------------------------------------------
         ---- Insert Details

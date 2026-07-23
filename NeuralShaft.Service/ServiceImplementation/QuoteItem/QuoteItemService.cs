@@ -86,7 +86,7 @@ namespace NeuralShaft.Service.ServiceImplementation.QuoteItem
             try
             {
                 //return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteItemDtl", new { @QuoteItemHdrId = QuoteItemHdrId, @QuoteItemHdrDtl = QuoteItemHdrDtl.ToString() });
-                return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteItemHdrDtl", new { @QuoteItemDtlId = quoteItemDtlId, @QuoteDtlItem = quoteDtlItem.ToString() });
+                return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteItemDtl", new { @QuoteItemDtlId = quoteItemDtlId, @QuoteDtlItem = quoteDtlItem.ToString() });
             }
             catch (Exception ex)
             {
