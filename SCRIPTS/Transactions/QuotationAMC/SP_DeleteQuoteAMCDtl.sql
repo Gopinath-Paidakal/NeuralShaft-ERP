@@ -45,10 +45,10 @@ BEGIN TRY
 
           UPDATE H
                 SET
-                    H.QuoteAMCAmount             = ISNULL(T.QuoteAMCAmount,0),
-                    H.QuoteAMCDiscountAmount     = ISNULL(T.QuoteAMCDiscountAmount,0),
-                    H.QuoteAMCTaxAmount          = ISNULL(T.QuoteAMCTaxAmount,0),
-                    H.QuoteAMCTotalAmount        = ISNULL(T.QuoteAMCTotalAmount,0)
+                    H.QuoteAMCAmount             = ISNULL(T.ItemAmount,0),
+                    H.QuoteAMCDiscountAmount     = ISNULL(T.ItemDiscountAmount,0),
+                    H.QuoteAMCTaxAmount          = ISNULL(T.ItemTaxAmount,0),
+                    H.QuoteAMCTotalAmount        = ISNULL(T.ItemTotalAmount,0)
                     
                     FROM QuoteAMCHdr H
 

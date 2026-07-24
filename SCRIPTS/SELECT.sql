@@ -144,6 +144,9 @@ Select * from QuoteDtlItem
 select * from QuoteAMCHdr
 select * from QuoteAMCDtl
 
+Select * from ProformaInvHdr
+
+
 
 
 

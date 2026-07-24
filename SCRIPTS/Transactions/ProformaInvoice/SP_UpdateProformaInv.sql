@@ -49,15 +49,10 @@ BEGIN TRY
             H.OrdClientPODate            = J.OrdClientPODate,
             H.ProformaInvRemarks         = J.ProformaInvRemarks,
 
-            H.ProformaProductAmount      = J.ProformaProductAmount,
-            H.ProformaDiscountPercentage = J.ProformaDiscountPercentage,
-            H.ProformaDiscountAmount     = J.ProformaDiscountAmount,
-            H.ProformaTaxPercentage      = J.ProformaTaxPercentage,
-            
-            H.ItemTotalAmount            = J.ItemTotalAmount,
-            H.ProformaSubTotal           = J.ProformaSubTotal,
-            H.ProformaTaxAmount          = J.ProformaTaxAmount,
-            H.ProformaGrandTotal         = J.ProformaGrandTotal,
+            --H.ProformaItemAmount         = J.ProformaItemAmount,
+            --H.ProformaDiscountAmount     = J.ProformaDiscountAmount,
+            --H.ProformaTaxAmount          = J.ProformaTaxAmount,
+            --H.ProformaTotalAmount        = J.ProformaTotalAmount,
 
             H.ModifiedUserId             = J.ModifiedUserId,
             H.ModifiedDate               = J.ModifiedDate
@@ -86,15 +81,15 @@ BEGIN TRY
                 OrdClientPODate            DATE,
                 ProformaInvRemarks         NVARCHAR(1000),
 
-                ProformaProductAmount      DECIMAL(18,2),
-                ProformaDiscountPercentage DECIMAL(18,2),
-                ProformaDiscountAmount     DECIMAL(18,2),
-                ProformaTaxPercentage      DECIMAL(18,2),
+                --ProformaProductAmount      DECIMAL(18,2),
+                --ProformaDiscountPercentage DECIMAL(18,2),
+                --ProformaDiscountAmount     DECIMAL(18,2),
+                --ProformaTaxPercentage      DECIMAL(18,2),
                 
-                ItemTotalAmount            DECIMAL(18,2),
-                ProformaSubTotal           DECIMAL(18,2),
-                ProformaTaxAmount          DECIMAL(18,2),
-                ProformaGrandTotal         DECIMAL(18,2),
+                --ItemTotalAmount            DECIMAL(18,2),
+                --ProformaSubTotal           DECIMAL(18,2),
+                --ProformaTaxAmount          DECIMAL(18,2),
+                --ProformaGrandTotal         DECIMAL(18,2),
 
                 ModifiedUserId             INT,
                 ModifiedDate               DATE

@@ -95,7 +95,7 @@ BEGIN TRY
                 ItemName nvarchar (100) ,
 	            ItemId int ,
 	            ItemHSNCode nvarchar(100),
-	            ItemCode int,
+	            ItemCode nvarchar(100),
 	            ItemDesc nvarchar(100),
 
 	            ItemQuantity numeric(18, 2),

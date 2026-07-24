@@ -92,5 +92,7 @@
 delete from QuoteHdrItem
 delete from QuoteDtlItem
 
---delete from QuoteAMCHdr
---delete from QuoteAMCDtl
+delete from QuoteAMCHdr
+delete from QuoteAMCDtl
+
+delete from ProformaInvHdr
