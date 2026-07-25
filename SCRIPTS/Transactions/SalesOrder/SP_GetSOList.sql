@@ -26,10 +26,14 @@ SET NOCOUNT ON;
 BEGIN TRY
 
     Declare @SOTotalAmt numeric(18,2)
+    DECLARE @SOHdr      NVARCHAR(MAX)
 
-SELECT
-    JSON_QUERY(
-        (
+--SELECT
+--    JSON_QUERY(
+--        (
+
+       SET @SOHdr = (
+
             SELECT
              [SOHdr].[SOHdrId]
             ,[SoDtl].[SoDtlId]
@@ -69,10 +73,15 @@ SELECT
 
           Order by [SOHdr].[SOHNo]
       
-		  FOR JSON PATH
-        )
-    ) AS SOHDR
-    FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+		  FOR JSON PATH, ROOT('SOHDR')
+		  )
+ 
+
+        Select @SOHdr
+
+
+    --) AS SOHDR
+    --FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
 
 END TRY
 

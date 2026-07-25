@@ -16,10 +16,10 @@ namespace NeuralShaft.Server.Controllers.QuoteItem
         }
 
 
-        [HttpGet("GetQuoteItem/{fromDate}/{toDate}")]
-        public async Task<ActionResult> GetQuoteItem(string fromDate, string toDate)
+        [HttpGet("GetQuoteItem/{fromDate}/{toDate}/{status}")]
+        public async Task<ActionResult> GetQuoteItem(string fromDate, string toDate, string status)
         {
-            string quoteitem = await _quoteItemService.GetQuoteItem(fromDate, toDate);
+            string quoteitem = await _quoteItemService.GetQuoteItem(fromDate, toDate, status);
             return Content(quoteitem, "application/json");
         }
 

@@ -30,7 +30,7 @@ namespace NeuralShaft.Server.Controllers.Vendor
             string getVendor = await _vendorService.GetVendor();
             return Content(getVendor, "application/json");
         }
-
+       
         [HttpGet("GetVendorById/{vendorHdrId}")]
         public async Task<ActionResult> GetVendorById(int vendorHdrId)
         {

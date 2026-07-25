@@ -70,6 +70,7 @@ BEGIN TRY
                (CompanyId
                ,BranchId
                ,OrdClientHdrId
+               ,ItemQuoteType
                ,ItemQuoteNo
                ,ItemQuoteDate
                ,ItemQuoteSlNo
@@ -102,6 +103,7 @@ BEGIN TRY
                 @CompanyId
                ,@BranchId
                ,OrdClientHdrId
+               ,'Quote_Spare'
                ,@ItemQuoteNo
                ,ItemQuoteDate
                ,@ItemQuoteSlNo

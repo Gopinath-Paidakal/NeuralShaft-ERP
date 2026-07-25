@@ -27,13 +27,17 @@ SET NOCOUNT ON;
 BEGIN TRY
 	-- BEGIN TRANSACTION
 			
-		
-		Declare @Status nvarchar(50)
+		DECLARE @EnqDtl   NVARCHAR(MAX)
 
-		set @Status = 'SentForApproval'
+		--Declare @Status nvarchar(50)
 
-		if (@Status = upper('SENTFORAPPROVAL'))
-		BEGIN
+		--set @Status = 'SentForApproval'
+
+		--if (@Status = upper('SENTFORAPPROVAL'))
+		--BEGIN
+
+		SET @EnqDtl = (
+
 			SELECT
 			  -- [OrdApprove].[OrdApproveId]
 			  --,[OrdApprove].[OrdClientHdrId]
@@ -64,6 +68,8 @@ BEGIN TRY
 			  ,[EnqHdr].EnqNo
 			  ,[QuoteHdr].QuoteNo
 			  ,FORMAT([OrdApprove].[CreatedDate], 'dd-MM-yyyy') as [CreatedDate]
+
+			  ,[EnqDtl].[SOGen]
       
 		  FROM [dbo].[OrdApprove]
   
@@ -74,16 +80,17 @@ BEGIN TRY
 
 		  --WHERE [OrdApprove].[CreatedDate] >= @FromDate AND [OrdApprove].[CreatedDate] < DATEADD(DAY, 1, @ToDate)
 
-		  and [EnqDtl].[OrderStatus] = 'SentForApproval' and [EnqDtl].[SOGen] = 0
+		  and [EnqDtl].[OrderStatus] = 'SentForApproval' --and [EnqDtl].[SOGen] = 0
   
 		  FOR JSON PATH, ROOT('OrdAprList')
-		END
+		  )
 
+		  Select @EnqDtl
 
 		
+		--END
 
   -- COMMIT TRANSACTION
-
 
 END TRY
 
@@ -106,7 +113,111 @@ END TRY
 
 End_Prog:
 
+--SET @QuoteItem = (
+  --      SELECT
+  --          JSON_QUERY(@QuoteItemHdr)  AS QuoteItemHdr,
+  --          JSON_QUERY(@QuoteItemDtl) AS QuoteItemDtl
+  --      FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+  -- )
 
+
+--if (@Status = upper('APPROVED'))
+		--BEGIN
+		--	SELECT
+		--	   [OrdApprove].[OrdApproveId]
+		--	  ,[OrdApprove].[OrdClientHdrId]
+		--	  ,[OrdApprove].[EnqHdrId]
+		--	  ,[OrdApprove].[EnqDtlId]
+		--	  ,[OrdApprove].[QuoteHdrId]
+
+		--	   --[OrdClientHdrId]
+		--	  ,[OrdClientHdr].[OrdConsultant]
+		--	  ,[OrdClientHdr].[OrdClientName]
+		--	  ,[OrdClientHdr].[OrdClientTitle]
+		--	  ,[OrdClientHdr].[OrdGstTradeName]
+		--	  ,[OrdClientHdr].[OrdGstNo]
+
+		--	  --,[OrdApprove].[OrdStatus]    
+		--	  ,[OrdApprove].[OrdApproved]    
+
+		--	  ,[EnqDtl].[CustomerStatus]
+		--	  ,[EnqDtl].[OrderStatus]
+		--	  ,[EnqDtl].[ApprovalStatus1]
+		--	  ,[EnqDtl].[ApprovalStatus2]
+
+		--	   ,[EnqHdr].EnqNo
+		--	   ,[QuoteHdr].QuoteNo
+
+		--	  ,FORMAT([OrdApprove].[CreatedDate], 'dd-MM-yyyy') as [CreatedDate]
+      
+		--  FROM [dbo].[OrdApprove]
+  
+		--  Inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = OrdApprove.OrdClientHdrId
+		--  Inner Join EnqDtl On Enqdtl.EnqDtlId = OrdApprove.EnqDtlId
+		--  Inner Join EnqHdr on EnqDtl.EnqHdrId = EnqHdr.EnqHdrId
+		--  Inner Join QuoteHdr on QuoteHdr.QuoteHdrId = OrdApprove.QuoteHdrId
+
+		--  WHERE [OrdApprove].[CreatedDate] >= @FromDate AND [OrdApprove].[CreatedDate] < DATEADD(DAY, 1, @ToDate)
+
+		--  and [EnqDtl].[OrderStatus] = 'Approved' and [OrdApprove].[SOGen] = 0
+  
+		--  FOR JSON PATH, ROOT('OrdAprList')
+		--END
+
+
+
+
+
+  --where [OrdApprove].[CreatedDate] >= @FromDate and [OrdApprove].[CreatedDate] < @ToDate
+
+
+  --WHERE dbo.fn_FormatDate([OrdApprove].[CreatedDate]) >= dbo.fn_FormatDate(@FromDate)
+  --and  dbo.fn_FormatDate([OrdApprove].[CreatedDate]) <= dbo.fn_FormatDate(@ToDate)
+
+
+--Declare @SOGen int
+
+	--set @SOGen = (select sogen from OrdApprove where OrdApprove.OrdApproveId = @OrdApproveId and
+	--				EnqHdr.EnqHdrId = OrdApprove.EnqHdrId 
+	--				and EnqDtl.EnqDtlId = OrdApprove.EnqDtlId)
+
+
+  -- COMMIT TRANSACTION
+
+
+--END TRY
+
+--	BEGIN CATCH
+--		--  ROLLBACK TRANSACTION
+--		Declare 
+--		@ErrMsg varchar(4000),
+--		@ErrSeverity int,
+--		@ErrProcedure varchar(100)
+
+--		SET @ErrMsg = (Select Error_Message())
+--		SET @ErrSeverity = (Select Error_Severity())
+--		SET @ErrProcedure = (Select Error_Procedure())
+
+--		SET @ErrMsg = @ErrMsg + ' / ' + @ErrProcedure
+--		Raiserror(@ErrMsg,@ErrSeverity,1)
+--		GOTO End_Prog
+
+--	END CATCH
+
+--End_Prog:
+
+
+ --Inner Join QuoteHdr on QuoteHdr.QuoteHdrId = OrdApprove.QuoteHdrId
+
+		  --Left Join QuoteHdrItem On QuoteHdrItem.ItemQuoteHdrId = 
+
+		  --Left Join QuoteSOItemDtl On QuoteSOItemDtl.QuoteItemDtlId = OrdApprove.QuoteSOItemDtlId
+		  --Left Join QuoteSOItemHdr on QuoteSOItemHdr.QuoteSOItemHdrId = OrdApprove.QuoteSOItemHdrId
+
+
+		  --WHERE [OrdApprove].[CreatedDate] >= @FromDate AND [OrdApprove].[CreatedDate] < DATEADD(DAY, 1, @ToDate)
+
+--  Inner Join EnqDtl On Enqdtl.EnqDtlId = OrdApprove.EnqDtlId
 
 --if (@Status = upper('APPROVED'))
 		--BEGIN

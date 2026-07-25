@@ -7,7 +7,7 @@ namespace NeuralShaft.Service.ServiceInterfaces.QuoteItem
     public interface IQuoteItem
     {
         //----- QuoteItem Hdr
-        Task<string> GetQuoteItem(string fromDate, string toDate);
+        Task<string> GetQuoteItem(string fromDate, string toDate, string status);
 
         Task<string> GetQuoteItemHdrById(int QuoteItemHdrId);
 

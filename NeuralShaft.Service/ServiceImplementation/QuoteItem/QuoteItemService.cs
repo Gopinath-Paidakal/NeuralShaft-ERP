@@ -2,6 +2,7 @@
 using NeuralShaft.Service.ServiceInterfaces.QuoteItem;
 using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace NeuralShaft.Service.ServiceImplementation.QuoteItem
@@ -16,12 +17,12 @@ namespace NeuralShaft.Service.ServiceImplementation.QuoteItem
             _repoJSon = repoJson;
         }
 
-        public async Task<string> GetQuoteItem(string fromDate, string toDate)
+        public async Task<string> GetQuoteItem(string fromDate, string toDate, string status)
         {
             try
             {
                 string quoteItemData = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetQuoteItemHdr",
-                                  new { @FromDate = fromDate, @ToDate = toDate });
+                                  new { @FromDate = fromDate, @ToDate = toDate, @Status = status });
                 return quoteItemData;
             }
             catch (Exception ex)

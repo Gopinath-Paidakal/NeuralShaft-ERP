@@ -1,19 +1,19 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateOrdRej]    Script Date: 04/04/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateOrdRej]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateOrdRej]
+/****** Object:  StoredProcedure [dbo].[SP_UpdateOrdApprove]    Script Date: 04/04/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateOrdApprove]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateOrdApprove]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdateOrdRej]    Script Date: 04/04/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_UpdateOrdApprove]    Script Date: 04/04/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_UpdateOrdRej]
+CREATE PROCEDURE [dbo].[SP_UpdateOrdApprove]
 (
 	--@OrdApproveId int,
 	@EnqDtlId int,

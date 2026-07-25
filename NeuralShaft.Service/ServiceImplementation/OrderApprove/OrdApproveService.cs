@@ -82,7 +82,7 @@ namespace NeuralShaft.Service.ServiceImplementation.OrderApprove
         {
             try
             {
-                return await _OrdrepoJSon.ExecuteJsonSPWithParameter("SP_UpdateOrdRej", new
+                return await _OrdrepoJSon.ExecuteJsonSPWithParameter("SP_UpdateOrdApprove", new
                 {
                     //@OrdApproveId = ordApproveId,
                     @EnqDtlId = enqDtlId , @OrdApproved = ordApproved.ToString()
