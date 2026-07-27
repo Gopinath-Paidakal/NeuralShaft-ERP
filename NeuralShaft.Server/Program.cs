@@ -26,7 +26,9 @@ using NeuralShaft.Service.ServiceImplementation.Purchase;
 using NeuralShaft.Service.ServiceImplementation.Quotation;
 using NeuralShaft.Service.ServiceImplementation.QuotationAMC;
 using NeuralShaft.Service.ServiceImplementation.QuoteItem;
+using NeuralShaft.Service.ServiceImplementation.SaleOrderItem;
 using NeuralShaft.Service.ServiceImplementation.SalesOrder;
+using NeuralShaft.Service.ServiceImplementation.SalesOrderAMC;
 using NeuralShaft.Service.ServiceImplementation.Stocks;
 using NeuralShaft.Service.ServiceImplementation.TaxInvoice;
 using NeuralShaft.Service.ServiceImplementation.Upload;
@@ -46,6 +48,8 @@ using NeuralShaft.Service.ServiceInterfaces.Quotation;
 using NeuralShaft.Service.ServiceInterfaces.QuotationAMC;
 using NeuralShaft.Service.ServiceInterfaces.QuoteItem;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrder;
+using NeuralShaft.Service.ServiceInterfaces.SalesOrderAMC;
+using NeuralShaft.Service.ServiceInterfaces.SalesOrderItem;
 using NeuralShaft.Service.ServiceInterfaces.Stocks;
 using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Upload;
@@ -128,6 +132,12 @@ builder.Services.AddScoped<IOrdApprove, OrdApproveService>();
 
 //--- Sales Order
 builder.Services.AddScoped<ISalesOrder, SalesOrderService>();
+
+//---- SOItem for Proforma Invoice
+builder.Services.AddScoped<ISalesOrderItem, SalesOrderItemService>();
+
+//---- SOAMC for Proforma Invoice
+builder.Services.AddScoped<ISalesOrderAMC, SalesOrderAMCService>();
 
 //--- Job Order
 builder.Services.AddScoped<IJobOrder, JobOrderService>();

@@ -146,6 +146,12 @@ select * from QuoteAMCDtl
 
 Select * from ProformaInvHdr
 
+Select * from QuoteSOItemHdr
+Select * from QuoteSOItemDtl
+
+
+
+
 
 
 

@@ -17,6 +17,7 @@ namespace NeuralShaft.Service.ServiceImplementation.QuoteItem
             _repoJSon = repoJson;
         }
 
+
         public async Task<string> GetQuoteItem(string fromDate, string toDate, string status)
         {
             try

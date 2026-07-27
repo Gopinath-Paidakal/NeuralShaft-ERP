@@ -85,6 +85,7 @@ SET @QuoteItemHdr = (
                [QuoteItemDtlId]
               ,[ItemQuoteHdrId]
               ,[ItemId]
+              ,[ItemCode]
               ,[ItemName]
           
               ,[ItemHSNCode]
