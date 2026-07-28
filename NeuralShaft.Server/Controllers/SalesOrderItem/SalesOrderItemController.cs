@@ -64,10 +64,10 @@ namespace NeuralShaft.Server.Controllers.SalesOrderItem
 
         }
 
-        [HttpPost("DeleteSalesOrderItemById/{soItemDtlId}")]
-        public async Task<ActionResult> DeleteSalesOrderItemById(int soItemDtlId)
+        [HttpPost("DeleteSalesOrderItemById/{QuoteSOItemDtlId}")]
+        public async Task<ActionResult> DeleteSalesOrderItemById(int QuoteSOItemDtlId)
         {
-            var deleteSOItemById = await _soItemService.DeleteSalesOrderItemDtl(soItemDtlId);
+            var deleteSOItemById = await _soItemService.DeleteSalesOrderItemDtl(QuoteSOItemDtlId);
             return Content(deleteSOItemById, "application/json");
             //return Ok(soById);            
         }

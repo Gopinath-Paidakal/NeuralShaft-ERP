@@ -34,37 +34,26 @@ BEGIN TRY
 	  UPDATE H
         SET
            
-            H.QuoteSOItemConsultant           = J.QuoteSOItemConsultant,
-            H.QuoteSOItemExpectedClosingDate  = J.ItemExpectedClosingDate,
+            H.QuoteSOItemValidity             = J.QuoteSOItemValidity,
             H.QuoteSOItemDeliveryInDays       = J.QuoteSOItemDeliveryInDays,
-			H.QuoteSOItemValidity             = J.QuoteSOItemValidity,
-
-            H.QuoteSOItemGSTExempted          = J.QuoteSOItemGSTExempted,
             H.QuoteSOItemPaymentTerms         = J.QuoteSOItemPaymentTerms,
+            H.QuoteSOItemExpectedClosingDate  = J.QuoteSOItemExpectedClosingDate,
+            H.QuoteSOItemConsultant           = J.QuoteSOItemConsultant,
 
-            H.QuoteSOItemAmount               = J.QuoteSOItemAmount,
-            H.QuoteSOItemTaxAmount            = J.QuoteSOItemTaxAmount,
-
-            H.QuoteSOItemOrderStatus          = J.QuoteSOItemOrderStatus
-
+            H.QuoteSOItemGSTExempted          = J.QuoteSOItemGSTExempted
+            
         FROM QuoteSOItemHdr H
 
         CROSS APPLY OPENJSON(@QuoteSOItemHdr,'$.QuoteSOItemHdr')
         WITH
         (
-            QuoteSOItemConsultant NVARCHAR(100),
-            ItemExpectedClosingDate date ,
-            ItemDeliveryInDays NVARCHAR(100),
-		    QuoteSOItemValidity NVARCHAR(100),
-
-            QuoteSOItemGSTExempted bit ,
+            QuoteSOItemValidity NVARCHAR(100),
+            QuoteSOItemDeliveryInDays NVARCHAR(100),
             QuoteSOItemPaymentTerms NVARCHAR(100),
-            QuoteSOItemAmount  numeric(18, 2) ,
-            QuoteSOItemTaxAmount  numeric(18, 2) ,
-            QuoteSOItemTotalAmount  numeric(18, 2),
+            QuoteSOItemExpectedClosingDate date,
+            QuoteSOItemConsultant NVARCHAR(100),
 
-            QuoteSOItemOrderStatus NVARCHAR(50)
-		
+            QuoteSOItemGSTExempted bit
         ) J
         WHERE H.QuoteSOItemHdrId = @QuoteSOItemHdrId;
 
@@ -95,6 +84,16 @@ END TRY
 
 End_Prog:
         
+
+        --H.QuoteSOItemAmount               = J.QuoteSOItemAmount,
+            --H.QuoteSOItemTaxAmount            = J.QuoteSOItemTaxAmount,
+            --H.QuoteSOItemOrderStatus          = J.QuoteSOItemOrderStatus
+
+              --QuoteSOItemAmount  numeric(18, 2) ,
+            --QuoteSOItemTaxAmount  numeric(18, 2) ,
+            --QuoteSOItemTotalAmount  numeric(18, 2),
+
+            --QuoteSOItemOrderStatus NVARCHAR(50)
 
 
           --------------------------------------------------------

@@ -54,6 +54,7 @@ BEGIN TRY
 			  ,[QuoteSOAMCHdr].[QuoteSOAMCMobileNo]
 
 			  ,[QuoteSOAMCHdr].[QuoteSOAMCOrderStatus]
+			  ,[QuoteSOAMCHdr].[QuoteSOAMCApprovalStatus]
 
 			  --,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 			  --,[Employee].[EmpMobileNo]
@@ -102,6 +103,7 @@ BEGIN TRY
 			  ,[QuoteSOAMCHdr].[QuoteSOAMCMobileNo]
 
 			  ,[QuoteSOAMCHdr].[QuoteSOAMCOrderStatus]
+			  ,[QuoteSOAMCHdr].[QuoteSOAMCApprovalStatus]
 
 			  --,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 			  --,[Employee].[EmpMobileNo]

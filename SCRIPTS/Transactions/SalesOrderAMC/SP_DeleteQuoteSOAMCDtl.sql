@@ -32,7 +32,7 @@ BEGIN TRY
 
 	BEGIN TRANSACTION
 
-            Delete from QuoteDtlItem where QuoteItemDtlId = @QuoteSOAMCDtlId
+            Delete from QuoteSOAMCDtl where QuoteSOAMCDtlId = @QuoteSOAMCDtlId
 
             ---==============================================
             ---- Updating the Hdr Amounts

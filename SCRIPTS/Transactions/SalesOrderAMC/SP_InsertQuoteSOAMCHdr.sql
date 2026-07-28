@@ -1,6 +1,6 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertQuoteSOAMCHdr]    Script Date: 27/07//20266 ******/
+/****** Object:  StoredProcedure [dbo].[`]    Script Date: 27/07//20266 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertQuoteSOAMCHdr]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_InsertQuoteSOAMCHdr]
 GO
@@ -37,6 +37,7 @@ BEGIN TRY
     Declare @DeliveryBy smallint
     Declare @ComplementaryAMC smallint
     Declare @QuoteSOAMCSpecialFeatures nvarchar(1000)
+    Declare @QuoteAMCHdrId int     -- for updation approval
     
     Declare @Prefix nvarchar(50)
 
@@ -46,6 +47,9 @@ BEGIN TRY
 	
         set @CompanyId = (Select CompanyId from Company)
 	    set @BranchId = (Select BranchId from Branch)
+
+        set @QuoteAMCHdrId = JSON_VALUE(@QuoteSOAMCHdr, '$.QuoteSOAMCHdr.QuoteAMCHdrId')
+      
 
         set @Prefix = 'BE/SO/'
         --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
@@ -83,12 +87,16 @@ BEGIN TRY
                ,QuoteSOAMCContPerson
 
                ,QuoteSOAMCMobileNo
-               ,QuoteAMCExpectedClosingDate
+               ,QuoteSOAMCExpectedClosingDate
                ,QuoteSOAMCEmailId
                ,QuoteSOAMCDeliveryInDays
 
                ,QuoteSOAMCValidity
                ,QuoteSOAMCGSTExempted
+               ,QuoteSOAMCStartDate
+               ,QuoteSOAMCEndDate
+               ,QuoteSOAMCRenewalCount
+
                ,QuoteSOAMCPaymentTerms
                ,QuoteSOAMCAmount
                ,QuoteSOAMCTaxAmount
@@ -103,7 +111,7 @@ BEGIN TRY
                 @CompanyId
                ,@BranchId
                ,OrdClientHdrId
-               ,'SOItem_Spare'
+               ,'SO_AMC'
                ,@QuoteSOAMCNo
                ,@QuoteSOAMCSlNo
                ,QuoteSOAMCDate
@@ -121,6 +129,10 @@ BEGIN TRY
 
                ,QuoteSOAMCValidity
                ,QuoteSOAMCGSTExempted
+               ,QuoteSOAMCStartDate
+               ,QuoteSOAMCEndDate
+               ,QuoteSOAMCRenewalCount
+
                ,QuoteSOAMCPaymentTerms
                ,QuoteSOAMCAmount
                ,QuoteSOAMCTaxAmount
@@ -134,27 +146,31 @@ BEGIN TRY
             FROM OPENJSON(@QuoteSOAMCHdr,'$.QuoteSOAMCHdr')
             WITH
             (
-                 OrdClientHdrId int,
-	             QuoteSOAMCDate   date   ,
-	             QuoteSOAMCSlNo   nvarchar (50)  ,
+                 OrdClientHdrId          int,
+	             QuoteSOAMCDate          date,
+	             QuoteSOAMCSlNo          nvarchar (50),
 
-	             QuoteSOAMCConsultant   nvarchar (100),
+	             QuoteSOAMCConsultant    nvarchar (100),
 	             
-	             QuoteSOAMCCustComp   nvarchar (100),
+	             QuoteSOAMCCustComp      nvarchar (100),
 	             QuoteSOAMCBillingAddr   nvarchar (100),
-                 QuoteSOAMCJobOrderNo nvarchar (50),
-	             QuoteSOAMCContPerson   nvarchar (100),
+                 QuoteSOAMCJobOrderNo    nvarchar (50),
+	             QuoteSOAMCContPerson    nvarchar (100),
 
-	             QuoteSOAMCMobileNo   nvarchar (100),
+	             QuoteSOAMCMobileNo      nvarchar (100),
 	             QuoteSOAMCExpectedClosingDate   date,
-	             QuoteSOAMCEmailId   nvarchar (100),
-	             QuoteSOAMCDeliveryInDays   smallint,
+	             QuoteSOAMCEmailId       nvarchar (100),
+	             QuoteSOAMCDeliveryInDays  smallint,
 
-	             QuoteSOAMCValidity   nvarchar (100),
-	             QuoteSOAMCGSTExempted   bit   ,
-	             QuoteSOAMCPaymentTerms   nvarchar (500),
-	             QuoteSOAMCAmount   numeric (18, 2),
-	             QuoteSOAMCTaxAmount   numeric (18, 2),
+	             QuoteSOAMCValidity      nvarchar (100),
+                 QuoteSOAMCGSTExempted   bit,
+                 QuoteSOAMCStartDate     date,
+                 QuoteSOAMCEndDate       date,
+                 QuoteSOAMCRenewalCount  smallint,
+
+	             QuoteSOAMCPaymentTerms  nvarchar (500),
+	             QuoteSOAMCAmount        numeric (18, 2),
+	             QuoteSOAMCTaxAmount     numeric (18, 2),
 
 	             QuoteSOAMCTotalAmount   numeric (18, 2),
 	             QuoteSOAMCOrderStatus   nvarchar (50),
@@ -165,7 +181,7 @@ BEGIN TRY
 
             );
     
-        set @QuoteSOAMCHdrId = SCOPE_IDENTITY()
+           set @QuoteSOAMCHdrId = SCOPE_IDENTITY()
 
            INSERT INTO QuoteSOAMCDtl
             (
@@ -218,7 +234,7 @@ BEGIN TRY
                ,CreatedDate
              
 
-            FROM OPENJSON(@QuoteSOAMCHdr,'$.@QuoteSOAMCDtl')
+            FROM OPENJSON(@QuoteSOAMCHdr,'$.QuoteSOAMCDtl')
             WITH
             (
 
@@ -270,6 +286,14 @@ BEGIN TRY
 
                 WHERE H.QuoteSOAMCHdrId = @QuoteSOAMCHdrId;  
                 --===============================================
+
+                ----=====================================================
+                ------ Updating QuoteHdrAMC approval status - approved
+                ----=====================================================
+
+                Update QuoteAMCHdr set ApprovalStatus = 'Approved' where QuoteAMCHdrId = @QuoteAMCHdrId
+
+
 
     Select @QuoteSOAMCHdrId
 

@@ -14,10 +14,10 @@ namespace NeuralShaft.Server.Controllers.QuoteAMC
             _quoteAMCService = quoteService;
         }
 
-        [HttpGet("GetQuoteAMC/{fromDate}/{toDate}")]
-        public async Task<ActionResult> GetQuoteAMC(string fromDate, string toDate)
+        [HttpGet("GetQuoteAMC/{fromDate}/{toDate}/{status}")]
+        public async Task<ActionResult> GetQuoteAMC(string fromDate, string toDate, string status)
         {
-            string quoteAMC = await _quoteAMCService.GetQuoteAMC(fromDate, toDate);
+            string quoteAMC = await _quoteAMCService.GetQuoteAMC(fromDate, toDate, status);
             return Content(quoteAMC, "application/json");
         }
 

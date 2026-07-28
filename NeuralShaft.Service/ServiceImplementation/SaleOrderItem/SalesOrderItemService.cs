@@ -43,26 +43,26 @@ namespace NeuralShaft.Service.ServiceImplementation.SaleOrderItem
 
         public async Task<string> UpdateSalesOrderItemHdr(int salesOrderItemHdrId, object salesOrderHdrItem)
         {
-            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteSOItemHdr", new { @SOItemHdrId = salesOrderItemHdrId, @SOHdrItem = salesOrderHdrItem.ToString() });
+            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteSOItemHdr", new { @QuoteSOItemHdrId = salesOrderItemHdrId, @QuoteSOItemHdr = salesOrderHdrItem.ToString() });
         }
 
 
         //----- SalesOrderItem Dtl
         public async Task<string> InsertSalesOrderItemDtl(object salesOrderItemDtl)
         {
-            string insertSOItemDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertQuoteSOItemDtl", new { @SODtlItem = salesOrderItemDtl.ToString() });
+            string insertSOItemDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertQuoteSOItemDtl", new { @QuoteSOItemDtl = salesOrderItemDtl.ToString() });
             return (insertSOItemDtl);
         }
 
         public async Task<string> UpdateSalesOrderItemDtl(int salesOrderItemDtlId, object salesOrderItemDtl)
         {
-            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteSOItemDtl", new { @SOItemDtlId = salesOrderItemDtlId, @SODtlItem = salesOrderItemDtl.ToString() });
+            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateQuoteSOItemDtl", new { @QuoteSOItemDtlId = salesOrderItemDtlId, @QuoteSOItemDtl = salesOrderItemDtl.ToString() });
         }
 
         public async Task<string> DeleteSalesOrderItemDtl(int salesOrderItemDtlId)
         {
             var deleteSOItemById = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteQuoteSOItemDtl",
-                                  new { @SOItemDtlId = salesOrderItemDtlId });
+                                  new { @QuoteSOItemDtlId = salesOrderItemDtlId });
 
             return deleteSOItemById;
         }

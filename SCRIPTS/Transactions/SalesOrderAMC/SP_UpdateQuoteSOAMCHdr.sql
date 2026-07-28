@@ -29,43 +29,36 @@ BEGIN TRY
 
 
     ------------------------------------------------
-    -- UPDATE QuoteSOHdrItem
+    -- UPDATE QuoteSOAMCHdr
     ------------------------------------------------
 	  UPDATE H
         SET
            
-            H.QuoteSOAMCConsultant           = J.QuoteSOAMCConsultant,
-            H.QuoteSOAMCExpectedClosingDate  = J.QuoteSOAMCExpectedClosingDate,
-              
+            H.QuoteSOAMCValidity             = J.QuoteSOAMCValidity,
             H.QuoteSOAMCDeliveryInDays       = J.QuoteSOAMCDeliveryInDays,
-			H.QuoteSOAMCValidity             = J.QuoteSOAMCValidity,
+            H.QuoteSOAMCPaymentTerms         = J.QuoteSOAMCPaymentTerms,
+            H.QuoteSOAMCExpectedClosingDate  = J.QuoteSOAMCExpectedClosingDate,
+            H.QuoteSOAMCConsultant           = J.QuoteSOAMCConsultant,
 
             H.QuoteSOAMCGSTExempted          = J.QuoteSOAMCGSTExempted,
-            H.QuoteSOAMCPaymentTerms         = J.QuoteSOAMCPaymentTerms,
-
-            H.QuoteSOAMCAmount               = J.QuoteSOAMCAmount,
-            H.QuoteSOAMCTaxAmount            = J.QuoteSOAMCTaxAmount,
-
-            H.QuoteSOAMCOrderStatus          = J.QuoteSOAMCOrderStatus
+            H.QuoteSOAMCStartDate            = J.QuoteSOAMCStartDate,
+            H.QuoteSOAMCEndDate              = J.QuoteSOAMCEndDate
 
         FROM QuoteSOAMCHdr H
 
         CROSS APPLY OPENJSON(@QuoteSOAMCHdr,'$.QuoteSOAMCHdr')
         WITH
         (
-            QuoteSOAMCConsultant NVARCHAR(100),
-            QuoteSOAMCExpectedClosingDate date ,
+            QuoteSOAMCValidity NVARCHAR(100),
             QuoteSOAMCDeliveryInDays NVARCHAR(100),
-		    QuoteSOAMCValidity NVARCHAR(100),
-
-            QuoteSOAMCGSTExempted bit ,
             QuoteSOAMCPaymentTerms NVARCHAR(100),
-            QuoteSOAMCAmount  numeric(18, 2) ,
-            QuoteSOAMCTaxAmount  numeric(18, 2) ,
-            QuoteSOAMCTotalAmount  numeric(18, 2),
+            QuoteSOAMCExpectedClosingDate date ,
+            QuoteSOAMCConsultant NVARCHAR(100),
 
-            QuoteSOAMCOrderStatus NVARCHAR(50)
-		
+            QuoteSOAMCGSTExempted bit,
+            QuoteSOAMCStartDate  date,
+            QuoteSOAMCEndDate    date
+       
         ) J
         WHERE H.QuoteSOAMCHdrId = @QuoteSOAMCHdrId;
 

@@ -7,7 +7,7 @@ namespace NeuralShaft.Service.ServiceInterfaces.QuotationAMC
     public interface IQuoteAMC
     {
         //  -------- AMC Hdr
-        Task<string> GetQuoteAMC(string fromDate, string toDate);
+        Task<string> GetQuoteAMC(string fromDate, string toDate, string status);
 
         Task<string> GetQuoteAMCHdrById(int quoteAMCHdrId);
 

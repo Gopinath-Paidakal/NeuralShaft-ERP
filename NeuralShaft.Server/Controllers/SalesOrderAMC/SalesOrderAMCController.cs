@@ -20,10 +20,10 @@ namespace NeuralShaft.Server.Controllers.SalesOrderAMC
             return Content(soAMC, "application/json");
         }
 
-        [HttpGet("GetSalesOrderAMCHdrById/{quoteItemHdrId}")]
-        public async Task<ActionResult> GetSOAMCHdrById(int soAMCdrId)
+        [HttpGet("GetSalesOrderAMCHdrById/{salesOrderAMCHdrId}")]
+        public async Task<ActionResult> GetSOAMCHdrById(int salesOrderAMCHdrId)
         {
-            var soAMCById = await _soAMCService.GetSalesOrderAMCHdrById(soAMCdrId);
+            var soAMCById = await _soAMCService.GetSalesOrderAMCHdrById(salesOrderAMCHdrId);
             return Content(soAMCById, "application/json");
             //return Ok(quoteById);            
         }
@@ -36,7 +36,7 @@ namespace NeuralShaft.Server.Controllers.SalesOrderAMC
 
         }
 
-        [HttpPost("UpdateSalesOrderAMCHdr/{quoteItemHdrId}")]    // Inserts both hdr and item in add
+        [HttpPost("UpdateSalesOrderAMCHdr/{salesOrderAMCHdrId}")]    // Inserts both hdr and item in add
         public async Task<IActionResult> UpdateSOAMCHdr(int salesOrderAMCHdrId, [FromBody] object salesOrderAMCHdr)
         {
             //await _service.InsertEnquiry(data);
@@ -55,15 +55,15 @@ namespace NeuralShaft.Server.Controllers.SalesOrderAMC
 
 
         //===== Adde on 26-05-2026 // Chnaged by Pavan
-        [HttpPost("UpdateSalesOrderAMCDtl/{quoteItemDtlId}")]
-        public async Task<IActionResult> UpdateSOAMCDtl(int quoteItemDtlId, [FromBody] object quoteDtlItem)
+        [HttpPost("UpdateSalesOrderAMCDtl/{salesOrderAMCDtlId}")]
+        public async Task<IActionResult> UpdateSOAMCDtl(int salesOrderAMCDtlId, [FromBody] object salesOrderAMCDtl)
         {
-            var soAMCUpdateDtlId = await _soAMCService.UpdateSalesOrderAMCDtl(quoteItemDtlId, quoteDtlItem);
+            var soAMCUpdateDtlId = await _soAMCService.UpdateSalesOrderAMCDtl(salesOrderAMCDtlId, salesOrderAMCDtl);
             return Ok(soAMCUpdateDtlId);
 
         }
 
-        [HttpPost("DeleteSalesOrderAMCDtlById/{quoteItemDtlId}")]
+        [HttpPost("DeleteSalesOrderAMCDtlById/{salesOrderAMCDtlId}")]
         public async Task<ActionResult> DeleteSOAMCById(int salesOrderAMCDtlId)
         {
             var deleteSOAMCById = await _soAMCService.DeleteSalesOrderAMCDtl(salesOrderAMCDtlId);

@@ -18,7 +18,8 @@ CREATE PROCEDURE [dbo].[SP_GetQuoteAMCHdr]
 
 (
 	@FromDate nvarchar(20),
-	@ToDate nvarchar(20)
+	@ToDate nvarchar(20),
+	@Status nvarchar(50)
 )
 ----With Encryption
 AS
@@ -27,67 +28,135 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 
-    
-	SELECT
-(
-        SELECT 
-		
-		  [QuoteAMCHdr].[QuoteAMCHdrId]
-          --,[CompanyId]
-          --,[BranchId]
-        
-		  ,[QuoteAMCHdr].[OrdClientHdrId]
-          ,[QuoteAMCHdr].[QuoteAMCNo]
-           --[QuoteHdr].[QuoteDate]
-	      ,FORMAT(QuoteAMCDate, 'dd-MM-yyyy') as QuoteDate   -- + ' ' + FORMAT(QuoteDate, 'HH:mm:ss') as QuoteDate
-          ,[QuoteAMCHdr].[QuoteAMCSlNo]
+	DECLARE @QuoteAMCHdr NVARCHAR(MAX)
 
-	      ,[QuoteAMCHdr].[QuoteAMCConsultant]
-          ,[QuoteAMCHdr].[QuoteAMCCustComp]
-		  --,[QuoteAMCHdr].[QuoteAMCBillingAddr]
-          ,[QuoteAMCHdr].[QuoteAMCContPerson]
-          ,[QuoteAMCHdr].[QuoteAMCMobileNo]
+	if (@Status = UPPER('EDIT'))
 
-	      --,[QuoteAMCHdr].[QuoteAMCProjectName]
-	      ,[QuoteAMCHdr].[AMCExpectedClosingDate]
-	      ,[QuoteAMCHdr].[QuoteAMCEmailId]
-          ,[QuoteAMCHdr].[QuoteAMCDeliveryInDays]
+	BEGIN 
+
+		SET @QuoteAMCHdr = (
+			SELECT
+				   [QuoteAMCHdr].[QuoteAMCHdrId]        
+				  ,[QuoteAMCHdr].[OrdClientHdrId]
+				  ,[QuoteAMCHdr].[QuoteAMCNo]
+				   --[QuoteHdr].[QuoteDate]
+				  ,FORMAT(QuoteAMCDate, 'dd-MM-yyyy') as QuoteAMCDate   -- + ' ' + FORMAT(QuoteDate, 'HH:mm:ss') as QuoteDate
+				  ,[QuoteAMCHdr].[QuoteAMCSlNo]
+
+				  ,[QuoteAMCHdr].[QuoteAMCConsultant]
+				  ,[QuoteAMCHdr].[QuoteAMCCustComp]
+				  --,[QuoteAMCHdr].[QuoteAMCBillingAddr]
+				  ,[QuoteAMCHdr].[QuoteAMCContPerson]
+				  ,[QuoteAMCHdr].[QuoteAMCMobileNo]
+
+				  --,[QuoteAMCHdr].[QuoteAMCProjectName]
+				  ,[QuoteAMCHdr].[AMCExpectedClosingDate]
+				  ,[QuoteAMCHdr].[QuoteAMCEmailId]
+				  ,[QuoteAMCHdr].[QuoteAMCDeliveryInDays]
 	      
 
-          ,[QuoteAMCHdr].[QuoteAMCValidity]
-          ,[QuoteAMCHdr].[QuoteAMCPaymentTerms]
-	      ,[QuoteAMCHdr].[QuoteAMCGSTExempted]
+				  ,[QuoteAMCHdr].[QuoteAMCValidity]
+				  ,[QuoteAMCHdr].[QuoteAMCPaymentTerms]
+				  ,[QuoteAMCHdr].[QuoteAMCGSTExempted]
 	      
-		  ,[QuoteAMCHdr].[QuoteAMCRenewalCount]
-		  --,[QuoteAMCHdr].[QuoteAMCRevisionNo]
-		  ,[QuoteAMCHdr].[QuoteAMCStartDate]
-	      ,[QuoteAMCHdr].[QuoteAMCEndDate]
+				  ,[QuoteAMCHdr].[QuoteAMCRenewalCount]
+				  --,[QuoteAMCHdr].[QuoteAMCRevisionNo]
+				  ,[QuoteAMCHdr].[QuoteAMCStartDate]
+				  ,[QuoteAMCHdr].[QuoteAMCEndDate]
 
-		  ,[QuoteAMCHdr].[QuoteAMCStatus]
+				  ,[QuoteAMCHdr].[QuoteAMCStatus]
+				  ,[QuoteAMCHdr].[OrderStatus]
+				  ,[QuoteAMCHdr].[ApprovalStatus]
 
-		  ,[QuoteAMCHdr].[CreatedUserId]
+				  ,[QuoteAMCHdr].[CreatedUserId]
 
-		  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
-		  ,[Employee].[EmpMobileNo]
+				  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
+				  ,[Employee].[EmpMobileNo]
 
-		  ,[QuoteAMCHdr].[CreatedDate]
+				  ,[QuoteAMCHdr].[CreatedDate]
 
-		  ,FORMAT(DATEADD(DAY, TRY_CAST(QuoteAMCHdr.QuoteAMCValidity AS INT), QuoteAMCHdr.CreatedDate),'dd-MM-yyyy') as 'Price Validity'
+				  ,FORMAT(DATEADD(DAY, TRY_CAST(QuoteAMCHdr.QuoteAMCValidity AS INT), QuoteAMCHdr.CreatedDate),'dd-MM-yyyy') as 'Price Validity'
 
 
-	    FROM [dbo].[QuoteAMCHdr]
-		--INNER JOIN [EnqHdr] ON [EnqHdr].EnqHdrId = [QuoteHdr].[EnqHdrId]
-		INNER JOIN [Employee] ON [Employee].EmpId = [QuoteAMCHdr].[CreatedUserId]
+				FROM [dbo].[QuoteAMCHdr]
+				--INNER JOIN [EnqHdr] ON [EnqHdr].EnqHdrId = [QuoteHdr].[EnqHdrId]
+				INNER JOIN [Employee] ON [Employee].EmpId = [QuoteAMCHdr].[CreatedUserId]
 
 	    
-		WHERE [QuoteAMCHdr].[QuoteAMCDate] >= @FromDate AND [QuoteAMCHdr].[QuoteAMCDate] < DATEADD(DAY, 1, @ToDate)
+				WHERE [QuoteAMCHdr].[QuoteAMCDate] >= @FromDate AND [QuoteAMCHdr].[QuoteAMCDate] < DATEADD(DAY, 1, @ToDate)
 	    
-		Order by [QuoteAMCHdr].[QuoteAMCNo]
+				Order by [QuoteAMCHdr].[QuoteAMCNo]
 		 
-	    FOR JSON PATH, ROOT('QuoteAMCHdr')  -- ROOT WITHOUT_ARRAY_WRAPPER
+				FOR JSON PATH, ROOT('QuoteAMCHdr'))  -- ROOT WITHOUT_ARRAY_WRAPPER
 
 
-    ) AS QuoteAMCHdr
+    --) AS QuoteAMCHdr
+	END
+
+	if (@Status = UPPER('SENTFORAPPROVAL'))
+	BEGIN 
+
+	  SET @QuoteAMCHdr = (
+
+		  SELECT 
+				
+				[QuoteAMCHdr].[QuoteAMCHdrId]        
+				  ,[QuoteAMCHdr].[OrdClientHdrId]
+				  ,[QuoteAMCHdr].[QuoteAMCNo]
+				   --[QuoteHdr].[QuoteDate]
+				  ,FORMAT(QuoteAMCDate, 'dd-MM-yyyy') as QuoteAMCDate   -- + ' ' + FORMAT(QuoteDate, 'HH:mm:ss') as QuoteDate
+				  ,[QuoteAMCHdr].[QuoteAMCSlNo]
+
+				  ,[QuoteAMCHdr].[QuoteAMCConsultant]
+				  ,[QuoteAMCHdr].[QuoteAMCCustComp]
+				  --,[QuoteAMCHdr].[QuoteAMCBillingAddr]
+				  ,[QuoteAMCHdr].[QuoteAMCContPerson]
+				  ,[QuoteAMCHdr].[QuoteAMCMobileNo]
+
+				  --,[QuoteAMCHdr].[QuoteAMCProjectName]
+				  ,[QuoteAMCHdr].[AMCExpectedClosingDate]
+				  ,[QuoteAMCHdr].[QuoteAMCEmailId]
+				  ,[QuoteAMCHdr].[QuoteAMCDeliveryInDays]
+	      
+
+				  ,[QuoteAMCHdr].[QuoteAMCValidity]
+				  ,[QuoteAMCHdr].[QuoteAMCPaymentTerms]
+				  ,[QuoteAMCHdr].[QuoteAMCGSTExempted]
+	      
+				  ,[QuoteAMCHdr].[QuoteAMCRenewalCount]
+				  --,[QuoteAMCHdr].[QuoteAMCRevisionNo]
+				  ,[QuoteAMCHdr].[QuoteAMCStartDate]
+				  ,[QuoteAMCHdr].[QuoteAMCEndDate]
+
+				  ,[QuoteAMCHdr].[QuoteAMCStatus]
+				  ,[QuoteAMCHdr].[OrderStatus]
+				  ,[QuoteAMCHdr].[ApprovalStatus]
+
+				  ,[QuoteAMCHdr].[CreatedUserId]
+
+				  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
+				  ,[Employee].[EmpMobileNo]
+
+				  ,[QuoteAMCHdr].[CreatedDate]
+
+				  ,FORMAT(DATEADD(DAY, TRY_CAST(QuoteAMCHdr.QuoteAMCValidity AS INT), QuoteAMCHdr.CreatedDate),'dd-MM-yyyy') as 'Price Validity'
+
+
+				FROM [dbo].[QuoteAMCHdr]
+				--INNER JOIN [EnqHdr] ON [EnqHdr].EnqHdrId = [QuoteHdr].[EnqHdrId]
+				INNER JOIN [Employee] ON [Employee].EmpId = [QuoteAMCHdr].[CreatedUserId]
+
+	    
+				WHERE [QuoteAMCHdr].[QuoteAMCDate] >= @FromDate AND [QuoteAMCHdr].[QuoteAMCDate] < DATEADD(DAY, 1, @ToDate)
+       			 and [QuoteAMCHdr].[OrderStatus] = UPPER('SENTFORAPPROVAL')
+	    
+				Order by [QuoteAMCHdr].[QuoteAMCNo]
+		 
+				FOR JSON PATH, ROOT('QuoteAMCHdr'))  -- ROOT WITHOUT_ARRAY_WRAPPER
+
+		END
+
+		select @QuoteAMCHdr
 
 END TRY
 

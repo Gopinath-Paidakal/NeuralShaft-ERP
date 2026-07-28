@@ -59,6 +59,10 @@ SET @QuoteAMCHdr = (
           ,[QuoteSOAMCHdr].[QuoteSOAMCValidity]
           ,[QuoteSOAMCHdr].[QuoteSOAMCPaymentTerms]
 	      ,[QuoteSOAMCHdr].[QuoteSOAMCGSTExempted]
+
+          ,[QuoteSOAMCHdr].[QuoteSOAMCStartDate]
+          ,[QuoteSOAMCHdr].[QuoteSOAMCEndDate]
+          ,[QuoteSOAMCHdr].[QuoteSOAMCRenewalCount]
 	      
 		  ,[QuoteSOAMCHdr].[QuoteSOAMCOrderStatus]
           ,[QuoteSOAMCHdr].[QuoteSOAMCAmount]

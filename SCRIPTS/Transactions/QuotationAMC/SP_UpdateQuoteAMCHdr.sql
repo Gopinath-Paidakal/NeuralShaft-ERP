@@ -63,8 +63,11 @@ BEGIN TRY
               QAH.QuoteAMCRenewalCount  = J.QuoteAMCRenewalCount,
               --QAH.QuoteAMCRevisionNo    = J.QuoteAMCRevisionNo,
               QAH.QuoteAMCStartDate     = J.QuoteAMCStartDate,
-              QAH.QuoteAMCEndDate     = J.QuoteAMCEndDate,
+              QAH.QuoteAMCEndDate       = J.QuoteAMCEndDate,
               QAH.QuoteAMCStatus        = J.QuoteAMCStatus,
+
+              QAH.OrderStatus           = J.OrderStatus,
+
 
               QAH.ModifiedUserId        = J.ModifiedUserId,
               QAH.ModifiedDate          = J.ModifiedDate
@@ -102,9 +105,12 @@ BEGIN TRY
               QuoteAMCRenewalCount      INT,
               QuoteAMCRevisionNo        INT,
               QuoteAMCStartDate         DATE,
-              QuoteAMCEndDate         DATE,
+              QuoteAMCEndDate           DATE,
 
               QuoteAMCStatus            NVARCHAR(50),
+
+              OrderStatus               NVARCHAR(50),
+
               ModifiedUserId            INT,
               ModifiedDate              DATE
 

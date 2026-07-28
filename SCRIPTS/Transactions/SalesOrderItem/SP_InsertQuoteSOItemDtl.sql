@@ -29,8 +29,7 @@ BEGIN TRY
        Declare @ModifiedDate date
 
        set @QuoteSOItemHdrId = JSON_VALUE(@QuoteSOItemDtl, '$.ItemQuoteHdrId')
-       set @ModifiedUserId = JSON_VALUE(@QuoteSOItemDtl, '$.ModifiedUserId')
-       set @ModifiedDate = JSON_VALUE(@QuoteSOItemDtl, '$.ModifiedDate')
+     
 
     BEGIN TRANSACTION
 
@@ -38,8 +37,9 @@ BEGIN TRY
             (
                 QuoteSOItemHdrId
 
-               ,ItemName
                ,ItemId
+               ,ItemName
+             
                ,ItemHSNCode
                ,ItemCode
                ,ItemDesc
@@ -55,17 +55,15 @@ BEGIN TRY
 
                ,CreatedUserId
                ,CreatedDate
-               ,ModifiedUserId
-               ,ModifiedDate
-             
             
             )
             SELECT
 
                QuoteSOItemHdrId
 
-               ,ItemName
                ,ItemId
+               ,ItemName
+              
                ,ItemHSNCode
                ,ItemCode
                ,ItemDesc
@@ -83,35 +81,28 @@ BEGIN TRY
                ,CreatedUserId
                ,CreatedDate
 
-               ,ModifiedUserId
-               ,ModifiedDate
-             
-
             FROM OPENJSON(@QuoteSOItemDtl,'$.QuoteSOItemDtl')
             WITH
             (
 
                 QuoteSOItemHdrId int,
-                ItemName nvarchar (100) ,
-	            ItemId int ,
+                ItemId int ,
+                ItemName nvarchar (100),
 	            ItemHSNCode nvarchar(100),
 	            ItemCode nvarchar(100),
-	            ItemDesc nvarchar(100),
 
+	            ItemDesc nvarchar(100),
 	            ItemQuantity numeric(18, 2),
 	            ItemRate numeric (18, 2),
 	            ItemAmount numeric (18, 2) ,
 	            ItemTaxPercentage numeric (10, 2),
-	            ItemDiscountAmount numeric(18, 2),
 
+	            ItemDiscountAmount numeric(18, 2),
 	            ItemDiscountPercentage numeric(10, 2),
 	            ItemTotalAmount numeric(18, 2),
-
-              
 	            CreatedUserId int ,
-	            CreatedDate date,
-	            ModifiedUserId int,
-	            ModifiedDate date 
+	            CreatedDate date
+
             );
 
             Set @QuoteItemDtlId = SCOPE_IDENTITY()
@@ -170,7 +161,10 @@ END TRY
 	END CATCH
 
 End_Prog:
-        
+   
+   
+     --set @ModifiedUserId = JSON_VALUE(@QuoteSOItemDtl, '$.ModifiedUserId')
+       --set @ModifiedDate = JSON_VALUE(@QuoteSOItemDtl, '$.ModifiedDate')
 
         --Declare @CompanyId int
 	--Declare @BranchId int

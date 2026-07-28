@@ -55,6 +55,7 @@ BEGIN TRY
 			  ,[QuoteHdrItem].[ItemQuoteMobileNo]
 
 			  ,[QuoteHdrItem].[OrderStatus]
+			  ,[QuoteHdrItem].[ApprovalStatus]
 
 			  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 			  ,[Employee].[EmpMobileNo]
@@ -108,6 +109,7 @@ BEGIN TRY
 			  ,[QuoteHdrItem].[ItemQuoteTotalAmount]
 
 			  ,[QuoteHdrItem].[OrderStatus]
+			  ,[QuoteHdrItem].[ApprovalStatus]
 
 			  ,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 			  ,[Employee].[EmpMobileNo]

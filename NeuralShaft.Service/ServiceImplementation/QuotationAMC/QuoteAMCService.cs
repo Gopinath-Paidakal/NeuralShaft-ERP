@@ -17,10 +17,10 @@ namespace NeuralShaft.Service.ServiceImplementation.QuotationAMC
         }
 
       
-        public async Task<string> GetQuoteAMC(string fromDate, string toDate)
+        public async Task<string> GetQuoteAMC(string fromDate, string toDate, string status)
         {
             string quoteData = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetQuoteAMCHdr",
-                                  new { @FromDate = fromDate, @ToDate = toDate });
+                                  new { @FromDate = fromDate, @ToDate = toDate, @Status = status });
             return quoteData;
         }
 

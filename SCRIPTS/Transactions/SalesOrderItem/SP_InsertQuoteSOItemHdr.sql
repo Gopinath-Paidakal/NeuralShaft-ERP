@@ -39,6 +39,7 @@ BEGIN TRY
     Declare @QuoteSOItemSpecialFeatures nvarchar(1000)
     
     Declare @Prefix nvarchar(50)
+    Declare @ItemQuoteHdrId int     -- for updation approval
 
     --Declare @EnqDtlId int
 
@@ -46,6 +47,9 @@ BEGIN TRY
 	
         set @CompanyId = (Select CompanyId from Company)
 	    set @BranchId = (Select BranchId from Branch)
+        --set @ItemQuoteHdrId = JSON_VALUE(@QuoteSOItemHdr, '$.QuoteSOItemHdr.ItemQuoteHdrId')
+        set @ItemQuoteHdrId = JSON_VALUE(@QuoteSOItemHdr, '$.QuoteSOItemHdr.ItemQuoteHdrId')
+
 
         set @Prefix = 'BE/SO/'
         --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
@@ -270,6 +274,14 @@ BEGIN TRY
 
                 WHERE H.ItemQuoteHdrId = @QuoteSOItemHdrId;  
                 --===============================================
+
+                ----=====================================================
+                ------ Updating QuoteHdrItem approval status - approved
+                ----=====================================================
+
+                Update QuoteHdrItem set ApprovalStatus = 'Approved' where ItemQuoteHdrId = @ItemQuoteHdrId
+
+
 
     Select @QuoteSOItemHdrId
 

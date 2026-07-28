@@ -29,7 +29,7 @@ BEGIN TRY
 	Declare @QuoteAMCNo int
 	Declare @QuoteAMCSlNo nvarchar(50)
     Declare @AMCClosingDays smallint
-    Declare @QuoteAMCHdrId int   
+    --Declare @QuoteAMCHdrId int   
     
     --- default Data
     Declare @QuotePaymentTerms nvarchar(500)
@@ -39,6 +39,7 @@ BEGIN TRY
     Declare @QuoteSpecialFeatures nvarchar(1000)
     
     Declare @Prefix nvarchar(50)
+    Declare @QuoteAMCHdrId int     -- for updation approval
 
     --Declare @EnqDtlId int
 
@@ -46,6 +47,8 @@ BEGIN TRY
 	
         set @CompanyId = (Select CompanyId from Company)
 	    set @BranchId = (Select BranchId from Branch)
+
+        set @QuoteAMCHdrId = JSON_VALUE(@QuoteAMCHdr, '$.QuoteAMCHdr.QuoteAMCHdrId')
 
         set @Prefix = 'BE/AMC/'
         --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
@@ -294,6 +297,12 @@ BEGIN TRY
 
                 WHERE H.QuoteAMCHdrId = @QuoteAMCHdrId;  
                 --===============================================
+
+                ----=====================================================
+                ------ Updating QuoteAMCHdr approval status - approved
+                ----=====================================================
+
+                Update QuoteAMCHdr set ApprovalStatus = 'Approved' where QuoteAMCHdrId = @QuoteAMCHdrId
 
 
     Select @QuoteAMCHdrId

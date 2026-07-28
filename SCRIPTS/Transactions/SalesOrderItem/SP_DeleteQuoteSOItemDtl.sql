@@ -1,18 +1,18 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_DeleteQuoteSOItem]    Script Date: 27/07//20266 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_DeleteQuoteSOItem]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_DeleteQuoteSOItem]
+/****** Object:  StoredProcedure [dbo].[SP_DeleteQuoteSOItemDtl]    Script Date: 27/07//20266 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_DeleteQuoteSOItemDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_DeleteQuoteSOItemDtl]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_DeleteQuoteSOItem]    Script Date: 27/07//2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_DeleteQuoteSOItemDtl]    Script Date: 27/07//2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_DeleteQuoteSOItem]
+CREATE PROCEDURE [dbo].[SP_DeleteQuoteSOItemDtl]
 (
 	@QuoteSOItemDtlId int
 )
@@ -32,7 +32,7 @@ BEGIN TRY
 
 	BEGIN TRANSACTION
 
-            Delete from QuoteDtlItem where QuoteItemDtlId = @QuoteSOItemDtlId
+            Delete from QuoteSOItemDtl where QuoteSOItemDtlId = @QuoteSOItemDtlId
 
             ---==============================================
             ---- Updating the Hdr Amounts
