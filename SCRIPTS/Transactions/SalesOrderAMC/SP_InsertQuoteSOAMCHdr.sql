@@ -291,7 +291,9 @@ BEGIN TRY
                 ------ Updating QuoteHdrAMC approval status - approved
                 ----=====================================================
 
-                Update QuoteAMCHdr set ApprovalStatus = 'Approved' where QuoteAMCHdrId = @QuoteAMCHdrId
+                Update QuoteAMCHdr set QuoteSOAMCHdrId = @QuoteSOAMCHdrId,
+                                       ApprovalStatus = 'Approved' 
+                                   where QuoteAMCHdrId = @QuoteAMCHdrId
 
 
 

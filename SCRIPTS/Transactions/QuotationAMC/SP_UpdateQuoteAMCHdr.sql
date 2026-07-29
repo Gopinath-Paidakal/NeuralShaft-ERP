@@ -56,9 +56,9 @@ BEGIN TRY
               
               QAH.QuoteAMCGSTExempted   = J.QuoteAMCGSTExempted,
               QAH.QuoteAMCPaymentTerms  = J.QuoteAMCPaymentTerms,
-              QAH.QuoteAMCAmount        = J.QuoteAMCAmount,
-              QAH.QuoteAMCTaxAmount     = J.QuoteAMCTaxAmount,
-              QAH.QuoteAMCTotalAmount   = J.QuoteAMCTotalAmount,
+              --QAH.QuoteAMCAmount        = J.QuoteAMCAmount,
+              --QAH.QuoteAMCTaxAmount     = J.QuoteAMCTaxAmount,
+              --QAH.QuoteAMCTotalAmount   = J.QuoteAMCTotalAmount,
               
               QAH.QuoteAMCRenewalCount  = J.QuoteAMCRenewalCount,
               --QAH.QuoteAMCRevisionNo    = J.QuoteAMCRevisionNo,
@@ -98,10 +98,10 @@ BEGIN TRY
               QuoteAMCValidity          NVARCHAR(200),
               QuoteAMCGSTExempted       BIT,
               QuoteAMCPaymentTerms      NVARCHAR(MAX),
-              QuoteAMCAmount            DECIMAL(18,2),
-              QuoteAMCTaxAmount         DECIMAL(18,2),
+              --QuoteAMCAmount            DECIMAL(18,2),
+              --QuoteAMCTaxAmount         DECIMAL(18,2),
               
-              QuoteAMCTotalAmount       DECIMAL(18,2),
+              --QuoteAMCTotalAmount       DECIMAL(18,2),
               QuoteAMCRenewalCount      INT,
               QuoteAMCRevisionNo        INT,
               QuoteAMCStartDate         DATE,

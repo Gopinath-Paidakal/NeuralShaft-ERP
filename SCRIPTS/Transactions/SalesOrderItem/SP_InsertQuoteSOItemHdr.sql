@@ -279,7 +279,9 @@ BEGIN TRY
                 ------ Updating QuoteHdrItem approval status - approved
                 ----=====================================================
 
-                Update QuoteHdrItem set ApprovalStatus = 'Approved' where ItemQuoteHdrId = @ItemQuoteHdrId
+                Update QuoteHdrItem set QuoteSOItemHdrId = @QuoteSOItemHdrId, 
+                                        ApprovalStatus = 'Approved' 
+                                        where ItemQuoteHdrId = @ItemQuoteHdrId
 
 
 

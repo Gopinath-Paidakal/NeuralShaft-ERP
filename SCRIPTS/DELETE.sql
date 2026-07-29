@@ -89,19 +89,22 @@
 --delete from filepath
 --delete from Users where EmpId < '1000'
 
---delete from QuoteHdrItem
---delete from QuoteDtlItem
+delete from QuoteHdrItem
+delete from QuoteDtlItem
 
-----delete from QuoteAMCHdr
-----delete from QuoteAMCDtl
+delete from QuoteSOItemHdr
+delete from QuoteSOItemDtl
 
-----delete from ProformaInvHdr
 
---delete from QuoteSOItemHdr
---delete from QuoteSOItemDtl
+delete from QuoteAMCHdr
+delete from QuoteAMCDtl
 
 delete from QuoteSOAMCHdr
 delete from QuoteSOAMCDtl
+
+delete from ProformaInvHdr
+delete from ProformaInvDtl
+
 
 
 

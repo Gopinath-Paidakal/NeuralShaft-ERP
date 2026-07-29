@@ -55,6 +55,7 @@ BEGIN TRY
 			  ,[QuoteSOItemHdr].[QuoteSOItemMobileNo]
 
 			  ,[QuoteSOItemHdr].[QuoteSOItemOrderStatus]
+			  ,[QuoteSOItemHdr].[QuoteSOItemApprovalStatus]
 
 			  --,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 			  --,[Employee].[EmpMobileNo]
@@ -103,6 +104,8 @@ BEGIN TRY
 			  ,[QuoteSOItemHdr].[QuoteSOItemMobileNo]
 
 			  ,[QuoteSOItemHdr].[QuoteSOItemOrderStatus]
+			  ,[QuoteSOItemHdr].[QuoteSOItemApprovalStatus]
+
 
 			  --,([Employee].[EmpFirstName] + ' ' +  [Employee].[EmpLastName]) as 'Employee Name'
 			  --,[Employee].[EmpMobileNo]

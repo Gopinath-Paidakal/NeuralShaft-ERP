@@ -98,7 +98,7 @@ BEGIN TRY
  --       ) AS ItemData;
  --   END
 
-    if upper(@ItemType) = 'RAW-MATERIAL'
+    if (upper(@ItemType) = 'RAW-MATERIAL') or (upper(@ItemType) = 'AMC')
 	BEGIN 
 
       SELECT (
@@ -166,7 +166,7 @@ BEGIN TRY
             FROM [dbo].[Item]
             INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
             INNER JOIN [DefaultData] [DDTax] ON [DDTax].[DefaultDataId] = [Item].[TaxId]
-            --WHERE ItemType = upper(@ItemType)
+            WHERE ItemType = upper(@ItemType)
 
             Order By ItemType
             FOR JSON PATH, ROOT('Raw-Material')

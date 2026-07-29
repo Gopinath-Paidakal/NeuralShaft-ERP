@@ -33,10 +33,13 @@ BEGIN TRY
 	Declare @ProformaInvNo int
 	Declare @ProformaInvSlNo nvarchar(50)
     Declare @Prefix nvarchar(50)
-
+    Declare @ItemQuoteHdrId int
+    Declare @QuoteAMCHdrId int
 
     set @CompanyId = (Select CompanyId from Company)
 	set @BranchId = (Select BranchId from Branch)
+    set @ItemQuoteHdrId = JSON_VALUE(@ProformaInv,'$.ProformaInvHdr.ItemQuoteHdrId')
+    set @QuoteAMCHdrId = JSON_VALUE(@ProformaInv,'$.ProformaInvHdr.QuoteAMCHdrId')
 
     set @Prefix = (select DefaultDataName from DefaultData where FormType = 'ProformaInv' and DefaultDataType = 'Prefix' and DefaultDataOrderBy = 1 )
  --   --set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
@@ -136,8 +139,8 @@ BEGIN TRY
 
             EmpId                       INT,
             ProformaType                NVARCHAR(50), 
-            --ProformaInvNo               NVARCHAR(50),
-            --ProformaInvSLNo             NVARCHAR(50),
+            --ProformaInvNo             NVARCHAR(50),
+            --ProformaInvSLNo           NVARCHAR(50),
             ProformaInvDate             DATE,
 
             BillingAddress              NVARCHAR(200),
@@ -165,76 +168,76 @@ BEGIN TRY
 
         SET @ProformaInvHdrId = SCOPE_IDENTITY();
 
+        ------------------------------------------------------------
+        -- Insert Details
+        ------------------------------------------------------------
+        INSERT INTO dbo.ProformaInvDtl
+        (
+            ProformaInvHdrId,
+            ItemId,
+            ItemDescription,
+            ItemQty,
+            ItemRate,
+            
+            ItemAmount,
+            ItemDiscountPercentage,
+            ItemDiscountAmount,
+            TaxPercentage,
+            TaxAmount,
+
+            ItemTotalAmount,
+            CreatedUserId,
+            CreatedDate
+        )
+
+        SELECT
+            @ProformaInvHdrId,
+
+            ItemId,
+            ItemDescription,
+            ItemQty,
+            ItemRate,
+
+            ItemAmount,
+            ItemDiscountPercentage,
+            ItemDiscountAmount,
+            0,  --TaxPercentage,
+            TaxAmount,
+
+            ItemTotalAmount,
+            CreatedUserId,
+            CreatedDate
+
+        FROM OPENJSON(@ProformaInv,'$.ProformaInvDtl')
+        WITH
+        (
+            ItemId                     INT,
+            ItemDescription            NVARCHAR(500),
+            ItemQty                    DECIMAL(18,2),
+            ItemRate                   DECIMAL(18,2),
+            ItemAmount                 DECIMAL(18,2),
+            
+            ItemDiscountPercentage     DECIMAL(18,2),
+            ItemDiscountAmount         DECIMAL(18,2),
+            TaxPercentage              DECIMAL(18,2),
+            TaxAmount                  DECIMAL(18,2),
+            ItemTotalAmount            DECIMAL(18,2),
+            
+            CreatedUserId               INT,
+            CreatedDate                 DATE
+        );
+
+
         ----===============================================
         ------  Updating ProformaInvHdrId created in QuoteItem
         -----================================================
-        --      Update QuoteHdrItem set ProformaInvHdrId = @ProformaInvHdrId where QuoteAMCHdrId = 
+        Update QuoteHdrItem set ProformaInvHdrId = @ProformaInvHdrId where ItemQuoteHdrId = @ItemQuoteHdrId
 
         ----===============================================
         ------  Updating ProformaInvHdrId created in QuoteAMC
         -----================================================
-        --      Update QuoteAMCHdr set ProformaInvHdrId = @ProformaInvHdrId where QuoteAMCHdrId = 
+        Update QuoteAMCHdr set ProformaInvHdrId = @ProformaInvHdrId where QuoteAMCHdrId = @QuoteAMCHdrId
 
-
-
-        --------------------------------------------------------------
-        ---- Insert Details
-        --------------------------------------------------------------
-        --INSERT INTO dbo.ProformaInvDtl
-        --(
-        --    ProformaInvHdrId,
-        --    ItemId,
-        --    ItemDescription,
-        --    ItemQty,
-        --    ItemRate,
-            
-        --    ItemAmount,
-        --    ItemDiscountPercentage,
-        --    ItemDiscountAmount,
-        --    TaxPercentage,
-        --    TaxAmount,
-
-        --    ItemTotalAmount,
-        --    CreatedUserId,
-        --    CreatedDate
-        --)
-
-        --SELECT
-        --    @ProformaInvHdrId,
-
-        --    ItemId,
-        --    ItemDescription,
-        --    ItemQty,
-        --    ItemRate,
-
-        --    ItemAmount,
-        --    ItemDiscountPercentage,
-        --    ItemDiscountAmount,
-        --    0,  --TaxPercentage,
-        --    TaxAmount,
-
-        --    ItemTotalAmount,
-        --    CreatedUserId,
-        --    CreatedDate
-
-        --FROM OPENJSON(@ProformaInv,'$.ProformaInvDtl')
-        --WITH
-        --(
-        --    ItemId                     INT,
-        --    ItemDescription            NVARCHAR(500),
-        --    ItemQty                    DECIMAL(18,2),
-        --    ItemRate                   DECIMAL(18,2),
-        --    ItemAmount                 DECIMAL(18,2),
-            
-        --    ItemDiscountPercentage     DECIMAL(18,2),
-        --    ItemDiscountAmount         DECIMAL(18,2),
-        --    TaxPercentage              DECIMAL(18,2),
-        --    TaxAmount                  DECIMAL(18,2),
-        --    ItemTotalAmount            DECIMAL(18,2),
-            
-        --    CreatedUserId               INT,
-        --    CreatedDate                 DATE
-        --);
 
     Select @ProformaInvHdrId
 

@@ -104,7 +104,6 @@ BEGIN TRY
 
                ,QuoteAMCStatus
 
-
                ,CreatedUserId
                ,CreatedDate)
 
@@ -302,7 +301,7 @@ BEGIN TRY
                 ------ Updating QuoteAMCHdr approval status - approved
                 ----=====================================================
 
-                Update QuoteAMCHdr set ApprovalStatus = 'Approved' where QuoteAMCHdrId = @QuoteAMCHdrId
+                --Update QuoteAMCHdr set ApprovalStatus = 'Approved' where QuoteAMCHdrId = @QuoteAMCHdrId
 
 
     Select @QuoteAMCHdrId

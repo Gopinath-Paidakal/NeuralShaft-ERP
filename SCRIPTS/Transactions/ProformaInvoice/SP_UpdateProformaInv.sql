@@ -100,50 +100,50 @@ BEGIN TRY
 
         ----------- Update Detail
 
-        UPDATE D
-        SET
-            D.ItemId                   = J.ItemId,
-            D.ItemDescription          = J.ItemDescription,
-            D.ItemQty                  = J.ItemQty,
-            D.ItemRate                 = J.ItemRate,
-            D.ItemAmount               = J.ItemAmount,
+        --UPDATE D
+        --SET
+        --    D.ItemId                   = J.ItemId,
+        --    D.ItemDescription          = J.ItemDescription,
+        --    D.ItemQty                  = J.ItemQty,
+        --    D.ItemRate                 = J.ItemRate,
+        --    D.ItemAmount               = J.ItemAmount,
 
-            D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
-            D.ItemDiscountAmount       = J.ItemDiscountAmount,
-            D.TaxPercentage            = J.TaxPercentage,
-            D.TaxAmount                = J.TaxAmount,
-            D.ItemTotalAmount          = J.ItemTotalAmount,
+        --    D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
+        --    D.ItemDiscountAmount       = J.ItemDiscountAmount,
+        --    D.TaxPercentage            = J.TaxPercentage,
+        --    D.TaxAmount                = J.TaxAmount,
+        --    D.ItemTotalAmount          = J.ItemTotalAmount,
 
-            D.ModifiedUserId           = J.ModifiedUserId,
-            D.ModifiedDate             = J.ModifiedDate
+        --    D.ModifiedUserId           = J.ModifiedUserId,
+        --    D.ModifiedDate             = J.ModifiedDate
 
 
-        FROM dbo.ProformaInvDtl D
-        INNER JOIN
-        (
-            SELECT *
-            FROM OPENJSON(@ProformaInvUpdate, '$.ProformaInvDtl')
-            WITH
-            (
-                ProformaInvDtlId         INT,
-                ItemId                  INT,
-                ItemDescription         NVARCHAR(500),
-                ItemQty                 DECIMAL(18,2),
-                ItemRate                DECIMAL(18,2),
+        --FROM dbo.ProformaInvDtl D
+        --INNER JOIN
+        --(
+        --    SELECT *
+        --    FROM OPENJSON(@ProformaInvUpdate, '$.ProformaInvDtl')
+        --    WITH
+        --    (
+        --        ProformaInvDtlId         INT,
+        --        ItemId                  INT,
+        --        ItemDescription         NVARCHAR(500),
+        --        ItemQty                 DECIMAL(18,2),
+        --        ItemRate                DECIMAL(18,2),
                 
-                ItemAmount              DECIMAL(18,2),
-                ItemDiscountPercentage  DECIMAL(18,2),
-                ItemDiscountAmount      DECIMAL(18,2),
-                TaxPercentage           DECIMAL(18,2),
+        --        ItemAmount              DECIMAL(18,2),
+        --        ItemDiscountPercentage  DECIMAL(18,2),
+        --        ItemDiscountAmount      DECIMAL(18,2),
+        --        TaxPercentage           DECIMAL(18,2),
 
-                TaxAmount               DECIMAL(18,2),
-                ItemTotalAmount         DECIMAL(18,2),
+        --        TaxAmount               DECIMAL(18,2),
+        --        ItemTotalAmount         DECIMAL(18,2),
 
-                ModifiedUserId          INT,
-                ModifiedDate            DATE
-            )
-        ) J
-        ON D.ProformaInvDtlId = J.ProformaInvDtlId;
+        --        ModifiedUserId          INT,
+        --        ModifiedDate            DATE
+        --    )
+        --) J
+        --ON D.ProformaInvDtlId = J.ProformaInvDtlId;
     
 
     Select @ProformaInvHdrId

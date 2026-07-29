@@ -136,24 +136,26 @@ select * from QuoteHdr
 --select * from QuoteDtl
 select * from EnqDtl
 
--- Item Quotation
+
 Select * from QuoteHdrItem
 Select * from QuoteDtlItem
-
--- AMC Quotation
-select * from QuoteAMCHdr
-select * from QuoteAMCDtl
-
-Select * from ProformaInvHdr
-
-Select * from QuoteHdrItem
 
 Select * from QuoteSOItemHdr
 Select * from QuoteSOItemDtl
 
+Select * from ProformaInvHdr
+Select * from ProformaInvDtl
+
+
 select * from QuoteAMCHdr
+select * from QuoteAMCDtl
+
 Select * from QuoteSOAMCHdr
 Select * from QuoteSOAMCDtl
+
+Select * from ProformaInvHdr
+Select * from ProformaInvDtl
+
 
 
 

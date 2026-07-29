@@ -25,11 +25,19 @@ DECLARE @ProformaType NVARCHAR(100)
 DECLARE @ItemQuoteHdrId INT
 DECLARE @QuoteAMCHdrId INT
 
+--DECLARE @QuoteSOItemHdrId INT
+--DECLARE @QuoteSOAMCHdrId INT
+
 BEGIN TRY
 
     SET @ProformaType = (Select ProformaType from ProformaInvHdr where ProformaInvHdrId = @ProformaInvHdrId)
+
+    --======  Quotation
     SET @ItemQuoteHdrId = (Select ItemQuoteHdrId from ProformaInvHdr where ProformaInvHdrId = @ProformaInvHdrId)
     SET @QuoteAMCHdrId = (Select QuoteAMCHdrId from ProformaInvHdr where ProformaInvHdrId = @ProformaInvHdrId)
+
+    --======  Sales Order
+
 
     --SELECT @ProformaType, @ItemQuoteHdrId, @QuoteAMCHdrId
 
@@ -145,6 +153,60 @@ BEGIN TRY
         FOR JSON PATH )
     END
 
+    if (@ProformaType = UPPER('QUOTE_SPARE'))
+    BEGIN
+         SET @ProformaInvDtl = (
+            SELECT [QuoteItemDtlId]
+              ,[ItemQuoteHdrId]
+              ,[ItemId]
+              ,[ItemName]
+              ,[ItemHSNCode]
+              ,[ItemCode]
+
+              ,[ItemDesc]
+              ,[ItemQuantity]
+              ,[ItemRate]
+              ,[ItemAmount]
+              ,[ItemDiscountPercentage]
+
+              ,[ItemDiscountAmount]
+              ,[ItemTaxPercentage]
+              ,[ItemTaxAmount]
+              ,[ItemTotalAmount]
+              --,[CreatedUserId]
+              --,[CreatedDate]
+              --,[ModifiedUserId]
+              --,[ModifiedDate]
+          FROM [dbo].[QuoteDtlItem]
+
+        WHERE ItemQuoteHdrId = @ItemQuoteHdrId
+        FOR JSON PATH )
+    END
+
+    else if (@ProformaType = UPPER('SOITEM_SPARE')) or  (@ProformaType = UPPER('SO_AMC'))
+        BEGIN
+         SET @ProformaInvDtl = (
+           SELECT [ProformaInvDtlId]
+              ,[ProformaInvHdrId]
+              ,[ItemId]
+              ,[ItemDescription]
+              ,[ItemQty]
+              ,[ItemRate]
+              ,[ItemAmount]
+              ,[ItemDiscountPercentage]
+              ,[ItemDiscountAmount]
+              ,[TaxPercentage]
+              ,[TaxAmount]
+              ,[ItemTotalAmount]
+              --,[CreatedUserId]
+              --,[CreatedDate]
+              --,[ModifiedUserId]
+              --,[ModifiedDate]
+          FROM [dbo].[ProformaInvDtl]
+
+        WHERE ProformaInvHdrId = @ProformaInvHdrId
+        FOR JSON PATH )
+    END
 
     SET @ProformaInv = (
         SELECT

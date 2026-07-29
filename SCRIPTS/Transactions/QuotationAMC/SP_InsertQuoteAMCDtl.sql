@@ -23,6 +23,7 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 
+BEGIN  TRANSACTION
        Declare @QuoteAMCDtlId int
 
        Declare @QuoteAMCHdrId int
@@ -96,7 +97,7 @@ BEGIN TRY
                 ItemName nvarchar (100) ,
 	            ItemId int ,
 	            ItemHSNCode nvarchar(100),
-	            ItemCode int,
+	            ItemCode nvarchar(50),
 	            ItemDesc nvarchar(100) ,
 
 	            ItemQuantity numeric(18, 2) ,
@@ -151,6 +152,7 @@ BEGIN TRY
     Select @QuoteAMCDtlId
 
     COMMIT TRANSACTION
+
 END TRY
 
 

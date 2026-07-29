@@ -40,6 +40,10 @@ BEGIN TRY
 			  
 			  --,[ProformaInvDate]
 			  ,FORMAT(ProformaInvDate, 'dd-MM-yyyy') as ProformaInvDate
+			  ,[ProformaInvHdr].[DeliveryContactPerson]
+			  ,[ProformaInvHdr].[DeliveryMobileId]
+			  ,[OrdClientHdr].[OrdClientName]
+
 			  ,[ProformaTotalAmount]
 
 			  --- for SO Product
