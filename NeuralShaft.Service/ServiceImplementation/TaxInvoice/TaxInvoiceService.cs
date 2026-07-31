@@ -18,12 +18,12 @@ namespace NeuralShaft.Service.ServiceImplementation.TaxInvoice
 
         }
 
-        public async Task<string> GetOrdClientByIdTaxInv(int ordClientHdrId)
-        {
-            var GetOrdClientHdrById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdTaxInv",
-                                 new { @ordClientHdrId = ordClientHdrId }); //@EnqDtlId = enqDtlId
-            return GetOrdClientHdrById;
-        }
+        //public async Task<string> GetOrdClientByIdTaxInv(int ordClientHdrId)
+        //{
+        //    var GetOrdClientHdrById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetOrdClientByIdTaxInv",
+        //                         new { @ordClientHdrId = ordClientHdrId }); //@EnqDtlId = enqDtlId
+        //    return GetOrdClientHdrById;
+        //}
 
         public async Task<string> GetTaxInv(string fromDate, string toDate)
         {
@@ -35,7 +35,7 @@ namespace NeuralShaft.Service.ServiceImplementation.TaxInvoice
         public async Task<string> GetTaxInvById(int taxInvHdrId)
         {
             var TaxInvById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetTaxInvById",
-                                    new { @TaxInvHdrId = taxInvHdrId }); //@EnqDtlId = enqDtlId
+                                    new { @TaxInvHdrId = taxInvHdrId }); 
             return TaxInvById;
             
         }
@@ -46,17 +46,38 @@ namespace NeuralShaft.Service.ServiceImplementation.TaxInvoice
             return (insertTaxInv);
         }
 
-        public async Task<string> UpdateTaxInv(int taxInvHdrId, object taxInv)
+        public async Task<string> UpdateTaxInvHdr(int taxInvHdrId, object taxInv)
         {
-            var updateTaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateTaxInv",
+            var updateTaxInv = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateTaxInvHdr",
                                new { @TaxInvHdrId = taxInvHdrId, @TaxInvUpdate = taxInv.ToString() });
             return (updateTaxInv);
         }
 
-        public async Task<string> DeleteTaxInv(int taxInvHdrId)
+       
+
+        public async Task<string> InsertTaxInvDtl(object taxInvDtl)
         {
-            throw new NotImplementedException();
+            string insertTaxInvDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertTaxInvDtl", new { @taxInvDtl = taxInvDtl.ToString() });
+            return (insertTaxInvDtl);
         }
 
+        public async Task<string> UpdateTaxInvDtl(int taxInvDtlId, object taxInvDtl)
+        {
+            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateTaxInvDtl", new { @TaxInvDtlId = taxInvDtlId, @TaxInvDtl = taxInvDtl.ToString() });
+        }
+
+        public async Task<string> DeleteTaxInvDtl(int taxInvDtlId)
+        {
+            var deleteTaxInvDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteTaxInvDtl",
+                                   new { @TaxInvDtlId = taxInvDtlId });
+
+            return deleteTaxInvDtl;
+        }
+
+
+        //public async Task<string> DeleteTaxInv(int taxInvHdrId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

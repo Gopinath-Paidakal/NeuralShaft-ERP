@@ -51,12 +51,31 @@ namespace NeuralShaft.Service.ServiceImplementation.DeliveryChallan
             return (updateDC);
         }
 
-
-        public Task<string> DeleteDeliveryChallan(int dCHdrId)
+        public async Task<string> InsertDeliveryChallanvDtl(object dcDtl)
         {
-            throw new NotImplementedException();
+            string insertDCDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertDeliveryChallanDtl", new { @DeliveryChallanDtl = dcDtl.ToString() });
+            return (insertDCDtl);
         }
 
-       
+        public async Task<string> UpdateDeliveryChallanDtl(int dcDtlId, object dcDtl)
+        {
+            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateDeliveryChallanDtl", new { @DCDtlId = dcDtlId,
+                                 @DeliveryChallanDtl = dcDtl.ToString() });
+        }
+
+        public async Task<string> DeleteDeliveryChallanDtl(int dcDtlId)
+        {
+            var deleteDCDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteDeliveryChallanDtl",
+                                  new { @DCDtlId = dcDtlId });
+
+            return deleteDCDtl;
+        }
+        
+
+
+        //public Task<string> DeleteDeliveryChallan(int dCHdrId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

@@ -1,13 +1,13 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetTaxInv]    Script Date: 11/07/2026 ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetTaxInv]    Script Date: 30/07/2026 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetTaxInv]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_GetTaxInv]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetTaxInv]    Script Date: 11/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetTaxInv]    Script Date: 30/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -42,33 +42,37 @@ BEGIN TRY
 			  --,[TaxInvInvDate]
 			  ,FORMAT(TaxInvDate, 'dd-MM-yyyy') as TaxInvDate
 
-			  --,[DeliveryAddress]
-     --         ,[DeliveryContactPerson]
-     --         ,[DeliveryMobileId]
+	  		  --,[DeliveryAddress]
+              ,[DeliveryContactPerson]
+              ,[DeliveryMobileId]
 			  
      --         ,[OrdClientPONo]
      --         ,[OrdClientPODate]
 
-			  --,[TaxInvProductAmount]
+			  ,[TaxInvProductAmount]
 			  --,[TaxInvDiscountPercentage]
-			  --,[TaxInvDiscountAmount]
+			  ,[TaxInvDiscountAmount]
 			  --,[TaxInvTaxPercentage]
 			  
 			  --,[ItemTotalAmount]
 			  --,[TaxInvSubTotal]
-			  --,[TaxInvTaxAmount]
-			  ,[TaxInvGrandTotal]
+			  ,[TaxInvTaxAmount]
+			  ,[TaxInvTotalAmount]
 
-			  ,[SOHdr].[SOConsultant]
-			  ,[SOHdr].[SOContPerson]
-			  ,[SOHdr].[SOCustComp]
+			  ,[OrdClientHdr].[OrdClientName]
+			  ,[OrdClientHdr].[OrdGstTradeName]
+			  ,[OrdClientHdr].[OrdGstNo]
+
+			  --,[SOHdr].[SOConsultant]
+			  --,[SOHdr].[SOContPerson]
+			  --,[SOHdr].[SOCustComp]
 			  --,[CreatedUserId]
 			  --,[CreatedDate]
 			  --,[ModifiedUserId]
 			  --,[ModifiedDate]
 
 			FROM [dbo].[TaxInvHdr]		
-			INNER JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [TaxInvHdr].[SOHdrId]
+			--INNER JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [TaxInvHdr].[SOHdrId]
 			INNER JOIN [OrdClientHdr] ON [OrdClientHdr].[OrdClientHdrId] = [TaxInvHdr].[OrdClientHdrId]
 
 			--- Both Date and Time-- best practice

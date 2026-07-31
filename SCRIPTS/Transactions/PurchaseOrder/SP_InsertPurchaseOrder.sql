@@ -75,14 +75,9 @@ BEGIN TRY
             PODeliveryTerms,
             
             POProductAmount,
-            PODiscountPercentage,
             PODiscountAmount,
-            POTaxPercentage,
-            
-            ItemTotalAmount,
-            POSubTotal,
             POTaxAmount,
-            POGrandTotal,
+            POTotalAmount,
             
             CreatedUserId,
             CreatedDate
@@ -112,14 +107,9 @@ BEGIN TRY
             PODeliveryTerms,
             
             POProductAmount,
-            PODiscountPercentage,
             PODiscountAmount,
-            POTaxPercentage,
-            
-            ItemTotalAmount,
-            POSubTotal,
             POTaxAmount,
-            POGrandTotal,
+            POTotalAmount,
             
             CreatedUserId,
             CreatedDate
@@ -147,14 +137,9 @@ BEGIN TRY
             PODeliveryTerms             NVARCHAR(100),
 
             POProductAmount             DECIMAL(18,2),
-            PODiscountPercentage        DECIMAL(18,2),
             PODiscountAmount            DECIMAL(18,2),
-            POTaxPercentage             DECIMAL(18,2),
-            ItemTotalAmount             DECIMAL(18,2),
-
-            POSubTotal                  DECIMAL(18,2),
             POTaxAmount                 DECIMAL(18,2),
-            POGrandTotal                DECIMAL(18,2),
+            POTotalAmount               DECIMAL(18,2),
 
             CreatedUserId               INT,
             CreatedDate                 DATE
@@ -169,33 +154,40 @@ BEGIN TRY
         (
             PurchaseOrderHdrId,
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode, 
+
+            ItemDesc,
+            ItemQuantity,
             ItemRate,
-            
             ItemAmount,
             ItemDiscountPercentage,
+
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
             CreatedDate
         )
         SELECT
-
             @PurchaseOrderHdrId,
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode, 
+            
+            ItemDesc,
+            ItemQuantity,
             ItemRate,
-
             ItemAmount,
             ItemDiscountPercentage,
+
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -205,20 +197,52 @@ BEGIN TRY
         WITH
         (
             ItemId                     INT,
-            ItemDescription            NVARCHAR(500),
-            ItemQty                    DECIMAL(18,2),
+            ItemName                   NVARCHAR(100),
+            ItemHSNCode                NVARCHAR(100),
+            ItemCode                   NVARCHAR(50), 
+            ItemDesc                   NVARCHAR(100),
+
+            ItemQuantity               DECIMAL(18,2),
             ItemRate                   DECIMAL(18,2),
             ItemAmount                 DECIMAL(18,2),
-            
             ItemDiscountPercentage     DECIMAL(18,2),
+
             ItemDiscountAmount         DECIMAL(18,2),
-            TaxPercentage              DECIMAL(18,2),
-            TaxAmount                  DECIMAL(18,2),
+            ItemTaxPercentage          DECIMAL(18,2),
+            ItemTaxAmount              DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
             
             CreatedUserId               INT,
             CreatedDate                 DATE
         );
+
+        ------------------------------------------------------------------
+        ------ Updating the totals in Purchase Oder Hdr
+        ------------------------------------------------------------------
+        
+          UPDATE H
+                SET
+                    H.POProductAmount    = ISNULL(T.ItemAmount,0),
+                    H.PODiscountAmount   = ISNULL(T.ItemDiscountAmount,0),
+                    H.POTaxAmount        = ISNULL(T.ItemTaxAmount,0),
+                    H.POTotalAmount      = ISNULL(T.ItemTotalAmount,0)
+                    
+                    FROM PurchaseOrderHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)          AS ItemAmount,
+                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                        SUM(ItemTotalAmount)     AS ItemTotalAmount
+
+                    FROM PurchaseOrderDtl D
+                    WHERE D.PurchaseOrderHdrId =  @PurchaseOrderHdrId  -- H.ItemQuoteHdrId
+                ) T
+
+                WHERE H.PurchaseOrderHdrId = @PurchaseOrderHdrId;  
+                --===============================================
 
     Select @PurchaseOrderHdrId
 

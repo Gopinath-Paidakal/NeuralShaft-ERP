@@ -1,13 +1,13 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertTaxInv]    Script Date: 13/07/2026 ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertTaxInv]    Script Date: 30/07/2026 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertTaxInv]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_InsertTaxInv]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertTaxInv]    Script Date: 13/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertTaxInv]    Script Date: 30/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -73,15 +73,10 @@ BEGIN TRY
             TaxInvRemarks,
             
             TaxInvProductAmount,
-            TaxInvDiscountPercentage,
             TaxInvDiscountAmount,
-            TaxInvTaxPercentage,
-            
-            ItemTotalAmount,
-            TaxInvSubTotal,
             TaxInvTaxAmount,
-            TaxInvGrandTotal,
-            
+            TaxInvTotalAmount,
+
             CreatedUserId,
             CreatedDate
 
@@ -108,14 +103,9 @@ BEGIN TRY
             TaxInvRemarks,
 
             TaxInvProductAmount,
-            TaxInvDiscountPercentage,
             TaxInvDiscountAmount,
-            TaxInvTaxPercentage,
-            ItemTotalAmount,
-            
-            TaxInvSubTotal,
             TaxInvTaxAmount,
-            TaxInvGrandTotal,
+            TaxInvTotalAmount,
 
             CreatedUserId,
             CreatedDate
@@ -125,8 +115,8 @@ BEGIN TRY
         (
             SOHdrId                     INT,
             OrdClientHdrId              INT,
-            EmpId                       INT,
-            TaxInvType                     NVARCHAR(50), 
+            EmpId                       NVARCHAR(50),
+            TaxInvType                  NVARCHAR(50), 
             TaxInvNo                    NVARCHAR(50),
             TaxInvSLNo                  INT,
             TaxInvDate                  DATE,
@@ -140,14 +130,9 @@ BEGIN TRY
             TaxInvRemarks               NVARCHAR(1000),
 
             TaxInvProductAmount         DECIMAL(18,2),
-            TaxInvDiscountPercentage    DECIMAL(18,2),
             TaxInvDiscountAmount        DECIMAL(18,2),
-            TaxInvTaxPercentage         DECIMAL(18,2),
-            ItemTotalAmount             DECIMAL(18,2),
-
-            TaxInvSubTotal              DECIMAL(18,2),
             TaxInvTaxAmount             DECIMAL(18,2),
-            TaxInvGrandTotal            DECIMAL(18,2),
+            TaxInvTotalAmount           DECIMAL(18,2),
 
             CreatedUserId               INT,
             CreatedDate                 DATE
@@ -162,15 +147,19 @@ BEGIN TRY
         (
             TaxInvHdrId,
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode, 
+
+            ItemDesc,
+            ItemQuantity,
             ItemRate,
-            
             ItemAmount,
             ItemDiscountPercentage,
+
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -179,15 +168,19 @@ BEGIN TRY
         SELECT
             @TaxInvHdrId,
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode, 
+            
+            ItemDesc,
+            ItemQuantity,
             ItemRate,
-
             ItemAmount,
             ItemDiscountPercentage,
+
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -197,20 +190,53 @@ BEGIN TRY
         WITH
         (
             ItemId                     INT,
-            ItemDescription            NVARCHAR(500),
-            ItemQty                    DECIMAL(18,2),
+            ItemName                   NVARCHAR(100),
+            ItemHSNCode                NVARCHAR(100),
+            ItemCode                   NVARCHAR(50), 
+            ItemDesc                   NVARCHAR(100),
+
+            ItemQuantity               DECIMAL(18,2),
             ItemRate                   DECIMAL(18,2),
             ItemAmount                 DECIMAL(18,2),
-            
             ItemDiscountPercentage     DECIMAL(18,2),
+
             ItemDiscountAmount         DECIMAL(18,2),
-            TaxPercentage              DECIMAL(18,2),
-            TaxAmount                  DECIMAL(18,2),
+            ItemTaxPercentage          DECIMAL(18,2),
+            ItemTaxAmount              DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
             
             CreatedUserId               INT,
             CreatedDate                 DATE
         );
+
+        ------------------------------------------------------------------
+        ------ Updating the totals in InvHdr
+        ------------------------------------------------------------------
+        
+          UPDATE H
+                SET
+                    H.TaxInvProductAmount    = ISNULL(T.ItemAmount,0),
+                    H.TaxInvDiscountAmount   = ISNULL(T.ItemDiscountAmount,0),
+                    H.TaxInvTaxAmount        = ISNULL(T.ItemTaxAmount,0),
+                    H.TaxInvTotalAmount      = ISNULL(T.ItemTotalAmount,0)
+                    
+                    FROM TaxInvHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)          AS ItemAmount,
+                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                        SUM(ItemTotalAmount)     AS ItemTotalAmount
+
+                    FROM TaxInvDtl D
+                    WHERE D.TaxInvHdrId =  @TaxInvHdrId  -- H.ItemQuoteHdrId
+                ) T
+
+                WHERE H.TaxInvHdrId = @TaxInvHdrId;  
+                --===============================================
+
 
     Select @TaxInvHdrId
 

@@ -83,6 +83,26 @@ Declare @EnqDtlString nvarchar(max)
         ,[EnqFalseCeilingType]
         ,[SOGen]
 
+        --- Added on 31/07/2027 - for Proforma Invoice Creation
+        ,Convert(nvarchar(50),[EnqProduct]) + '|' + Convert(nvarchar(10),NoOfPassengers) + '-Passengers' + '|' + Convert(nvarchar(10),TotalStops) + '-Stops' as 'ProductName'
+          ,[EnqQty]
+          ,[EnqRate]
+          ,[EnqProductAmount]
+          --,[IncreasePercentage]
+         -- ,[IncreaseAmount]
+          ,[DiscountPercentage]
+          ,[DiscountAmount]
+         -- ,[TaxableValue]
+          --,[TaxableCashAmount]
+         -- ,[TaxableChequeAmount]
+         -- ,[AMCPercentage]
+         -- ,[AMCAmount]
+        --,[EnqSubTotal]
+        --,[EnqTaxAmount]
+        --,[EnqTotalAmount]
+         -- ,[EnqGrandTotal]
+
+
         ,[TaxableValue]
         ,[EnqSubTotal]
         ,[EnqTaxAmount]

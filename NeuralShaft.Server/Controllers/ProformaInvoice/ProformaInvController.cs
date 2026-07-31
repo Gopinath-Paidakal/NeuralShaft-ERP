@@ -24,10 +24,10 @@ namespace NeuralShaft.Server.Controllers.ProformaInvoice
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProfotmaInvController : Controller
+    public class ProformaInvController : Controller
     {
         private readonly IProformaInv _proInvService;
-        public ProfotmaInvController(IProformaInv service)
+        public ProformaInvController(IProformaInv service)
         {
             _proInvService = service;
 

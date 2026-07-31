@@ -83,14 +83,9 @@ BEGIN TRY
             CreditDate,
 
             SIProductAmount,
-            SIDiscountPercentage,
             SIDiscountAmount,
-            SITaxPercentage,
-            ItemTotalAmount,
-
-            SISubTotal,
             SITaxAmount,
-            SIGrandTotal,
+            SITotalAmount,
 
             CreatedUserId,
             CreatedDate
@@ -124,16 +119,11 @@ BEGIN TRY
             CreditDate,
 
             SIProductAmount,
-            SIDiscountPercentage,
             SIDiscountAmount,
-            SITaxPercentage,
-            ItemTotalAmount,
-
-            SISubTotal,
             SITaxAmount,
-            SIGrandTotal,
+            SITotalAmount,
+            
             CreatedUserId,
-
             CreatedDate
 
         FROM OPENJSON(@StocksInwardHdr, '$.StocksInwardHdr')
@@ -167,14 +157,10 @@ BEGIN TRY
             CreditDate DATE,
             
             SIProductAmount DECIMAL(18,2),
-            SIDiscountPercentage DECIMAL(18,2),
             SIDiscountAmount DECIMAL(18,2),
-            SITaxPercentage DECIMAL(18,2),
-            ItemTotalAmount DECIMAL(18,2),
-            
-            SISubTotal DECIMAL(18,2),
             SITaxAmount DECIMAL(18,2),
-            SIGrandTotal DECIMAL(18,2),
+            SITotalAmount DECIMAL(18,2),
+            
             CreatedUserId INT,
             CreatedDate DATE
         );
@@ -189,8 +175,12 @@ BEGIN TRY
             StocksInwardHdrId,
 
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode,
+            ItemDesc,
+
+            ItemQuantity,
             InwardQty,
             AcceptedQty,
             ItemRate,
@@ -209,7 +199,11 @@ BEGIN TRY
 
             @StocksInwardHdrId,
             ItemId,
-            ItemDescription,
+            ItemName,
+            ItemHSNCode,
+            ItemCode,
+
+            ItemDesc,
             ItemQty,
             InwardQty,
             AcceptedQty,
@@ -229,7 +223,11 @@ BEGIN TRY
         WITH
         (
             ItemId                     INT,
-            ItemDescription            NVARCHAR(500),
+            ItemName                   NVARCHAR(100),
+            ItemHSNCode                NVARCHAR(50),
+            ItemCode                   NVARCHAR(50),
+            ItemDesc                   NVARCHAR(500),
+
             ItemQty                    DECIMAL(18,2),
             InwardQty                  DECIMAL(18,2),
             AcceptedQty                DECIMAL(18,2),
@@ -247,6 +245,34 @@ BEGIN TRY
         );
 
         set @StocksInwardDtlId = SCOPE_IDENTITY()
+
+          ------------------------------------------------------------------
+        ------ Updating the totals in SI Hdr
+        ------------------------------------------------------------------
+        
+          UPDATE H
+                SET
+                    H.SIProductAmount    = ISNULL(T.ItemAmount,0),
+                    H.SIDiscountAmount   = ISNULL(T.ItemDiscountAmount,0),
+                    H.SITaxAmount        = ISNULL(T.ItemTaxAmount,0),
+                    H.SITotalAmount      = ISNULL(T.ItemTotalAmount,0)
+                    
+                    FROM StocksInwardHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)          AS ItemAmount,
+                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                        SUM(ItemTotalAmount)     AS ItemTotalAmount
+
+                    FROM StocksInwardDtl D
+                    WHERE D.StocksInwardHdrId =  @StocksInwardHdrId  
+                ) T
+
+                WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
+                --===============================================
 
     ---=======================================================
     --- Inserting StockBatch

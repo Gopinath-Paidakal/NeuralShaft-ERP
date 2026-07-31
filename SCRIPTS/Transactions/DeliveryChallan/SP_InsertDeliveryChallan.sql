@@ -74,14 +74,9 @@ BEGIN TRY
             DCRemarks,
             
             DCProductAmount,
-            DCDiscountPercentage,
             DCDiscountAmount,
-            DCTaxPercentage,
-            
-            ItemTotalAmount,
-            DCSubTotal,
             DCTaxAmount,
-            DCGrandTotal,
+            DCTotalAmount,
             
             CreatedUserId,
             CreatedDate
@@ -109,14 +104,9 @@ BEGIN TRY
             DCRemarks,
 
             DCProductAmount,
-            DCDiscountPercentage,
             DCDiscountAmount,
-            DCTaxPercentage,
-            ItemTotalAmount,
-            
-            DCSubTotal,
             DCTaxAmount,
-            DCGrandTotal,
+            DCTotalAmount,
 
             CreatedUserId,
             CreatedDate
@@ -141,14 +131,9 @@ BEGIN TRY
             DCRemarks                   NVARCHAR(1000),
 
             DCProductAmount             DECIMAL(18,2),
-            DCDiscountPercentage        DECIMAL(18,2),
             DCDiscountAmount            DECIMAL(18,2),
-            DCTaxPercentage             DECIMAL(18,2),
-            ItemTotalAmount             DECIMAL(18,2),
-
-            DCSubTotal                  DECIMAL(18,2),
             DCTaxAmount                 DECIMAL(18,2),
-            DCGrandTotal                DECIMAL(18,2),
+            DCTotalAmount           DECIMAL(18,2),
 
             CreatedUserId               INT,
             CreatedDate                 DATE
@@ -162,16 +147,21 @@ BEGIN TRY
         INSERT INTO dbo.DeliveryChallanDtl
         (
             DCHdrId,
+            DCDtlDate,
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode, 
+
+            ItemDesc,
+            ItemQuantity,
             ItemRate,
-            
             ItemAmount,
             ItemDiscountPercentage,
+
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -179,16 +169,21 @@ BEGIN TRY
         )
         SELECT
             @DCHdrId,
+            DCDtlDate,
             ItemId,
-            ItemDescription,
-            ItemQty,
+            ItemName,
+            ItemHSNCode,
+            ItemCode, 
+            
+            ItemDesc,
+            ItemQuantity,
             ItemRate,
-
             ItemAmount,
             ItemDiscountPercentage,
+
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -197,16 +192,21 @@ BEGIN TRY
         FROM OPENJSON(@DeliveryChallan,'$.DeliveryChallanDtl')
         WITH
         (
+            DCDtlDate                  Date,
             ItemId                     INT,
-            ItemDescription            NVARCHAR(500),
-            ItemQty                    DECIMAL(18,2),
+            ItemName                   NVARCHAR(100),
+            ItemHSNCode                NVARCHAR(100),
+            ItemCode                   NVARCHAR(50), 
+            ItemDesc                   NVARCHAR(100),
+
+            ItemQuantity               DECIMAL(18,2),
             ItemRate                   DECIMAL(18,2),
             ItemAmount                 DECIMAL(18,2),
-            
             ItemDiscountPercentage     DECIMAL(18,2),
+
             ItemDiscountAmount         DECIMAL(18,2),
-            TaxPercentage              DECIMAL(18,2),
-            TaxAmount                  DECIMAL(18,2),
+            ItemTaxPercentage          DECIMAL(18,2),
+            ItemTaxAmount              DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
             
             CreatedUserId               INT,
@@ -215,24 +215,52 @@ BEGIN TRY
 
         Set @DCDtlId = SCOPE_IDENTITY()
 
-    ------====================================================
-    ------ Insert in StockTrn
-    ----------------------------------------------------------
-    Declare @ItemId Numeric(18,2)
-    Declare @ItemQty Numeric(18,2)
-    Declare @ItemRate Numeric(18,2)
-    Declare @WareHouseId int
-    Declare @CreatedUserId int
-    Declare @CreatedDate date
-    Declare @BatchId int
+         ------------------------------------------------------------------
+        ------ Updating the totals in Hdr
+        ------------------------------------------------------------------
+        
+        UPDATE H
+            SET
+                H.DCProductAmount        = ISNULL(T.ItemAmount,0),
+                H.DCDiscountAmount       = ISNULL(T.ItemDiscountAmount,0),
+                H.DCTaxAmount            = ISNULL(T.ItemTaxAmount,0),
+                H.DCTotalAmount      = ISNULL(T.ItemTotalAmount,0)
+                    
+                FROM DeliveryChallanHdr H
 
-    --Set @WareHouseId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.WareHouseId')
-    Set @CreatedUserId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.CreatedUserId')
-    Set @CreatedDate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.CreatedDate')
+            OUTER APPLY
+            (
+                SELECT
+                    SUM(ItemAmount)          AS ItemAmount,
+                    SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
+                    SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                    SUM(ItemTotalAmount)     AS ItemTotalAmount
 
-    Set @ItemId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemId')
-    Set @ItemQty = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemQty')
-    Set @ItemRate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemRate')
+                FROM DeliveryChallanDtl D
+                WHERE D.DCHdrId =  @DCHdrId  -- H.ItemQuoteHdrId
+            ) T
+
+            WHERE H.DCHdrId = @DCHdrId;  
+            --===============================================
+
+        ------====================================================
+        ------ Insert in StockTrn
+        ----------------------------------------------------------
+        Declare @ItemId Numeric(18,2)
+        Declare @ItemQty Numeric(18,2)
+        Declare @ItemRate Numeric(18,2)
+        Declare @WareHouseId int
+        Declare @CreatedUserId int
+        Declare @CreatedDate date
+        Declare @BatchId int
+
+        --Set @WareHouseId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.WareHouseId')
+        Set @CreatedUserId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.CreatedUserId')
+        Set @CreatedDate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanHdr.CreatedDate')
+
+        Set @ItemId = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemId')
+        Set @ItemQty = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemQty')
+        Set @ItemRate = JSON_VALUE(@DeliveryChallan, '$.DeliveryChallanDtl[0].ItemRate')
 
     
     -----====================================================

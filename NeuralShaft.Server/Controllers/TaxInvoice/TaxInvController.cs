@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NeuralShaft.Service.ServiceImplementation.Masters;
 using NeuralShaft.Service.ServiceImplementation.Previlege;
+using NeuralShaft.Service.ServiceImplementation.QuoteItem;
 using NeuralShaft.Service.ServiceImplementation.Upload;
 //using NeuralShaft.Model;
 using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.ProformaInvoice;
+using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
 using NeuralShaft.Service.ServiceInterfaces.Upload;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -19,9 +21,6 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
-
-using NeuralShaft.Service.ServiceInterfaces.TaxInvoice;
 
 namespace NeuralShaft.Server.Controllers.TaxInvoice
 {
@@ -37,15 +36,15 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
 
         }
 
-        [HttpGet("GetOrdClientByIdTaxInv/{ordClientHdrId}")]
-        public async Task<ActionResult> GetOrdClientByIdTaxInv(int ordClientHdrId)
-        {
+        //[HttpGet("GetOrdClientByIdTaxInv/{ordClientHdrId}")]
+        //public async Task<ActionResult> GetOrdClientByIdTaxInv(int ordClientHdrId)
+        //{
 
-            var GetOrdClientByIdTaxInv = await _taxInvService.GetOrdClientByIdTaxInv(ordClientHdrId);
-            //int len = json.ToString().Length;
-            return Content(GetOrdClientByIdTaxInv, "application/json");
-            //return Ok(json);
-        }
+        //    var GetOrdClientByIdTaxInv = await _taxInvService.GetOrdClientByIdTaxInv(ordClientHdrId);
+        //    //int len = json.ToString().Length;
+        //    return Content(GetOrdClientByIdTaxInv, "application/json");
+        //    //return Ok(json);
+        //}
 
         [HttpGet("GetTaxInv/{fromDate}/{toDate}")]
         public async Task<ActionResult> GetTaxInv(string fromDate, string toDate)
@@ -74,12 +73,37 @@ namespace NeuralShaft.Server.Controllers.TaxInvoice
             return Ok(insertTaxInv);
         }
 
-        [HttpPost("UpdateTaxInv/{taxInvHdrId}")]
+        [HttpPost("UpdateTaxInvHdr/{taxInvHdrId}")]
         public async Task<IActionResult> UpdateTaxInv(int taxInvHdrId, [FromBody] object taxInv)
         {
-            var updateTaxInv = await _taxInvService.UpdateTaxInv(taxInvHdrId, taxInv);
+            var updateTaxInv = await _taxInvService.UpdateTaxInvHdr(taxInvHdrId, taxInv);
             return Ok(updateTaxInv);
 
         }
+
+        [HttpPost("InsertTaxInvDtl")]    // Inserts both hdr and item in add
+        public async Task<IActionResult> InsertTaxInvDtl([FromBody] object taxInvDtl)
+        {
+            var insertQuoteDtlItem = await _taxInvService.InsertTaxInvDtl(taxInvDtl);
+            return Ok(insertQuoteDtlItem);
+        }
+      
+        [HttpPost("UpdateTaxInvDtl/{taxInvDtlId}")]
+        public async Task<IActionResult> UpdateTaxInveDtl(int taxInvDtlId, [FromBody] object taxInvDtl)
+        {
+            var quoteItemUpdateDtlId = await _taxInvService.UpdateTaxInvDtl(taxInvDtlId, taxInvDtl);
+            return Ok(quoteItemUpdateDtlId);
+
+        }
+
+        [HttpPost("DeleteTaxInvDtl/{taxInvDtlId}")]
+        public async Task<ActionResult> DeleteTaxInvDtl(int taxInvDtlId)
+        {
+            var deleteQuoteItemById = await _taxInvService.DeleteTaxInvDtl(taxInvDtlId);
+            return Content(deleteQuoteItemById, "application/json");
+            //return Ok(quoteById);            
+        }
+
+
     }
 }

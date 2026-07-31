@@ -67,8 +67,8 @@
 --Delete from DeliveryChallanHdr
 --Delete from DeliveryChallanDtl
 
---Delete from PurchaseOrderHdr
---Delete from PurchaseOrderDtl
+Delete from PurchaseOrderHdr
+Delete from PurchaseOrderDtl
 
 --Delete from StocksInwardHdr
 --Delete from StocksInwardDtl
@@ -89,21 +89,24 @@
 --delete from filepath
 --delete from Users where EmpId < '1000'
 
-delete from QuoteHdrItem
-delete from QuoteDtlItem
+--delete from QuoteHdrItem
+--delete from QuoteDtlItem
 
-delete from QuoteSOItemHdr
-delete from QuoteSOItemDtl
+--delete from QuoteSOItemHdr
+--delete from QuoteSOItemDtl
 
 
-delete from QuoteAMCHdr
-delete from QuoteAMCDtl
+--delete from QuoteAMCHdr
+--delete from QuoteAMCDtl
 
-delete from QuoteSOAMCHdr
-delete from QuoteSOAMCDtl
+--delete from QuoteSOAMCHdr
+--delete from QuoteSOAMCDtl
 
-delete from ProformaInvHdr
-delete from ProformaInvDtl
+--delete from ProformaInvHdr
+--delete from ProformaInvDtl
+
+delete from TaxInvHdr
+delete from taxinvdtl
 
 
 

@@ -7,10 +7,17 @@ namespace NeuralShaft.Service.ServiceInterfaces.DeliveryChallan
     public interface IDeliveryChallan
     {
         Task<string> GetDeliveryChallan(string fromDate, string toDate);
-        Task<string> GetOrdClientByIdDeliveryChallan(int ordClientHdrId);
+        //Task<string> GetOrdClientByIdDeliveryChallan(int ordClientHdrId);
         Task<string> GetDeliveryChallanById(int dCHdrId);
         Task<string> InsertDeliveryChallan(object deliveryChallan);
         Task<string> UpdateDeliveryChallan(int dCHdrId, object deliveryChallan);
-        Task<string> DeleteDeliveryChallan(int dCHdrId);
+        //Task<string> DeleteDeliveryChallan(int dCHdrId);
+
+        //----- TaxInvDtl Dtl
+        Task<string> InsertDeliveryChallanvDtl(object dcDtl);
+
+        Task<string> UpdateDeliveryChallanDtl(int dcDtlId, object dcDtl);
+
+        Task<string> DeleteDeliveryChallanDtl(int dcDtlId);
     }
 }

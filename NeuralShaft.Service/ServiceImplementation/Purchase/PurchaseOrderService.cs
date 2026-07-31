@@ -33,17 +33,39 @@ namespace NeuralShaft.Service.ServiceImplementation.Purchase
             return (insertPO);
         }
 
-        public async Task<string> UpdatePurchaseOrder(int purchaseOrderHdrId, object purchaseOrder)
+        public async Task<string> UpdatePurchaseOrderHdr(int purchaseOrderHdrId, object purchaseOrder)
         {
-            var updatePO = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdatePurchaseOrder",
+            var updatePO = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdatePurchaseOrderHdr",
                                new { @PurchaseOrderHdrId = purchaseOrderHdrId, @PurchaseOrderUpdate = purchaseOrder.ToString() });
             return (updatePO);
         }
 
-        public async Task<string> DeletePurchaseOrder(int purchaseOrderHdrId)
+
+        public async Task<string> InsertPurchaseOrderDtl(object purchaseOrderDtlId)
         {
-            throw new NotImplementedException();
+            string insertPODtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertPurchaseOrderDtl", new { @PurchaseOrderDtl = purchaseOrderDtlId.ToString() });
+            return (insertPODtl);
+        }
+        
+
+        public async Task<string> UpdatePurchaseOrderDtl(int purchaseOrderDtlId, object purchaseOrderDtl)
+        {
+            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdatePurchaseOrderDtl", new { @PurchaseOrderDtlId = purchaseOrderDtlId,
+                                                @PurchaseOrderDtl = purchaseOrderDtl.ToString() });
         }
 
+        public async Task<string> DeletePurchaseOrderDtl(int purchaseOrderDtlId)
+        {
+            var deleteTaxInvDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeletePurchaseOrderDtl",
+                                  new { @PurchaseOrderDtlId = purchaseOrderDtlId });
+
+            return deleteTaxInvDtl;
+        }
+
+
+        //public async Task<string> DeletePurchaseOrder(int purchaseOrderHdrId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

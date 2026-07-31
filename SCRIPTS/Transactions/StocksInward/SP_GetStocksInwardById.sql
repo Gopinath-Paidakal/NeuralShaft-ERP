@@ -74,9 +74,9 @@ BEGIN TRY
                [StocksInwardDtlId]
               ,[StocksInwardHdrId]
               ,[ItemId]
-              ,[ItemDescription]
+              ,[ItemDesc]
 
-              ,[ItemQty]
+              ,[ItemQuantity]
               ,[InwardQty]
               ,[AcceptedQty]
               
@@ -89,10 +89,10 @@ BEGIN TRY
               ,[TaxAmount]
               ,[ItemTotalAmount]
 
-              ,[CreatedUserId]
-              ,[CreatedDate]
-              ,[ModifiedUserId]
-              ,[ModifiedDate]
+              --,[CreatedUserId]
+              --,[CreatedDate]
+              --,[ModifiedUserId]
+              --,[ModifiedDate]
 
         FROM [dbo].[StocksInwardDtl]
         WHERE StocksInwardHdrId = @StocksInwardHdrId

@@ -42,9 +42,17 @@ BEGIN TRY
 			  ,FORMAT(ProformaInvDate, 'dd-MM-yyyy') as ProformaInvDate
 			  ,[ProformaInvHdr].[DeliveryContactPerson]
 			  ,[ProformaInvHdr].[DeliveryMobileId]
-			  ,[OrdClientHdr].[OrdClientName]
 
-			  ,[ProformaTotalAmount]
+			  ,[ProformaInvHdr].[ProformaItemAmount]
+			  ,[ProformaInvHdr].[ProformaDiscountAmount]
+			  ,[ProformaInvHdr].[ProformaTaxAmount]
+			  ,[ProformaInvHdr].[ProformaTotalAmount]
+
+			  ,[OrdClientHdr].[OrdClientName]
+			  ,[OrdClientHdr].[OrdGstNo]
+			  ,[OrdClientHdr].[OrdGstTradeName]
+
+			  --,[ProformaTotalAmount]
 
 			  --- for SO Product
 			  ,[SOHdr].[SOConsultant]

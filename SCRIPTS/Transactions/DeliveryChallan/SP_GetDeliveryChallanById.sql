@@ -39,19 +39,13 @@ BEGIN TRY
 
               ,[DCDate]
               ,[DCProductAmount]
-              ,[DCDiscountPercentage]
+              --,[DCDiscountPercentage]
               ,[DCDiscountAmount]
-              ,[DCTaxPercentage]
-              
-              ,[ItemTotalAmount]
-              ,[DCSubTotal]
               ,[DCTaxAmount]
-              ,[DCGrandTotal]
+             -- ,[DCTaxPercentage]
               
-              --,[CreatedUserId]
-              --,[CreatedDate]
-              --,[ModifiedUserId]
-              --,[ModifiedDate]
+              ,[DCTotalAmount]
+             -- ,[DCSubTotal]
 
         FROM [dbo].[DeliveryChallanHdr]
         WHERE DCHdrId = @DCHdrId
@@ -59,31 +53,28 @@ BEGIN TRY
     )
 
     SET @DCDtl = (
-                SELECT [DCDtlId]
+          SELECT [DCDtlId]
               ,[DCHdrId]
+              ,[DCDtlDate]
+              ,[SOHdrId]
               ,[ItemId]
-              ,[ItemDescription]
-              ,[ItemQty]
+              ,[ItemName]
+              ,[ItemHSNCode]
+              ,[ItemCode]
+              ,[ItemDesc]
+              ,[ItemQuantity]
               ,[ItemRate]
-
               ,[ItemAmount]
               ,[ItemDiscountPercentage]
               ,[ItemDiscountAmount]
-              ,[TaxPercentage]
-              ,[TaxAmount]
-
+              ,[ItemTaxPercentage]
+              ,[ItemTaxAmount]
               ,[ItemTotalAmount]
-
-              --,[CreatedUserId]
-              --,[CreatedDate]
-              --,[ModifiedUserId]
-              --,[ModifiedDate]
+              
         FROM [dbo].[DeliveryChallanDtl]
         WHERE DCHdrId = @DCHdrId
         FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
     )
-
-   
 
     SET @DC = (
         SELECT
@@ -107,3 +98,13 @@ BEGIN CATCH
     SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
     RAISERROR(@ErrMsg, @ErrSeverity, 1)
 END CATCH
+
+ --,[CreatedUserId]
+              --,[CreatedDate]
+              --,[ModifiedUserId]
+              --,[ModifiedDate]
+
+               --,[CreatedUserId]
+              --,[CreatedDate]
+              --,[ModifiedUserId]
+              --,[ModifiedDate]

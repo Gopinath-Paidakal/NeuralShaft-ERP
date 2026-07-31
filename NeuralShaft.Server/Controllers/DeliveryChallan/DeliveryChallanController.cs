@@ -17,15 +17,15 @@ namespace NeuralShaft.Server.Controllers.DeliveryChallan
 
         }
 
-        [HttpGet("GetOrdClientByIdDC/{ordClientHdrId}")]
-        public async Task<ActionResult> GetOrdClientByIdTaxInv(int ordClientHdrId)
-        {
+        //[HttpGet("GetOrdClientByIdDC/{ordClientHdrId}")]
+        //public async Task<ActionResult> GetOrdClientByIdTaxInv(int ordClientHdrId)
+        //{
 
-            var GetOrdClientByIdDC = await _dcService.GetOrdClientByIdDeliveryChallan(ordClientHdrId);
-            //int len = json.ToString().Length;
-            return Content(GetOrdClientByIdDC, "application/json");
-            //return Ok(json);
-        }
+        //    var GetOrdClientByIdDC = await _dcService.GetOrdClientByIdDeliveryChallan(ordClientHdrId);
+        //    //int len = json.ToString().Length;
+        //    return Content(GetOrdClientByIdDC, "application/json");
+        //    //return Ok(json);
+        //}
 
         [HttpGet("GetDeliveryChallan/{fromDate}/{toDate}")]
         public async Task<ActionResult> GetDeliveryChallan(string fromDate, string toDate)
@@ -61,5 +61,31 @@ namespace NeuralShaft.Server.Controllers.DeliveryChallan
             return Ok(updateDeliveryChallan);
 
         }
+
+        [HttpPost("InsertDeliveryChallanDtl")]    // Inserts both hdr and item in add
+        public async Task<IActionResult> InsertQuoteItemDtl([FromBody] object dcDtl)
+        {
+            var insertDCDtl = await _dcService.InsertDeliveryChallanvDtl(dcDtl);
+            return Ok(insertDCDtl);
+        }
+
+        [HttpPost("UpdateDeliveryChallanDtl/{dcDtlId}")]
+        public async Task<IActionResult> UpdateQuoteItemDtl(int dcDtlId, [FromBody] object dcDtl)
+        {
+            var updateDCDtlId = await _dcService.UpdateDeliveryChallanDtl(dcDtlId, dcDtl);
+            return Ok(updateDCDtlId);
+
+        }
+
+        [HttpPost("DeleteDeliveryChallanDtl/{dcDtlId}")]
+        public async Task<ActionResult> DeleteQuoteItemById(int dcDtlId)
+        {
+            var deletDcDtl = await _dcService.DeleteDeliveryChallanDtl(dcDtlId);
+            return Content(deletDcDtl, "application/json");
+            //return Ok(quoteById);            
+        }
+
+
+
     }
 }

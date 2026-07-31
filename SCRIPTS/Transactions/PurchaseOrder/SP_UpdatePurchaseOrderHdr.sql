@@ -1,19 +1,19 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdatePurchaseOrder]    Script Date: 16/05/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdatePurchaseOrder]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdatePurchaseOrder]
+/****** Object:  StoredProcedure [dbo].[SP_UpdatePurchaseOrderHdr]    Script Date: 31/07/2026 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdatePurchaseOrderHdr]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdatePurchaseOrderHdr]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_UpdatePurchaseOrder]    Script Date: 16/05/2026  ******/
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_UpdatePurchaseOrder]
+CREATE PROCEDURE [dbo].[SP_UpdatePurchaseOrderHdr]
 (
     @PurchaseOrderHdrId int,
 	@PurchaseOrderUpdate NVARCHAR(MAX)
@@ -109,50 +109,50 @@ BEGIN TRY
 
         ----------- Update Detail
 
-        UPDATE D
-        SET
-            D.ItemId                   = J.ItemId,
-            D.ItemDescription          = J.ItemDescription,
-            D.ItemQty                  = J.ItemQty,
-            D.ItemRate                 = J.ItemRate,
-            D.ItemAmount               = J.ItemAmount,
+        --UPDATE D
+        --SET
+        --    D.ItemId                   = J.ItemId,
+        --    D.ItemDescription          = J.ItemDescription,
+        --    D.ItemQty                  = J.ItemQty,
+        --    D.ItemRate                 = J.ItemRate,
+        --    D.ItemAmount               = J.ItemAmount,
 
-            D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
-            D.ItemDiscountAmount       = J.ItemDiscountAmount,
-            D.TaxPercentage            = J.TaxPercentage,
-            D.TaxAmount                = J.TaxAmount,
-            D.ItemTotalAmount          = J.ItemTotalAmount,
+        --    D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
+        --    D.ItemDiscountAmount       = J.ItemDiscountAmount,
+        --    D.TaxPercentage            = J.TaxPercentage,
+        --    D.TaxAmount                = J.TaxAmount,
+        --    D.ItemTotalAmount          = J.ItemTotalAmount,
 
-            D.ModifiedUserId           = J.ModifiedUserId,
-            D.ModifiedDate             = J.ModifiedDate
+        --    D.ModifiedUserId           = J.ModifiedUserId,
+        --    D.ModifiedDate             = J.ModifiedDate
 
 
-        FROM dbo.PurchaseOrderDtl D
-        INNER JOIN
-        (
-            SELECT *
-            FROM OPENJSON(@PurchaseOrderUpdate, '$.PurchaseOrderDtl')
-            WITH
-            (
-                PurchaseOrderDtlId             INT,
-                ItemId                  INT,
-                ItemDescription         NVARCHAR(500),
-                ItemQty                 DECIMAL(18,2),
-                ItemRate                DECIMAL(18,2),
+        --FROM dbo.PurchaseOrderDtl D
+        --INNER JOIN
+        --(
+        --    SELECT *
+        --    FROM OPENJSON(@PurchaseOrderUpdate, '$.PurchaseOrderDtl')
+        --    WITH
+        --    (
+        --        PurchaseOrderDtlId             INT,
+        --        ItemId                  INT,
+        --        ItemDescription         NVARCHAR(500),
+        --        ItemQty                 DECIMAL(18,2),
+        --        ItemRate                DECIMAL(18,2),
                 
-                ItemAmount              DECIMAL(18,2),
-                ItemDiscountPercentage  DECIMAL(18,2),
-                ItemDiscountAmount      DECIMAL(18,2),
-                TaxPercentage           DECIMAL(18,2),
+        --        ItemAmount              DECIMAL(18,2),
+        --        ItemDiscountPercentage  DECIMAL(18,2),
+        --        ItemDiscountAmount      DECIMAL(18,2),
+        --        TaxPercentage           DECIMAL(18,2),
 
-                TaxAmount               DECIMAL(18,2),
-                ItemTotalAmount         DECIMAL(18,2),
+        --        TaxAmount               DECIMAL(18,2),
+        --        ItemTotalAmount         DECIMAL(18,2),
 
-                ModifiedUserId          INT,
-                ModifiedDate            DATE
-            )
-        ) J
-        ON D.PurchaseOrderDtlId = J.PurchaseOrderDtlId;
+        --        ModifiedUserId          INT,
+        --        ModifiedDate            DATE
+        --    )
+        --) J
+        --ON D.PurchaseOrderDtlId = J.PurchaseOrderDtlId;
     
 
     Select @PurchaseOrderHdrId

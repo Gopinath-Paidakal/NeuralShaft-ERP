@@ -37,17 +37,41 @@ namespace NeuralShaft.Service.ServiceImplementation.Stocks
             return (insertStocksInward);
         }
 
-        public async Task<string> UpdateStocksInward(int stocksInwardHdrId, object stocksInward)
+        public async Task<string> UpdateStocksInwardHdr(int stocksInwardHdrId, object stocksInward)
         {
-            var updateStockInward = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateStocksInward",
+            var updateStockInward = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateStocksInwardHdr",
                               new { @StocksInwardHdrId = stocksInwardHdrId, @StocksInwardUpdate = stocksInward.ToString() });
             return (updateStockInward);
         }
 
 
-        public Task<string> DeleteStocksInward(int StocksInwardHdrId)
+      
+        public async Task<string> InsertStocksInwardDtl(object siInwardDtl)
         {
-            throw new NotImplementedException();
+            string insertSIDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertStocksInwardDtl", new { @SiInwardDtl = siInwardDtl.ToString() });
+            return (insertSIDtl);
         }
+
+        public async Task<string> UpdateStocksInwardDtl(int stocksInwardDtlId, object siInwardDtl)
+        {
+            return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateStocksInwardDtl", new {
+                                                @StocksInwardDtlId = stocksInwardDtlId,
+                                                @SIInwardDtl = siInwardDtl.ToString() });
+        }
+
+        public async Task<string> DeleteStocksInwardDtl(int stocksInwardDtlId)
+        {
+            var deleteSIDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteStocksInwardDtl",
+                                  new { @TaxInvDtlId = stocksInwardDtlId });
+
+            return deleteSIDtl;
+        }
+
+
+        //public Task<string> DeleteStocksInward(int StocksInwardHdrId)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
     }
 }

@@ -41,12 +41,35 @@ namespace NeuralShaft.Server.Controllers.Stocks
             return Ok(insertStocksInward);
         }
 
-        [HttpPost("UpdateStocksInward/{StocksInwardHdrId}")]
-        public async Task<IActionResult> UpdateStocksInward(int dcHdrId, [FromBody] object StocksInward)
+        [HttpPost("UpdateStocksInwardHdr/{StocksInwardHdrId}")]
+        public async Task<IActionResult> UpdateStocksInward(int stocksInwardHdrId, [FromBody] object StocksInward)
         {
-            var updateStocksInward = await _siService.UpdateStocksInward(dcHdrId, StocksInward);
+            var updateStocksInward = await _siService.UpdateStocksInwardHdr(stocksInwardHdrId, StocksInward);
             return Ok(updateStocksInward);
 
+        }
+
+        [HttpPost("InsertStocksInwardDtl")]    // Inserts both hdr and item in add
+        public async Task<IActionResult> InsertStocksInwardDtl([FromBody] object siInwardDtl)
+        {
+            var insertQuoteDtlItem = await _siService.InsertStocksInwardDtl(siInwardDtl);
+            return Ok(insertQuoteDtlItem);
+        }
+
+        [HttpPost("UpdateStocksInwardDtl/{stocksInwardDtlId}")]
+        public async Task<IActionResult> UpdateStocksInwardeDtl(int stocksInwardDtlId, [FromBody] object siInwardDtl)
+        {
+            var quoteItemUpdateDtlId = await _siService.UpdateStocksInwardDtl(stocksInwardDtlId, siInwardDtl);
+            return Ok(quoteItemUpdateDtlId);
+
+        }
+
+        [HttpPost("DeleteStocksInwardDtl/{stocksInwardDtlId}")]
+        public async Task<ActionResult> DeleteStocksInwardDtl(int stocksInwardDtlId)
+        {
+            var deleteQuoteItemById = await _siService.DeleteStocksInwardDtl(stocksInwardDtlId);
+            return Content(deleteQuoteItemById, "application/json");
+            //return Ok(quoteById);            
         }
     }
 }

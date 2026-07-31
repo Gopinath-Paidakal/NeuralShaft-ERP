@@ -42,8 +42,8 @@ BEGIN TRY
             H.ItemGSTExempted          = J.ItemGSTExempted,
             H.ItemQuotePaymentTerms    = J.ItemQuotePaymentTerms,
 
-            H.ItemQuoteAmount          = J.ItemQuoteAmount,
-            H.ItemQuoteTaxAmount       = J.ItemQuoteTaxAmount,
+            --H.ItemQuoteAmount          = J.ItemQuoteAmount,
+            --H.ItemQuoteTaxAmount       = J.ItemQuoteTaxAmount,
 
             H.OrderStatus              = J.OrderStatus
 
@@ -61,8 +61,8 @@ BEGIN TRY
             ItemGSTExempted bit ,
             ItemQuotePaymentTerms NVARCHAR(100),
             ItemQuoteAmount  numeric(18, 2) ,
-            ItemQuoteTaxAmount  numeric(18, 2) ,
-            ItemQuoteTotalAmount  numeric(18, 2),
+            --ItemQuoteTaxAmount  numeric(18, 2) ,
+            --ItemQuoteTotalAmount  numeric(18, 2),
 
             OrderStatus NVARCHAR(50)
 		

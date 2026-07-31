@@ -43,34 +43,31 @@ BEGIN TRY
 			  ,FORMAT(DCDate, 'dd-MM-yyyy') as DCDate
 
 			  --,[DeliveryAddress]
-     --         ,[DeliveryContactPerson]
-     --         ,[DeliveryMobileId]
+              ,[DeliveryContactPerson]
+              ,[DeliveryMobileId]
 			  
      --         ,[OrdClientPONo]
      --         ,[OrdClientPODate]
 
-			  --,[DCProductAmount]
+			  ,[DCProductAmount]
 			  --,[DCDiscountPercentage]
-			  --,[DCDiscountAmount]
+			  ,[DCDiscountAmount]
+			  ,[DCTaxAmount]
 			  --,[DCTaxPercentage]
 			  
 			  --,[ItemTotalAmount]
 			  --,[DCSubTotal]
-			  --,[DCTaxAmount]
-			  ,[DCGrandTotal]
+			  
+			  ,[DCTotalAmount]
 
-			  ,[SOHdr].[SOConsultant]
-			  ,[SOHdr].[SOContPerson]
-			  ,[SOHdr].[SOCustComp]
+			  ,[OrdClientHdr].[OrdClientName]
+			  ,[OrdClientHdr].[OrdGstTradeName]
+			  ,[OrdClientHdr].[OrdGstNo]
 
-
-			  --,[CreatedUserId]
-			  --,[CreatedDate]
-			  --,[ModifiedUserId]
-			  --,[ModifiedDate]
+		
 
 			FROM [dbo].[DeliveryChallanHdr]		
-			INNER JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [DeliveryChallanHdr].[SOHdrId]
+			--INNER JOIN [SOHdr] ON [SOHdr].[SOHdrId] = [DeliveryChallanHdr].[SOHdrId]
 			INNER JOIN [OrdClientHdr] ON [OrdClientHdr].[OrdClientHdrId] = [DeliveryChallanHdr].[OrdClientHdrId]
 
 			--- Both Date and Time-- best practice
@@ -104,3 +101,14 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+
+	  --,[SOHdr].[SOConsultant]
+			  --,[SOHdr].[SOContPerson]
+			  --,[SOHdr].[SOCustComp]
+
+
+			  --,[CreatedUserId]
+			  --,[CreatedDate]
+			  --,[ModifiedUserId]
+			  --,[ModifiedDate]

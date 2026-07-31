@@ -32,33 +32,28 @@ BEGIN TRY
 
 	UPDATE H
         SET
-            H.SOHdrId                   = J.SOHdrId,
-            H.OrdClientHdrId            = J.OrdClientHdrId,
+            --H.SOHdrId                   = J.SOHdrId,
+            --H.OrdClientHdrId            = J.OrdClientHdrId,
 
             H.EmpId                     = J.EmpId,
 
-            H.DCNo                      = J.DCNo,
-            H.DCSLNo                    = J.DCSLNo,
-            H.DCDate                    = J.DCDate,
+            --H.DCNo                      = J.DCNo,
+            --H.DCSLNo                    = J.DCSLNo,
+            --H.DCDate                    = J.DCDate,
 
             H.DeliveryAddress           = J.DeliveryAddress,
-            H.DeliveryContactperson     = J.DeliveryContactperson,
-            H.DeliveryMobileId          = J.DeliveryMobileId,
+            --H.DeliveryContactperson     = J.DeliveryContactperson,
+            --H.DeliveryMobileId          = J.DeliveryMobileId,
 
             H.OrdClientPONo             = J.OrdClientPONo,
             H.OrdClientPODate           = J.OrdClientPODate,
             H.DCRemarks                 = J.DCRemarks,
 
-            H.DCProductAmount           = J.DCProductAmount,
-            H.DCDiscountPercentage      = J.DCDiscountPercentage,
-            H.DCDiscountAmount          = J.DCDiscountAmount,
-            H.DCTaxPercentage           = J.DCTaxPercentage,
+            --H.DCProductAmount           = J.DCProductAmount,
+            --H.DCDiscountAmount          = J.DCDiscountAmount,
+            --H.DCTaxAmount               = J.DCTaxAmount,
+            --H.ItemTotalAmount           = J.ItemTotalAmount,
             
-            H.ItemTotalAmount           = J.ItemTotalAmount,
-            H.DCSubTotal                = J.DCSubTotal,
-            H.DCTaxAmount               = J.DCTaxAmount,
-            H.DCGrandTotal              = J.DCGrandTotal,
-
             H.ModifiedUserId            = J.ModifiedUserId,
             H.ModifiedDate              = J.ModifiedDate
 
@@ -87,15 +82,10 @@ BEGIN TRY
                 DCRemarks               NVARCHAR(1000),
 
                 DCProductAmount         DECIMAL(18,2),
-                DCDiscountPercentage    DECIMAL(18,2),
                 DCDiscountAmount        DECIMAL(18,2),
-                DCTaxPercentage         DECIMAL(18,2),
-                
-                ItemTotalAmount         DECIMAL(18,2),
-                DCSubTotal              DECIMAL(18,2),
                 DCTaxAmount             DECIMAL(18,2),
-                DCGrandTotal            DECIMAL(18,2),
-
+                ItemTotalAmount         DECIMAL(18,2),
+                
                 ModifiedUserId          INT,
                 ModifiedDate            DATE
 
@@ -105,50 +95,50 @@ BEGIN TRY
 
         ----------- Update Detail
 
-        UPDATE D
-        SET
-            D.ItemId                   = J.ItemId,
-            D.ItemDescription          = J.ItemDescription,
-            D.ItemQty                  = J.ItemQty,
-            D.ItemRate                 = J.ItemRate,
-            D.ItemAmount               = J.ItemAmount,
+        --UPDATE D
+        --SET
+        --    D.ItemId                   = J.ItemId,
+        --    D.ItemDescription          = J.ItemDescription,
+        --    D.ItemQty                  = J.ItemQty,
+        --    D.ItemRate                 = J.ItemRate,
+        --    D.ItemAmount               = J.ItemAmount,
 
-            D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
-            D.ItemDiscountAmount       = J.ItemDiscountAmount,
-            D.TaxPercentage            = J.TaxPercentage,
-            D.TaxAmount                = J.TaxAmount,
-            D.ItemTotalAmount          = J.ItemTotalAmount,
+        --    D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
+        --    D.ItemDiscountAmount       = J.ItemDiscountAmount,
+        --    D.TaxPercentage            = J.TaxPercentage,
+        --    D.TaxAmount                = J.TaxAmount,
+        --    D.ItemTotalAmount          = J.ItemTotalAmount,
 
-            D.ModifiedUserId           = J.ModifiedUserId,
-            D.ModifiedDate             = J.ModifiedDate
+        --    D.ModifiedUserId           = J.ModifiedUserId,
+        --    D.ModifiedDate             = J.ModifiedDate
 
 
-        FROM dbo.DeliveryChallanDtl D
-        INNER JOIN
-        (
-            SELECT *
-            FROM OPENJSON(@DeliveryChallanUpdate, '$.DeliveryChallanDtl')
-            WITH
-            (
-                DCDtlId             INT,
-                ItemId                  INT,
-                ItemDescription         NVARCHAR(500),
-                ItemQty                 DECIMAL(18,2),
-                ItemRate                DECIMAL(18,2),
+        --FROM dbo.DeliveryChallanDtl D
+        --INNER JOIN
+        --(
+        --    SELECT *
+        --    FROM OPENJSON(@DeliveryChallanUpdate, '$.DeliveryChallanDtl')
+        --    WITH
+        --    (
+        --        DCDtlId             INT,
+        --        ItemId                  INT,
+        --        ItemDescription         NVARCHAR(500),
+        --        ItemQty                 DECIMAL(18,2),
+        --        ItemRate                DECIMAL(18,2),
                 
-                ItemAmount              DECIMAL(18,2),
-                ItemDiscountPercentage  DECIMAL(18,2),
-                ItemDiscountAmount      DECIMAL(18,2),
-                TaxPercentage           DECIMAL(18,2),
+        --        ItemAmount              DECIMAL(18,2),
+        --        ItemDiscountPercentage  DECIMAL(18,2),
+        --        ItemDiscountAmount      DECIMAL(18,2),
+        --        TaxPercentage           DECIMAL(18,2),
 
-                TaxAmount               DECIMAL(18,2),
-                ItemTotalAmount         DECIMAL(18,2),
+        --        TaxAmount               DECIMAL(18,2),
+        --        ItemTotalAmount         DECIMAL(18,2),
 
-                ModifiedUserId          INT,
-                ModifiedDate            DATE
-            )
-        ) J
-        ON D.DCDtlId = J.DCDtlId;
+        --        ModifiedUserId          INT,
+        --        ModifiedDate            DATE
+        --    )
+        --) J
+        --ON D.DCDtlId = J.DCDtlId;
     
 
     Select @DCHdrId

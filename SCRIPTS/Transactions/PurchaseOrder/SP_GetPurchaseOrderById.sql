@@ -1,5 +1,6 @@
 USE [NSERPLIVE]
 GO
+/****** Object:  StoredProcedure [dbo].[SP_GetPurchaseOrderById]    Script Date: 31/07/2026 ******/
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetPurchaseOrderById]') AND type IN (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_GetPurchaseOrderById]
 GO
@@ -63,24 +64,26 @@ BEGIN TRY
 
     SET @PurchaseOrderDtl = (
 
-           SELECT [PurchaseOrderDtlId]
+           SELECT 
+               [PurchaseOrderDtlId]
               ,[PurchaseOrderHdrId]
               ,[ItemId]
-              ,[ItemDescription]
-              ,[ItemQty]
+              ,[ItemName]
+              ,[ItemHSNCode]
+              ,[ItemCode]
+
+              ,[ItemDesc]
+              ,[ItemQuantity]
               ,[ItemRate]
               ,[ItemAmount]
               ,[ItemDiscountPercentage]
+              
               ,[ItemDiscountAmount]
-              ,[TaxPercentage]
-              ,[TaxAmount]
+              ,[ItemTaxPercentage]
+              ,[ItemTaxAmount]
               ,[ItemTotalAmount]
-              ,[CreatedUserId]
-              ,[CreatedDate]
-              ,[ModifiedUserId]
-              ,[ModifiedDate]
-
-        FROM [dbo].[PurchaseOrderDtl]
+             
+          FROM [dbo].[PurchaseOrderDtl]
         WHERE PurchaseOrderHdrId = @PurchaseOrderHdrId
         FOR JSON PATH    
     )

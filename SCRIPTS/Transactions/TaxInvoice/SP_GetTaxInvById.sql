@@ -38,15 +38,11 @@ BEGIN TRY
               ,[TaxInvRemarks]
 
               ,[TaxInvDate]
-              ,[TaxInvProductAmount]
-              ,[TaxInvDiscountPercentage]
-              ,[TaxInvDiscountAmount]
-              ,[TaxInvTaxPercentage]
-              
-              ,[ItemTotalAmount]
-              ,[TaxInvSubTotal]
-              ,[TaxInvTaxAmount]
-              ,[TaxInvGrandTotal]
+
+              --,[TaxInvProductAmount]
+              --,[TaxInvDiscountAmount]
+              --,[TaxInvTaxAmount]
+              --,[TaxInvTotalAmount]
               
               --,[CreatedUserId]
               --,[CreatedDate]
@@ -59,26 +55,31 @@ BEGIN TRY
     )
 
     SET @TaxInvDtl = (
-                SELECT [TaxInvDtlId]
+
+         SELECT [TaxInvDtlId]
               ,[TaxInvHdrId]
               ,[ItemId]
-              ,[ItemDescription]
-              ,[ItemQty]
-              ,[ItemRate]
+              ,[ItemName]
+              ,[ItemHSNCode]
 
+              ,[ItemCode]
+              ,[ItemDesc]
+              ,[ItemQuantity]
+              ,[ItemRate]
               ,[ItemAmount]
+              
               ,[ItemDiscountPercentage]
               ,[ItemDiscountAmount]
-              ,[TaxPercentage]
-              ,[TaxAmount]
-
+              ,[ItemTaxPercentage]
+              ,[ItemTaxAmount]
               ,[ItemTotalAmount]
-
+              
               --,[CreatedUserId]
               --,[CreatedDate]
               --,[ModifiedUserId]
               --,[ModifiedDate]
-        FROM [dbo].[TaxInvDtl]
+         FROM [dbo].[TaxInvDtl]
+       
         WHERE TaxInvHdrId = @TaxInvHdrId
         FOR JSON PATH    ----WITHOUT_ARRAY_WRAPPER
     )

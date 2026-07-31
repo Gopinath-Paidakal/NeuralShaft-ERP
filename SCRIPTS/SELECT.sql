@@ -146,6 +146,8 @@ Select * from QuoteSOItemDtl
 Select * from ProformaInvHdr
 Select * from ProformaInvDtl
 
+select * from item
+
 
 select * from QuoteAMCHdr
 select * from QuoteAMCDtl
@@ -155,6 +157,9 @@ Select * from QuoteSOAMCDtl
 
 Select * from ProformaInvHdr
 Select * from ProformaInvDtl
+
+Select * from TaxInvHdr
+Select * from TaxInvDtl
 
 
 

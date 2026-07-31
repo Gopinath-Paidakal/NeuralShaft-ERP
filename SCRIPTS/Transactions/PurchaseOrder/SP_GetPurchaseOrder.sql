@@ -1,13 +1,13 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetPurchaseOrder]    Script Date: 16/07/2026 ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetPurchaseOrder]    Script Date: 31/07/2026 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_GetPurchaseOrder]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_GetPurchaseOrder]
 GO
 
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_GetPurchaseOrder]    Script Date: 16/07/2026  ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetPurchaseOrder]    Script Date: 31/07/2026  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -40,7 +40,9 @@ BEGIN TRY
 			  ,[Employee].EmpFirstName
 
 			  ,[PurchaseOrderHdr].[VendorHdrId]
-			  ,[VendorHdr].VendorName
+			  ,[VendorHdr].[VendorName]
+			  ,[VendorHdr].[VendorGSTTradeName]
+			  ,[VendorHdr].[VendorGSTNo]
 
 			  ,[POType]
 			  ,[PONo]
@@ -60,23 +62,12 @@ BEGIN TRY
 			--,[OrdClientPODate]
 			--,[PORemarks]
 
-			  --,[POProductAmount]
+			  ,[POProductAmount]
 			  --,[PODiscountPercentage]
-			  --,[PODiscountAmount]
-			  --,[POTaxPercentage]
-			  --,[ItemTotalAmount]
-			  --,[POSubTotal]
-			  --,[POTaxAmount]
-			  ,[POGrandTotal]
-
-			  --,[CreatedUserId]
-			  --,[CreatedDate]
-			  --,[ModifiedUserId]
-			  --,[ModifiedDate]
-
-			  --,[SOHdr].[SOConsultant]
-			  --,[SOHdr].[SOContPerson]
-			  --,[SOHdr].[SOCustComp]
+			  ,[PODiscountAmount]
+			  ,[POTaxAmount]
+			  
+			  ,[POTotalAmount]
 
 			FROM [dbo].[PurchaseOrderHdr]
 			INNER JOIN [Employee] ON [Employee].EmpId = [PurchaseOrderHdr].EmpId
@@ -117,6 +108,13 @@ END TRY
 End_Prog:
 
  
+   --,[CreatedUserId]
+			  --,[CreatedDate]
+			  --,[ModifiedUserId]
+			  --,[ModifiedDate]
 
+			  --,[SOHdr].[SOConsultant]
+			  --,[SOHdr].[SOContPerson]
+			  --,[SOHdr].[SOCustComp]
 
 		
