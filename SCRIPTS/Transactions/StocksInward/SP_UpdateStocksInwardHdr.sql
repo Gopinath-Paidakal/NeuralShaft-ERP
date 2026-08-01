@@ -16,7 +16,7 @@ GO
 CREATE PROCEDURE [dbo].[SP_UpdateStocksInwardHdr]
 (
     @StocksInwardHdrId int,
-	@StocksInwardUpdate NVARCHAR(MAX)
+	@StocksInwardHdr NVARCHAR(MAX)
 
 )
 ----With Encryption
@@ -74,7 +74,7 @@ BEGIN TRY
 
         FROM dbo.StocksInwardHdr SIH
 
-        INNER JOIN OPENJSON(@StocksInwardUpdate, '$.StocksInwardHdr')
+        INNER JOIN OPENJSON(@StocksInwardHdr, '$.StocksInwardHdr')
         WITH
         (
               StocksInwardHdrId        INT

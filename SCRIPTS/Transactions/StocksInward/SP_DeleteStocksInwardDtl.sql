@@ -62,7 +62,7 @@ BEGIN TRY
 
 
 
-    Select @TaxInvDtlId
+    Select @StocksInwardDtlId
     
     COMMIT TRANSACTION
 

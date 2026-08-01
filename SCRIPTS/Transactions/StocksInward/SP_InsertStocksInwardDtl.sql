@@ -25,12 +25,10 @@ BEGIN TRY
 
        Declare @StocksInwardDtlId int
        Declare @StocksInwardHdrId int
-       --Declare @ModifiedUserId int
-       --Declare @ModifiedDate date
+     
 
        set @StocksInwardHdrId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.StocksInwardHdrId')
-       --set @ModifiedUserId = JSON_VALUE(@TaxInvDtl, '$.ModifiedUserId')
-       --set @ModifiedDate = JSON_VALUE(@TaxInvDtl, '$.ModifiedDate')
+     
 
     BEGIN TRANSACTION
 
@@ -52,8 +50,8 @@ BEGIN TRY
             ItemAmount,
             ItemDiscountPercentage,
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -68,7 +66,7 @@ BEGIN TRY
             ItemCode,
 
             ItemDesc,
-            ItemQty,
+            ItemQuantity,
             InwardQty,
             AcceptedQty,
             ItemRate,
@@ -76,8 +74,8 @@ BEGIN TRY
             ItemAmount,
             ItemDiscountPercentage,
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -92,7 +90,7 @@ BEGIN TRY
             ItemCode                   NVARCHAR(50),
             ItemDesc                   NVARCHAR(500),
 
-            ItemQty                    DECIMAL(18,2),
+            ItemQuantity               DECIMAL(18,2),
             InwardQty                  DECIMAL(18,2),
             AcceptedQty                DECIMAL(18,2),
             ItemRate                   DECIMAL(18,2),
@@ -100,8 +98,8 @@ BEGIN TRY
             
             ItemDiscountPercentage     DECIMAL(18,2),
             ItemDiscountAmount         DECIMAL(18,2),
-            TaxPercentage              DECIMAL(18,2),
-            TaxAmount                  DECIMAL(18,2),
+            ItemTaxPercentage          DECIMAL(18,2),
+            ItemTaxAmount              DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
             
             CreatedUserId               INT,
@@ -135,9 +133,7 @@ BEGIN TRY
                 ) T
 
                 WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
-                --===============================================
-         
-               
+                --===============================================               
 
     Select @StocksInwardDtlId
 
@@ -165,6 +161,12 @@ END TRY
 
 End_Prog:
         
+
+          --Declare @ModifiedUserId int
+       --Declare @ModifiedDate date
+
+         --set @ModifiedUserId = JSON_VALUE(@TaxInvDtl, '$.ModifiedUserId')
+       --set @ModifiedDate = JSON_VALUE(@TaxInvDtl, '$.ModifiedDate')
 
         --Declare @CompanyId int
 	--Declare @BranchId int

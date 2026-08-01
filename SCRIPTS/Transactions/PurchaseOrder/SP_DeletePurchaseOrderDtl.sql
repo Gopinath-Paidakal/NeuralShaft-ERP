@@ -24,15 +24,16 @@ BEGIN TRY
        Declare @PurchaseOrderHdrId int
        
        --set @ItemQuoteHdrId = JSON_VALUE(@QuoteItemDtl, '$.ItemQuoteHdrId')
-       set @PurchaseOrderHdrId = (select PurchaseOrderHdrId from PurchaseOrderDtl where PurchaseOrderDtlId = @PurchaseOrderDtlId)
+       set @PurchaseOrderHdrId = (select PurchaseOrderHdrId from PurchaseOrderDtl 
+                                    where PurchaseOrderDtlId = @PurchaseOrderDtlId)
       
 
 	BEGIN TRANSACTION
 
             Delete from PurchaseOrderDtl where PurchaseOrderDtlId = @PurchaseOrderDtlId
 
-            ------------------------------------------------------------------
-        ------ Updating the totals in InvHdr
+        ------------------------------------------------------------------
+        ------ Updating the totals in POHdr
         ------------------------------------------------------------------
         
             UPDATE H
@@ -58,9 +59,6 @@ BEGIN TRY
 
                 WHERE H.PurchaseOrderHdrId = @PurchaseOrderHdrId;  
                 --===============================================
-               
-
-
 
     Select @PurchaseOrderDtlId
     

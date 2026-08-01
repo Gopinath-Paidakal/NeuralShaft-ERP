@@ -17,7 +17,6 @@ CREATE PROCEDURE [dbo].[SP_GetStocksInward]
 (
 	@FromDate nvarchar(20),
 	@ToDate nvarchar(20)
-
 )
 
 AS

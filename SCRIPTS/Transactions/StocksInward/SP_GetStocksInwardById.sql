@@ -85,8 +85,8 @@ BEGIN TRY
               ,[ItemAmount]
               ,[ItemDiscountPercentage]
               ,[ItemDiscountAmount]
-              ,[TaxPercentage]
-              ,[TaxAmount]
+              ,[ItemTaxPercentage]
+              ,[ItemTaxAmount]
               ,[ItemTotalAmount]
 
               --,[CreatedUserId]

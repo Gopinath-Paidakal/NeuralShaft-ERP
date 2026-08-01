@@ -24,27 +24,27 @@ namespace NeuralShaft.Server.Controllers.Stocks
             //return Ok(getStocksInward);
         }
 
-        [HttpGet("GetStocksInwardById/{StocksInwardHdrId}")]
-        public async Task<ActionResult> GetStocksInwardEmpById(int StocksInwardHdrId)
+        [HttpGet("GetStocksInwardById/{stocksInwardHdrId}")]
+        public async Task<ActionResult> GetStocksInwardEmpById(int stocksInwardHdrId)
         {
 
-            var getStocksInwardById = await _siService.GetStocksInwardById(StocksInwardHdrId);
+            var getStocksInwardById = await _siService.GetStocksInwardById(stocksInwardHdrId);
             //int len = json.ToString().Length;
             return Content(getStocksInwardById, "application/json");
             //return Ok(json);
         }
 
         [HttpPost("InsertStocksInward")]
-        public async Task<IActionResult> InsertStocksInward([FromBody] object StocksInward)
+        public async Task<IActionResult> InsertStocksInward([FromBody] object stocksInward)
         {
-            var insertStocksInward = await _siService.InsertStocksInward(StocksInward);
+            var insertStocksInward = await _siService.InsertStocksInward(stocksInward);
             return Ok(insertStocksInward);
         }
 
-        [HttpPost("UpdateStocksInwardHdr/{StocksInwardHdrId}")]
-        public async Task<IActionResult> UpdateStocksInward(int stocksInwardHdrId, [FromBody] object StocksInward)
+        [HttpPost("UpdateStocksInwardHdr/{stocksInwardHdrId}")]
+        public async Task<IActionResult> UpdateStocksInward(int stocksInwardHdrId, [FromBody] object stocksInward)
         {
-            var updateStocksInward = await _siService.UpdateStocksInwardHdr(stocksInwardHdrId, StocksInward);
+            var updateStocksInward = await _siService.UpdateStocksInwardHdr(stocksInwardHdrId, stocksInward);
             return Ok(updateStocksInward);
 
         }
@@ -52,23 +52,23 @@ namespace NeuralShaft.Server.Controllers.Stocks
         [HttpPost("InsertStocksInwardDtl")]    // Inserts both hdr and item in add
         public async Task<IActionResult> InsertStocksInwardDtl([FromBody] object siInwardDtl)
         {
-            var insertQuoteDtlItem = await _siService.InsertStocksInwardDtl(siInwardDtl);
-            return Ok(insertQuoteDtlItem);
+            var insertStocksInwardDtl = await _siService.InsertStocksInwardDtl(siInwardDtl);
+            return Ok(insertStocksInwardDtl);
         }
 
         [HttpPost("UpdateStocksInwardDtl/{stocksInwardDtlId}")]
         public async Task<IActionResult> UpdateStocksInwardeDtl(int stocksInwardDtlId, [FromBody] object siInwardDtl)
         {
-            var quoteItemUpdateDtlId = await _siService.UpdateStocksInwardDtl(stocksInwardDtlId, siInwardDtl);
-            return Ok(quoteItemUpdateDtlId);
+            var stocksInwardUpdateDtl = await _siService.UpdateStocksInwardDtl(stocksInwardDtlId, siInwardDtl);
+            return Ok(stocksInwardUpdateDtl);
 
         }
 
         [HttpPost("DeleteStocksInwardDtl/{stocksInwardDtlId}")]
         public async Task<ActionResult> DeleteStocksInwardDtl(int stocksInwardDtlId)
         {
-            var deleteQuoteItemById = await _siService.DeleteStocksInwardDtl(stocksInwardDtlId);
-            return Content(deleteQuoteItemById, "application/json");
+            var deleteStocksInwardDtl = await _siService.DeleteStocksInwardDtl(stocksInwardDtlId);
+            return Content(deleteStocksInwardDtl, "application/json");
             //return Ok(quoteById);            
         }
     }

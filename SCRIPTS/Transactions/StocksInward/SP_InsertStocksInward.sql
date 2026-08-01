@@ -188,8 +188,8 @@ BEGIN TRY
             ItemAmount,
             ItemDiscountPercentage,
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -204,7 +204,7 @@ BEGIN TRY
             ItemCode,
 
             ItemDesc,
-            ItemQty,
+            ItemQuantity,
             InwardQty,
             AcceptedQty,
             ItemRate,
@@ -212,8 +212,8 @@ BEGIN TRY
             ItemAmount,
             ItemDiscountPercentage,
             ItemDiscountAmount,
-            TaxPercentage,
-            TaxAmount,
+            ItemTaxPercentage,
+            ItemTaxAmount,
 
             ItemTotalAmount,
             CreatedUserId,
@@ -228,7 +228,7 @@ BEGIN TRY
             ItemCode                   NVARCHAR(50),
             ItemDesc                   NVARCHAR(500),
 
-            ItemQty                    DECIMAL(18,2),
+            ItemQuantity               DECIMAL(18,2),
             InwardQty                  DECIMAL(18,2),
             AcceptedQty                DECIMAL(18,2),
             ItemRate                   DECIMAL(18,2),
@@ -236,8 +236,8 @@ BEGIN TRY
             
             ItemDiscountPercentage     DECIMAL(18,2),
             ItemDiscountAmount         DECIMAL(18,2),
-            TaxPercentage              DECIMAL(18,2),
-            TaxAmount                  DECIMAL(18,2),
+            ItemTaxPercentage              DECIMAL(18,2),
+            ItemTaxAmount                  DECIMAL(18,2),
             ItemTotalAmount            DECIMAL(18,2),
             
             CreatedUserId               INT,

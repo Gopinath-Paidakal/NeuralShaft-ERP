@@ -75,9 +75,9 @@ namespace NeuralShaft.Server.Controllers.Purchase
         }
 
         [HttpPost("DeletePurchaseOrderDtl/{purchaseOrderDtlId}")]
-        public async Task<ActionResult> DeletePurchaseOrderDtl(int taxInvDtlId)
+        public async Task<ActionResult> DeletePurchaseOrderDtl(int purchaseOrderDtlId)
         {
-            var deletePODtl = await _poService.DeletePurchaseOrderDtl(taxInvDtlId);
+            var deletePODtl = await _poService.DeletePurchaseOrderDtl(purchaseOrderDtlId);
             return Content(deletePODtl, "application/json");
             //return Ok(quoteById);            
         }

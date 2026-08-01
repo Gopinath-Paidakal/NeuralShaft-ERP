@@ -40,7 +40,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Stocks
         public async Task<string> UpdateStocksInwardHdr(int stocksInwardHdrId, object stocksInward)
         {
             var updateStockInward = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateStocksInwardHdr",
-                              new { @StocksInwardHdrId = stocksInwardHdrId, @StocksInwardUpdate = stocksInward.ToString() });
+                              new { @StocksInwardHdrId = stocksInwardHdrId, @StocksInwardHdr = stocksInward.ToString() });
             return (updateStockInward);
         }
 
@@ -48,7 +48,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Stocks
       
         public async Task<string> InsertStocksInwardDtl(object siInwardDtl)
         {
-            string insertSIDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertStocksInwardDtl", new { @SiInwardDtl = siInwardDtl.ToString() });
+            string insertSIDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_InsertStocksInwardDtl", new { @StocksInwardDtl = siInwardDtl.ToString() });
             return (insertSIDtl);
         }
 
@@ -56,13 +56,13 @@ namespace NeuralShaft.Service.ServiceImplementation.Stocks
         {
             return await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateStocksInwardDtl", new {
                                                 @StocksInwardDtlId = stocksInwardDtlId,
-                                                @SIInwardDtl = siInwardDtl.ToString() });
+                                                @StocksInwardDtl = siInwardDtl.ToString() });
         }
 
         public async Task<string> DeleteStocksInwardDtl(int stocksInwardDtlId)
         {
             var deleteSIDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeleteStocksInwardDtl",
-                                  new { @TaxInvDtlId = stocksInwardDtlId });
+                                  new { @StocksInwardDtlId = stocksInwardDtlId });
 
             return deleteSIDtl;
         }

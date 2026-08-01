@@ -36,7 +36,7 @@ namespace NeuralShaft.Service.ServiceImplementation.Purchase
         public async Task<string> UpdatePurchaseOrderHdr(int purchaseOrderHdrId, object purchaseOrder)
         {
             var updatePO = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdatePurchaseOrderHdr",
-                               new { @PurchaseOrderHdrId = purchaseOrderHdrId, @PurchaseOrderUpdate = purchaseOrder.ToString() });
+                               new { @PurchaseOrderHdrId = purchaseOrderHdrId, @PurchaseOrderHdr = purchaseOrder.ToString() });
             return (updatePO);
         }
 
@@ -56,10 +56,10 @@ namespace NeuralShaft.Service.ServiceImplementation.Purchase
 
         public async Task<string> DeletePurchaseOrderDtl(int purchaseOrderDtlId)
         {
-            var deleteTaxInvDtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeletePurchaseOrderDtl",
+            var deletePODtl = await _repoJSon.ExecuteJsonSPWithParameter("SP_DeletePurchaseOrderDtl",
                                   new { @PurchaseOrderDtlId = purchaseOrderDtlId });
 
-            return deleteTaxInvDtl;
+            return deletePODtl;
         }
 
 

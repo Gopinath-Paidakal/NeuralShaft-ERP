@@ -1,8 +1,8 @@
 USE [NSERPLIVE]
 GO
 /****** Object:  StoredProcedure [dbo].[SP_UpdateStockInwardDtl]    Script Date: 30/07/2026 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateStockInwardDtl]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SP_UpdateStockInwardDtl]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_UpdateStocksInwardDtl]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[SP_UpdateStocksInwardDtl]
 GO
 
 USE [NSERPLIVE]
@@ -12,7 +12,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SP_UpdateStockInwardDtl]
+CREATE PROCEDURE [dbo].[SP_UpdateStocksInwardDtl]
 (
 	@StocksInwardDtlId int,	
 	@StocksInwardDtl nvarchar(Max)
@@ -47,8 +47,8 @@ BEGIN TRY
 
             D.ItemDiscountPercentage   = J.ItemDiscountPercentage,
             D.ItemDiscountAmount       = J.ItemDiscountAmount,
-            D.TaxPercentage            = J.TaxPercentage,
-            D.TaxAmount                = J.TaxAmount,
+            D.ItemTaxPercentage        = J.ItemTaxPercentage,
+            D.ItemTaxAmount            = J.ItemTaxAmount,
             D.ItemTotalAmount          = J.ItemTotalAmount,
 
             D.ModifiedUserId           = J.ModifiedUserId,
@@ -73,9 +73,9 @@ BEGIN TRY
                 ItemAmount              DECIMAL(18,2),
                 ItemDiscountPercentage  DECIMAL(18,2),
                 ItemDiscountAmount      DECIMAL(18,2),
-                TaxPercentage           DECIMAL(18,2),
+                ItemTaxPercentage           DECIMAL(18,2),
 
-                TaxAmount               DECIMAL(18,2),
+                ItemTaxAmount               DECIMAL(18,2),
                 ItemTotalAmount         DECIMAL(18,2),
 
                 ModifiedUserId          INT,

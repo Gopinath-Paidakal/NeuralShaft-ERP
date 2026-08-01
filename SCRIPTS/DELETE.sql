@@ -67,11 +67,11 @@
 --Delete from DeliveryChallanHdr
 --Delete from DeliveryChallanDtl
 
-Delete from PurchaseOrderHdr
-Delete from PurchaseOrderDtl
+--Delete from PurchaseOrderHdr
+--Delete from PurchaseOrderDtl
 
---Delete from StocksInwardHdr
---Delete from StocksInwardDtl
+Delete from StocksInwardHdr
+Delete from StocksInwardDtl
 
 --Delete from StockBatch
 --Delete from StockTrn

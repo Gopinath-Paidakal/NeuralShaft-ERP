@@ -16,7 +16,7 @@ GO
 CREATE PROCEDURE [dbo].[SP_UpdatePurchaseOrderHdr]
 (
     @PurchaseOrderHdrId int,
-	@PurchaseOrderUpdate NVARCHAR(MAX)
+	@PurchaseOrderHdr NVARCHAR(MAX)
 
 )
 ----With Encryption
@@ -51,14 +51,9 @@ BEGIN TRY
             H.PODeliveryTerms           = J.PODeliveryTerms,
 
             H.POProductAmount           = J.POProductAmount,
-            H.PODiscountPercentage      = J.PODiscountPercentage,
             H.PODiscountAmount          = J.PODiscountAmount,
-            H.POTaxPercentage           = J.POTaxPercentage,
-            
-            H.ItemTotalAmount           = J.ItemTotalAmount,
-            H.POSubTotal                = J.POSubTotal,
-            H.POTaxAmount               = J.POTaxAmount,
-            H.POGrandTotal              = J.POGrandTotal,
+            H.POTaxAmount               = J.POTaxAmount,            
+            H.POTotalAmount             = J.POTotalAmount,
 
             H.ModifiedUserId            = J.ModifiedUserId,
             H.ModifiedDate              = J.ModifiedDate
@@ -68,7 +63,7 @@ BEGIN TRY
         INNER JOIN
         (
             SELECT *
-            FROM OPENJSON(@PurchaseOrderUpdate, '$.PurchaseOrderHdr')
+            FROM OPENJSON(@PurchaseOrderHdr, '$.PurchaseOrderHdr')
             WITH
             (
                 PurchaseOrderHdrId      INT,
@@ -91,15 +86,10 @@ BEGIN TRY
                 PODeliveryTerms         NVARCHAR(100),
 
                 POProductAmount         DECIMAL(18,2),
-                PODiscountPercentage    DECIMAL(18,2),
                 PODiscountAmount        DECIMAL(18,2),
-                POTaxPercentage         DECIMAL(18,2),
-                
-                ItemTotalAmount         DECIMAL(18,2),
-                POSubTotal              DECIMAL(18,2),
                 POTaxAmount             DECIMAL(18,2),
-                POGrandTotal            DECIMAL(18,2),
-
+                POTotalAmount         DECIMAL(18,2),
+                
                 ModifiedUserId          INT,
                 ModifiedDate            DATE
 
