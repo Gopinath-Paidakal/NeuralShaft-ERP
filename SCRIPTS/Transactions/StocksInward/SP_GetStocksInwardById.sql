@@ -74,6 +74,9 @@ BEGIN TRY
                [StocksInwardDtlId]
               ,[StocksInwardHdrId]
               ,[ItemId]
+              ,[ItemCode]
+              ,[ItemName]
+              ,[ItemHSNCode]
               ,[ItemDesc]
 
               ,[ItemQuantity]

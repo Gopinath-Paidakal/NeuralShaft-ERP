@@ -59,6 +59,27 @@ BEGIN TRY
                 WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
                 --===============================================
               
+                -----=======================================================
+                ----- Updating the ItemStockQty in item master
+                -----=======================================================
+                Declare @ItemStockQty decimal(18,2)
+                Declare @itemId int
+                Declare @AcceptedQty decimal(18,2)
+                Declare @ItemDespatchQty decimal(18,2)
+
+                --set @ItemId = JSON_VALUE(@StocksInwardDtl,'$.ItemId')
+                --set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.AcceptedQty')
+
+                set @ItemId = (Select ItemId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
+                set @AcceptedQty = (Select ItemId from Item where ItemId = @ItemId)
+                set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
+
+                set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+
+                Update item set ItemDespatchQty = ( @ItemDespatchQty - @AcceptedQty),
+                                ItemStockQty = (@ItemStockQty - @AcceptedQty) 
+                                where ItemId = @ItemId
+
 
 
 

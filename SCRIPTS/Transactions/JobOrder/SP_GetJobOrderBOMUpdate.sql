@@ -74,6 +74,7 @@ BEGIN TRY
 
               ,[Item].[ItemId]
               ,[Item].[ItemName]
+              ,[Item].[ItemStockQty]
 
               ,[ItemQty]
               ,[ItemReqdQty]

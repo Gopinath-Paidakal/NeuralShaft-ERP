@@ -120,6 +120,8 @@ BEGIN TRY
               ,[SuppItemName]
               ,[ItemDesc]
               ,[ItemRemarks]
+              ,[ItemInwardQty]
+              ,[ItemDespatchQty]
               ,[ItemStockQty]
               ,[ItemMinQty]
               

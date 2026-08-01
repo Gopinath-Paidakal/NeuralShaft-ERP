@@ -274,133 +274,176 @@ BEGIN TRY
                 WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
                 --===============================================
 
-    ---=======================================================
-    --- Inserting StockBatch
-    --========================================================
-    Declare @ItemId Numeric(18,2)
-    Declare @ItemQty Numeric(18,2)
-    Declare @ItemRate Numeric(18,2)
-    Declare @WareHouseId int
-    Declare @CreatedUserId int
-    Declare @CreatedDate date
-   
-    Set @WareHouseId = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardHdr.WareHouseId')
-    Set @CreatedUserId = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardHdr.CreatedUserId')
-    Set @CreatedDate = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardHdr.CreatedDate')
 
-    Set @ItemId = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardDtl[0].ItemId')
-    Set @ItemQty = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardDtl[0].ItemQty')
-    Set @ItemRate = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardDtl[0].ItemRate')
+        -----=======================================================
+        ----- Updating the ItemStockQty in item master
+        -----=======================================================
+        Declare @ItemStockQty decimal(18,2)
+        Declare @itemId int
+        Declare @ItemInwardQty decimal(18,2)
+        Declare @AcceptedQty decimal(18,2)
+
+        SELECT
+                @ItemId = ItemId,
+                @AcceptedQty = AcceptedQty
+                FROM OPENJSON(@StocksInwardHdr,'$.StocksInwardDtl')
+        WITH
+        (
+            ItemId INT,
+            AcceptedQty DECIMAL(18,2)
+        );
+
+        --set @ItemId = JSON_VALUE(@StocksInwardHdr,'$.StocksInwardDtl[0].ItemId')
+        --set @AcceptedQty = JSON_VALUE(@StocksInwardHdr,'$.StocksInwardDtl[0].AcceptedQty')
+
+        --set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
+
+        --set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+
+        --Update item set ItemInwardQty = (@ItemInwardQty + @AcceptedQty),  
+        --                ItemStockQty  = (@ItemStockQty + @AcceptedQty) where ItemId = @ItemId
+
+        UPDATE I
+        SET
+            I.ItemInwardQty = ISNULL(I.ItemInwardQty, 0) + J.AcceptedQty,
+            I.ItemStockQty  = ISNULL(I.ItemStockQty, 0) + J.AcceptedQty
+        FROM Item I
+        INNER JOIN OPENJSON(@StocksInwardHdr, '$.StocksInwardDtl')
+        WITH
+        (
+            ItemId INT,
+            AcceptedQty DECIMAL(18,2)
+        ) J
+        ON I.ItemId = J.ItemId;
+
+
+    -----=======================================================
+    ----- Inserting StockBatch
+    ----========================================================
+    --Declare @ItemId Numeric(18,2)
+    --Declare @ItemQty Numeric(18,2)
+    --Declare @ItemRate Numeric(18,2)
+    --Declare @WareHouseId int
+    --Declare @CreatedUserId int
+    --Declare @CreatedDate date
+   
+    --Set @WareHouseId = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardHdr.WareHouseId')
+    --Set @CreatedUserId = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardHdr.CreatedUserId')
+    --Set @CreatedDate = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardHdr.CreatedDate')
+
+    --Set @ItemId = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardDtl[0].ItemId')
+    --Set @ItemQty = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardDtl[0].ItemQty')
+    --Set @ItemRate = JSON_VALUE(@StocksInwardHdr, '$.StocksInwardDtl[0].ItemRate')
 
         
-    INSERT INTO dbo.StockBatch
-        (
-            CompanyId,
-            BranchId,
-            WareHouseId,
-            ItemId,
-            BatchNo,
+    --INSERT INTO dbo.StockBatch
+    --    (
+    --        CompanyId,
+    --        BranchId,
+    --        WareHouseId,
+    --        ItemId,
+    --        BatchNo,
 
-            StocksInwardHdrId,
-            StocksInwardDtlId,
-            StocksInwardDate,
+    --        StocksInwardHdrId,
+    --        StocksInwardDtlId,
+    --        StocksInwardDate,
             
-            ReceivedQty,
-            BalanceQty,
-            PurchaseRate,
+    --        ReceivedQty,
+    --        BalanceQty,
+    --        PurchaseRate,
 
-            CreatedUserId,
-            CreatedDate
-        )
-        VALUES
-        (
-            @CompanyId,
-            @BranchId,
-            @WareHouseId,
-            @ItemId,
-            '',
+    --        CreatedUserId,
+    --        CreatedDate
+    --    )
+    --    VALUES
+    --    (
+    --        @CompanyId,
+    --        @BranchId,
+    --        @WareHouseId,
+    --        @ItemId,
+    --        '',
 
-            @StocksInwardHdrId,
-            @StocksInwardDtlId,
-            @CreatedDate,
+    --        @StocksInwardHdrId,
+    --        @StocksInwardDtlId,
+    --        @CreatedDate,
             
-            @ItemQty,
-            @ItemQty,
-            @ItemRate,
+    --        @ItemQty,
+    --        @ItemQty,
+    --        @ItemRate,
             
-            @CreatedUserId,
-            @CreatedDate
-        );
+    --        @CreatedUserId,
+    --        @CreatedDate
+    --    );
 
-        DECLARE @BatchId INT = SCOPE_IDENTITY();
+    --    DECLARE @BatchId INT = SCOPE_IDENTITY();
 
-        UPDATE StockBatch
-        SET BatchNo = 'B' + RIGHT('000000' + CAST(@BatchId AS VARCHAR(6)),6)
-        WHERE BatchId = @BatchId;
+    --    UPDATE StockBatch
+    --    SET BatchNo = 'B' + RIGHT('000' + CAST(@BatchId AS VARCHAR(6)),6)
+    --    WHERE BatchId = @BatchId;
 
      
-    ---=======================================================
-    --- Inserting StockTrn
-    --========================================================
-    INSERT INTO dbo.StockTrn
-        (
-            CompanyId,
-            BranchId,
-            WareHouseId,
+    -----=======================================================
+    ----- Inserting StockTrn
+    ----========================================================
+    --INSERT INTO dbo.StockTrn
+    --    (
+    --        CompanyId,
+    --        BranchId,
+    --        WareHouseId,
 
-            TrnDate,
-            TrnType,
+    --        TrnDate,
+    --        TrnType,
 
-            RefType,
-            RefHdrId,
-            RefDtlId,
+    --        RefType,
+    --        RefHdrId,
+    --        RefDtlId,
 
-            BatchId,
-            ItemId,
+    --        BatchId,
+    --        ItemId,
 
-            RecdQty,
-            IssuedQty,
-            BalanceQty,
+    --        RecdQty,
+    --        IssuedQty,
+    --        BalanceQty,
 
-            PurchaseRate,
-            IssueRate,
-            Amount,
+    --        PurchaseRate,
+    --        IssueRate,
+    --        Amount,
 
-            Remarks,
+    --        Remarks,
 
-            CreatedUserId,
-            CreatedDate
-        )
-        VALUES
-        (
-            @CompanyId,
-            @BranchId,
-            @WareHouseId,
+    --        CreatedUserId,
+    --        CreatedDate
+    --    )
+    --    VALUES
+    --    (
+    --        @CompanyId,
+    --        @BranchId,
+    --        @WareHouseId,
 
-            @CreatedDate,
-            'Purchase',
+    --        @CreatedDate,
+    --        'Purchase',
 
-            'Stock Inward',
-            @StocksInwardHdrId,
-            @StocksInwardDtlId,
+    --        'Stock Inward',
+    --        @StocksInwardHdrId,
+    --        @StocksInwardDtlId,
 
-            @BatchId,
-            @ItemId,
+    --        @BatchId,
+    --        @ItemId,
 
-            @ItemQty,
-            0,
-            @ItemQty,
+    --        @ItemQty,
+    --        0,
+    --        @ItemQty,
 
-            @ItemRate,
-            NULL,
+    --        @ItemRate,
+    --        NULL,
 
-            @ItemQty * @ItemRate,
+    --        @ItemQty * @ItemRate,
 
-            '',       ---@Remarks,
+    --        '',       ---@Remarks,
 
-            @CreatedUserId,
-            @CreatedDate
-        );
+    --        @CreatedUserId,
+    --        @CreatedDate
+    --    );
 
 
     Select @StocksInwardHdrId

@@ -70,8 +70,8 @@
 --Delete from PurchaseOrderHdr
 --Delete from PurchaseOrderDtl
 
-Delete from StocksInwardHdr
-Delete from StocksInwardDtl
+--Delete from StocksInwardHdr
+--Delete from StocksInwardDtl
 
 --Delete from StockBatch
 --Delete from StockTrn
@@ -105,8 +105,8 @@ Delete from StocksInwardDtl
 --delete from ProformaInvHdr
 --delete from ProformaInvDtl
 
-delete from TaxInvHdr
-delete from taxinvdtl
+--delete from TaxInvHdr
+--delete from taxinvdtl
 
 
 

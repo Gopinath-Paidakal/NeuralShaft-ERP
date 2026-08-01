@@ -23,13 +23,13 @@ AS
 SET NOCOUNT ON;
 BEGIN TRY
 
-         Declare @StocksInwardHdrId int
-       --Declare @ModifiedUserId int
-       --Declare @ModifiedDate date
+      Declare @StocksInwardHdrId int
+      Declare @itemId int
+      Declare @SIDtlItemQuantity decimal(18,2)
 
-       set @StocksInwardHdrId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.StocksInwardHdrId')
-       --set @ModifiedUserId = JSON_VALUE(@QuoteDtlItem, '$.ModifiedUserId')
-       --set @ModifiedDate = JSON_VALUE(@QuoteDtlItem, '$.ModifiedDate')
+      set @StocksInwardHdrId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.StocksInwardHdrId')
+      set @ItemId            = (Select ItemId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
+      set @SIDtlItemQuantity = (Select ItemQuantity from StocksInwardDtl where ItemId = @ItemId)
 
 	BEGIN TRANSACTION
 
@@ -113,6 +113,30 @@ BEGIN TRY
                 WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
                 --===============================================
 
+                -----=======================================================
+                ----- Updating the ItemStockQty in item master
+                -----=======================================================
+                   Declare @AcceptedQty decimal(18,2)
+                   Declare @ItemStockQty decimal(18,2)
+                   Declare @ItemInwardQty decimal(18,2)
+                   Declare @ItemDespatchQty decimal(18,2)
+
+                --- deducting the stock before update
+                set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+                set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
+                set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
+
+                Update item set ItemInwardQty = (@ItemInwardQty - @SIDtlItemQuantity),
+                                ItemStockQty = (@ItemStockQty - @SIDtlItemQuantity) 
+                                where ItemId = @ItemId
+
+                --- Adding the stock after update
+                set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.StocksInwardDtl.AcceptedQty')
+                Update item set ItemDespatchQty = (@ItemDespatchQty + @AcceptedQty),                
+                                ItemStockQty = (@ItemStockQty + @AcceptedQty) 
+                                where ItemId = @ItemId
+
+
     Select @StocksInwardDtlId
     
     COMMIT 
@@ -140,6 +164,8 @@ END TRY
 
 End_Prog:
         
+        --set @ItemId = JSON_VALUE(@StocksInwardDtl,'$.ItemId')
+        --set @ItemId = (Select ItemId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
 
          --QDI.ItemQuoteHdrId          = J.ItemQuoteHdrId,
               --QDI.ItemName                = J.ItemName,
