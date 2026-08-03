@@ -15,6 +15,8 @@ GO
 CREATE PROCEDURE [dbo].[SP_DeleteStocksInwardDtl]
 (
 	@StocksInwardDtlId int
+    --@StocksInwardDtl nvarchar(max)
+    
 )
 ----With Encryption
 AS
@@ -27,61 +29,54 @@ BEGIN TRY
        set @StocksInwardHdrId = (select StocksInwardHdrId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
       
 
-	BEGIN TRANSACTION
+	        BEGIN TRANSACTION
+            ----========================================================
+            ---- Update the InwardQty (-) in Item
+            --==========================================================
+              Declare @itemId int              
+              Declare @AcceptedQty decimal(18,2)
+              Declare @ItemInwardQty decimal(18,2)
+              
+              set @ItemId = (Select ItemId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
+              set @AcceptedQty = (Select AcceptedQty from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
+              set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
+
+              Update item set ItemInwardQty = (@ItemInwardQty - @AcceptedQty) where ItemId = @ItemId   
+
+
+            -----=======================================================
+            ----- Deleting StockInwardDtl
+            -----=======================================================
 
             Delete from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId
 
             ------------------------------------------------------------------
-        ------ Updating the totals in InvHdr
-        ------------------------------------------------------------------
+            ------ Updating the totals in InvHdr
+            ------------------------------------------------------------------
         
-           UPDATE H
-                SET
-                    H.SIProductAmount    = ISNULL(T.ItemAmount,0),
-                    H.SIDiscountAmount   = ISNULL(T.ItemDiscountAmount,0),
-                    H.SITaxAmount        = ISNULL(T.ItemTaxAmount,0),
-                    H.SITotalAmount      = ISNULL(T.ItemTotalAmount,0)
+               UPDATE H
+                    SET
+                        H.SIProductAmount    = ISNULL(T.ItemAmount,0),
+                        H.SIDiscountAmount   = ISNULL(T.ItemDiscountAmount,0),
+                        H.SITaxAmount        = ISNULL(T.ItemTaxAmount,0),
+                        H.SITotalAmount      = ISNULL(T.ItemTotalAmount,0)
                     
-                    FROM StocksInwardHdr H
+                        FROM StocksInwardHdr H
 
-                OUTER APPLY
-                (
-                    SELECT
-                        SUM(ItemAmount)          AS ItemAmount,
-                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
-                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
-                        SUM(ItemTotalAmount)     AS ItemTotalAmount
+                    OUTER APPLY
+                    (
+                        SELECT
+                            SUM(ItemAmount)          AS ItemAmount,
+                            SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
+                            SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                            SUM(ItemTotalAmount)     AS ItemTotalAmount
 
-                    FROM StocksInwardDtl D
-                    WHERE D.StocksInwardHdrId =  @StocksInwardHdrId  
-                ) T
+                        FROM StocksInwardDtl D
+                        WHERE D.StocksInwardHdrId =  @StocksInwardHdrId  
+                    ) T
 
-                WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
-                --===============================================
-              
-                -----=======================================================
-                ----- Updating the ItemStockQty in item master
-                -----=======================================================
-                Declare @ItemStockQty decimal(18,2)
-                Declare @itemId int
-                Declare @AcceptedQty decimal(18,2)
-                Declare @ItemDespatchQty decimal(18,2)
-
-                --set @ItemId = JSON_VALUE(@StocksInwardDtl,'$.ItemId')
-                --set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.AcceptedQty')
-
-                set @ItemId = (Select ItemId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
-                set @AcceptedQty = (Select ItemId from Item where ItemId = @ItemId)
-                set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
-
-                set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
-
-                Update item set ItemDespatchQty = ( @ItemDespatchQty - @AcceptedQty),
-                                ItemStockQty = (@ItemStockQty - @AcceptedQty) 
-                                where ItemId = @ItemId
-
-
-
+                    WHERE H.StocksInwardHdrId = @StocksInwardHdrId;  
+                    --===============================================
 
     Select @StocksInwardDtlId
     
@@ -90,6 +85,12 @@ BEGIN TRY
 END TRY
 
 
+--set @ItemId = JSON_VALUE(@StocksInwardDtl,'$.ItemId')
+              --set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.AcceptedQty')
+
+                --set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+
+                --Declare @ItemStockQty decimal(18,2)
 
 	BEGIN CATCH
 		ROLLBACK TRANSACTION

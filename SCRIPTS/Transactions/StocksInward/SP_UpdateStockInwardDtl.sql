@@ -26,10 +26,12 @@ BEGIN TRY
       Declare @StocksInwardHdrId int
       Declare @itemId int
       Declare @SIDtlItemQuantity decimal(18,2)
+      Declare @ItemInwardQty decimal(18,2)
 
       set @StocksInwardHdrId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.StocksInwardHdrId')
       set @ItemId            = (Select ItemId from StocksInwardDtl where StocksInwardDtlId = @StocksInwardDtlId)
-      set @SIDtlItemQuantity = (Select ItemQuantity from StocksInwardDtl where ItemId = @ItemId)
+      --set @SIDtlItemQuantity = (Select ItemQuantity from StocksInwardDtl where ItemId = @ItemId)
+      set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
 
 	BEGIN TRANSACTION
 
@@ -116,25 +118,50 @@ BEGIN TRY
                 -----=======================================================
                 ----- Updating the ItemStockQty in item master
                 -----=======================================================
-                   Declare @AcceptedQty decimal(18,2)
-                   Declare @ItemStockQty decimal(18,2)
-                   Declare @ItemInwardQty decimal(18,2)
-                   Declare @ItemDespatchQty decimal(18,2)
+                Declare @AcceptedQty decimal(18,2)
+
+                set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.StocksInwardDtl.AcceptedQty')
+
+                 --900                  1000
+                if (@AcceptedQty < @ItemInwardQty)
+                BEGIN
+                    --select ItemInwardQty = @ItemInwardQty - (@ItemInwardQty - @AcceptedQty)
+                    Update item set ItemInwardQty = @ItemInwardQty - (@ItemInwardQty - @AcceptedQty) where ItemId = @ItemId
+                ENd
+                --1100                     1000
+                if (@AcceptedQty > @ItemInwardQty)
+                BEGIN
+                    --select ItemInwardQty = @AcceptedQty
+                    Update item set ItemInwardQty = (@AcceptedQty) where ItemId = @ItemId
+                ENd
+
+                ----900                  1000
+                --if (@AcceptedQty < @ItemInwardQty)
+                --BEGIN
+                --    Update item set ItemInwardQty = (@ItemInwardQty - @AcceptedQty) where ItemId = @ItemId                                
+                --ENd
+                ----1100                     1000
+                --if (@AcceptedQty > @ItemInwardQty)
+                --BEGIN
+                --    Update item set ItemInwardQty = (@ItemInwardQty + @AcceptedQty) where ItemId = @ItemId                                
+                --ENd
+
+
+                ----- Adding the stock after update
+                --set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.StocksInwardDtl.AcceptedQty')
+                --Update item set ItemDespatchQty = (@ItemDespatchQty + @AcceptedQty)               
+                --                --ItemStockQty = (@ItemStockQty + @AcceptedQty) 
+                --                where ItemId = @ItemId
+
+                   --Declare @ItemStockQty decimal(18,2)
+                   --Declare @ItemInwardQty decimal(18,2)
+                   --Declare @ItemDespatchQty decimal(18,2)
+                   
 
                 --- deducting the stock before update
-                set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
-                set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
-                set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
-
-                Update item set ItemInwardQty = (@ItemInwardQty - @SIDtlItemQuantity),
-                                ItemStockQty = (@ItemStockQty - @SIDtlItemQuantity) 
-                                where ItemId = @ItemId
-
-                --- Adding the stock after update
-                set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.StocksInwardDtl.AcceptedQty')
-                Update item set ItemDespatchQty = (@ItemDespatchQty + @AcceptedQty),                
-                                ItemStockQty = (@ItemStockQty + @AcceptedQty) 
-                                where ItemId = @ItemId
+                --set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+                --set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
+                --set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
 
 
     Select @StocksInwardDtlId

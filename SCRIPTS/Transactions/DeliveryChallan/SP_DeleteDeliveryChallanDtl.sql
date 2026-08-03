@@ -29,32 +29,51 @@ BEGIN TRY
 
 	BEGIN TRANSACTION
 
+
+            ----========================================================
+            ---- Update the InwardQty (-) in Item
+            --==========================================================
+              Declare @itemId int              
+              Declare @ItemQuantity decimal(18,2)
+              Declare @ItemDespatchQty decimal(18,2)
+              
+              set @ItemId = (Select ItemId from DeliveryChallanDtl where DCDtlId = @DCDtlId)
+              set @ItemQuantity = (Select ItemQuantity from DeliveryChallanDtl where DCDtlId = @DCDtlId)
+
+              set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
+
+              Update item set ItemDespatchQty = (@ItemDespatchQty - @ItemQuantity) where ItemId = @ItemId   
+
+            -----=======================================================
+            ----- Deleting DeliveryChallanDtl
+            -----=======================================================
+
             Delete from DeliveryChallanDtl where DCDtlId = @DCDtlId
 
             ------------------------------------------------------------------
-        ------ Updating the totals in InvHdr
-        ------------------------------------------------------------------
+            ------ Updating the totals in InvHdr
+            ------------------------------------------------------------------
         
-          UPDATE H
-            SET
-                H.DCProductAmount        = ISNULL(T.ItemAmount,0),
-                H.DCDiscountAmount       = ISNULL(T.ItemDiscountAmount,0),
-                H.DCTaxAmount            = ISNULL(T.ItemTaxAmount,0),
-                H.DCTotalAmount      = ISNULL(T.ItemTotalAmount,0)
+              UPDATE H
+                SET
+                    H.DCProductAmount        = ISNULL(T.ItemAmount,0),
+                    H.DCDiscountAmount       = ISNULL(T.ItemDiscountAmount,0),
+                    H.DCTaxAmount            = ISNULL(T.ItemTaxAmount,0),
+                    H.DCTotalAmount      = ISNULL(T.ItemTotalAmount,0)
                     
-                FROM DeliveryChallanHdr H
+                    FROM DeliveryChallanHdr H
 
-            OUTER APPLY
-            (
-                SELECT
-                    SUM(ItemAmount)          AS ItemAmount,
-                    SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
-                    SUM(ItemTaxAmount)       AS ItemTaxAmount,
-                    SUM(ItemTotalAmount)     AS ItemTotalAmount
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(ItemAmount)          AS ItemAmount,
+                        SUM(ItemDiscountAmount)  AS ItemDiscountAmount,
+                        SUM(ItemTaxAmount)       AS ItemTaxAmount,
+                        SUM(ItemTotalAmount)     AS ItemTotalAmount
 
-                FROM DeliveryChallanDtl D
-                WHERE D.DCHdrId =  @DCHdrId  -- H.ItemQuoteHdrId
-            ) T
+                    FROM DeliveryChallanDtl D
+                    WHERE D.DCHdrId =  @DCHdrId  -- H.ItemQuoteHdrId
+                ) T
 
             WHERE H.DCHdrId = @DCHdrId;  
             --===============================================

@@ -122,7 +122,8 @@ BEGIN TRY
               ,[ItemRemarks]
               ,[ItemInwardQty]
               ,[ItemDespatchQty]
-              ,[ItemStockQty]
+              ,([ItemInwardQty] - [ItemDespatchQty]) as 'ItemStockQty'
+              --,[ItemStockQty]
               ,[ItemMinQty]
               
               ,[ItemMaxQty]

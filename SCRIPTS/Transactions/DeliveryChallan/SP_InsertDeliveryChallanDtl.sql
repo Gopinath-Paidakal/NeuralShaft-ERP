@@ -136,6 +136,22 @@ BEGIN TRY
             WHERE H.DCHdrId = @DCHdrId;  
             --===============================================
 
+             -----=======================================================
+             ----- Updating the ItemStockQty in item master
+             -----=======================================================
+                Declare @ItemStockQty decimal(18,2)
+                Declare @itemId int
+                Declare @ItemDespatchQty decimal(18,2)
+                Declare @ItemQuantity decimal(18,2)
+
+                set @ItemId        = JSON_VALUE(@DeliveryChallanDtl,'$.DeliveryChallanDtl.ItemId')
+                set @ItemQuantity  = JSON_VALUE(@DeliveryChallanDtl,'$.DeliveryChallanDtl.ItemQuantity')
+
+                set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
+
+                Update item set ItemDespatchQty = (@ItemDespatchQty + @ItemQuantity) where ItemId = @ItemId 
+                
+
     Select @DCDtlId
 
     COMMIT TRANSACTION
@@ -161,8 +177,10 @@ END TRY
 	END CATCH
 
 End_Prog:
-        
 
+--set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+        
+        --Update Item set ItemStockQty = (@ItemStockQty + @ItemQuantity)  where ItemId = @ItemId
         --Declare @CompanyId int
 	--Declare @BranchId int
 	--Declare @ItemQuoteNo int

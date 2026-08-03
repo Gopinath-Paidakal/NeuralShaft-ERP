@@ -105,6 +105,8 @@ BEGIN TRY
 						  AND cm.ParentMenuId IS NOT NULL
 					)
 			) x
+			ORDER BY x.DisplayOrder, x.ParentMenuId, x.MenuName
+			
 			--order by x.MenuName
 
 			--Order by x.DisplayOrder;)

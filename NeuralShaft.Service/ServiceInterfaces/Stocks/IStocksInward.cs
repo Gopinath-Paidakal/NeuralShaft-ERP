@@ -17,6 +17,6 @@ namespace NeuralShaft.Service.ServiceInterfaces.Stocks
 
         Task<string> UpdateStocksInwardDtl(int stocksInwardDtlId, object siInwardDtl);
 
-        Task<string> DeleteStocksInwardDtl(int stocksInwardDtlId);
+        Task<string> DeleteStocksInwardDtl(int stocksInwardDtlId);   //, object siInwardDtl);
     }
 }

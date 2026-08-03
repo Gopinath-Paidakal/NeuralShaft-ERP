@@ -23,9 +23,14 @@ SET NOCOUNT ON;
 
 BEGIN TRY
 
+       Declare @CompanyId int
+	   Declare @BranchId int
+
        Declare @StocksInwardDtlId int
        Declare @StocksInwardHdrId int
-     
+
+       set @CompanyId = (Select CompanyId from Company)
+	   set @BranchId = (Select BranchId from Branch)
 
        set @StocksInwardHdrId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.StocksInwardHdrId')
      
@@ -143,15 +148,80 @@ BEGIN TRY
                 Declare @ItemInwardQty decimal(18,2)
                 Declare @AcceptedQty decimal(18,2)
 
-                set @ItemId = JSON_VALUE(@StocksInwardDtl,'$.ItemId')
+                set @ItemId = JSON_VALUE(@StocksInwardDtl,'$.StocksInwardDtl.ItemId')
                 set @AcceptedQty = JSON_VALUE(@StocksInwardDtl,'$.StocksInwardDtl.AcceptedQty')
                 set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
 
-                set @ItemStockQty = (Select ItemStockQty from item where ItemId = @ItemId)
+                set @ItemInwardQty = (Select ItemInwardQty from item where ItemId = @ItemId)
 
-                Update item set ItemInwardQty = (@ItemInwardQty + @AcceptedQty),  
-                                ItemStockQty  = (@ItemStockQty + @AcceptedQty) where ItemId = @ItemId
+                Update item set ItemInwardQty = (@ItemInwardQty + @AcceptedQty) where ItemId = @ItemId 
+                --Update Item set ItemStockQty = (@ItemStockQty + @AcceptedQty)  where ItemId = @ItemId
 
+                --=======================================================================================
+
+                -----=======================================================
+                ----- Inserting StockBatch
+                ----========================================================
+                --Declare @ItemId Numeric(18,2)
+                Declare @ItemQty Numeric(18,2)
+                Declare @ItemRate Numeric(18,2)
+                Declare @WareHouseId int
+                Declare @CreatedUserId int
+                Declare @CreatedDate date
+   
+                Set @WareHouseId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.WareHouseId')
+                Set @CreatedUserId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.CreatedUserId')
+                Set @CreatedDate = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl.CreatedDate')
+
+                Set @ItemId = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl[0].ItemId')
+                Set @ItemQty = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl[0].ItemQty')
+                Set @ItemRate = JSON_VALUE(@StocksInwardDtl, '$.StocksInwardDtl[0].ItemRate')
+
+        
+                INSERT INTO dbo.StockBatch
+                    (
+                        CompanyId,
+                        BranchId,
+                        WareHouseId,
+                        ItemId,
+                        BatchNo,
+
+                        StocksInwardHdrId,
+                        StocksInwardDtlId,
+                        StocksInwardDate,
+            
+                        ReceivedQty,
+                        BalanceQty,
+                        PurchaseRate,
+
+                        CreatedUserId,
+                        CreatedDate
+                    )
+                    VALUES
+                    (
+                        @CompanyId,
+                        @BranchId,
+                        @WareHouseId,
+                        @ItemId,
+                        '',
+
+                        @StocksInwardHdrId,
+                        @StocksInwardDtlId,
+                        @CreatedDate,
+            
+                        @ItemQty,
+                        @ItemQty,
+                        @ItemRate,
+            
+                        @CreatedUserId,
+                        @CreatedDate
+                    );
+
+                    DECLARE @BatchId INT = SCOPE_IDENTITY();
+
+                    UPDATE StockBatch
+                    SET BatchNo = 'B' + RIGHT('000' + CAST(@BatchId AS VARCHAR(6)),6)
+                    WHERE BatchId = @BatchId;
 
     Select @StocksInwardDtlId
 

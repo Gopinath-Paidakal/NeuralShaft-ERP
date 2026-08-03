@@ -24,8 +24,14 @@ SET NOCOUNT ON;
 BEGIN TRY
 
          Declare @DCHdrId int
+         Declare @itemId int
+         Declare @ItemDespatchQty decimal(18,2)
 
          set @DCHdrId = JSON_VALUE(@DeliveryChallanDtl, '$.DeliveryChallanDtl.DCHdrId ')
+         set @ItemId  = (Select ItemId from DeliveryChallanDtl where DCDtlId = @DCDtlId)
+         --set @SIDtlItemQuantity = (Select ItemQuantity from StocksInwardDtl where ItemId = @ItemId)
+         set @ItemDespatchQty = (Select ItemDespatchQty from item where ItemId = @ItemId)
+
        
 	BEGIN TRANSACTION
 
@@ -92,6 +98,26 @@ BEGIN TRY
 
             WHERE H.DCHdrId = @DCHdrId;  
             --===============================================
+
+             -----=======================================================
+                ----- Updating the ItemStockQty in item master
+                -----=======================================================
+                Declare @ItemQuantity decimal(18,2)
+
+                set @ItemQuantity = JSON_VALUE(@DeliveryChallanDtl,'$.DeliveryChallanDtl.ItemQuantity')
+
+                 --900                  1000
+                if (@ItemQuantity < @ItemDespatchQty)
+                BEGIN
+                    --select ItemInwardQty = @ItemInwardQty - (@ItemInwardQty - @ItemQuantity)
+                    Update item set ItemDespatchQty = @ItemDespatchQty - (@ItemDespatchQty - @ItemQuantity) where ItemId = @ItemId
+                ENd
+                --1100                     1000
+                if (@ItemQuantity > @ItemDespatchQty)
+                BEGIN
+                    --select ItemInwardQty = @ItemQuantity
+                    Update item set ItemDespatchQty = (@ItemQuantity) where ItemId = @ItemId
+                ENd
 
     Select @DCDtlId
     

@@ -243,10 +243,42 @@ BEGIN TRY
             WHERE H.DCHdrId = @DCHdrId;  
             --===============================================
 
+        -----=======================================================
+        ----- Updating the ItemStockQty in item master
+        -----=======================================================
+        Declare @ItemStockQty decimal(18,2)
+        Declare @itemId int
+        Declare @ItemDespatchQty decimal(18,2)
+        Declare @ItemQuantity decimal(18,2)
+
+        SELECT
+                @ItemId = ItemId,
+                @ItemQuantity = ItemQuantity
+                FROM OPENJSON(@DeliveryChallan,'$.DeliveryChallanDtl')
+        WITH
+        (
+            ItemId INT,
+            ItemQuantity DECIMAL(18,2)   
+        );
+     
+        UPDATE I
+        SET
+            I.ItemDespatchQty = ISNULL(I.ItemDespatchQty, 0) + J.ItemQuantity,
+            I.ItemStockQty  = ISNULL(I.ItemStockQty, 0) - J.ItemQuantity
+        FROM Item I
+        INNER JOIN OPENJSON(@DeliveryChallan, '$.DeliveryChallanDtl')
+        WITH
+        (
+            ItemId INT,
+            ItemQuantity DECIMAL(18,2)
+        ) J
+        ON I.ItemId = J.ItemId;
+
+
         ------====================================================
         ------ Insert in StockTrn
         ----------------------------------------------------------
-        Declare @ItemId Numeric(18,2)
+        ---Declare @ItemId Numeric(18,2)
         Declare @ItemQty Numeric(18,2)
         Declare @ItemRate Numeric(18,2)
         Declare @WareHouseId int
