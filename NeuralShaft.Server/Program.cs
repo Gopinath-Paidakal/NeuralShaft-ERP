@@ -19,6 +19,7 @@ using NeuralShaft.Service.ServiceImplementation.Enquiry;
 using NeuralShaft.Service.ServiceImplementation.JobOrder;
 using NeuralShaft.Service.ServiceImplementation.Login;
 using NeuralShaft.Service.ServiceImplementation.Masters;
+using NeuralShaft.Service.ServiceImplementation.MPL;
 using NeuralShaft.Service.ServiceImplementation.OrderApprove;
 using NeuralShaft.Service.ServiceImplementation.Previlege;
 using NeuralShaft.Service.ServiceImplementation.ProformaInvoice;
@@ -40,6 +41,7 @@ using NeuralShaft.Service.ServiceInterfaces.Enquiry;
 using NeuralShaft.Service.ServiceInterfaces.JobOrder;
 using NeuralShaft.Service.ServiceInterfaces.Login;
 using NeuralShaft.Service.ServiceInterfaces.Masters;
+using NeuralShaft.Service.ServiceInterfaces.MPL;
 using NeuralShaft.Service.ServiceInterfaces.OrderApprove;
 using NeuralShaft.Service.ServiceInterfaces.Previlege;
 using NeuralShaft.Service.ServiceInterfaces.ProformaInvoice;
@@ -163,6 +165,10 @@ builder.Services.AddScoped<IPurchaseOrder, PurchaseOrderService>();
 
 //------- Stocks Inward
 builder.Services.AddScoped<IStocksInward, StocksInwardService>();
+
+//------- MPL
+builder.Services.AddScoped<IMPL, MPLService>();
+
 
 //----- SMTP Setting for email services
 builder.Services.Configure<SmtpSettings>(
