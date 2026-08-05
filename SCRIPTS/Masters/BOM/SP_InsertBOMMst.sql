@@ -1,13 +1,13 @@
 USE [NSERPLIVE]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertBOMMst]    Script Date: 20/03/2026 ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertBOMMst]    Script Date: 05/08/2026 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SP_InsertBOMMst]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [dbo].[SP_InsertBOMMst]
 GO
 
 --USE [NSERPLIVE]
 --GO
---/****** Object:  StoredProcedure [dbo].[SP_InsertBOMMst]    Script Date: 20/03/2026  ******/
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -48,7 +48,7 @@ BEGIN TRY
 		   ,[ItemId]
 		   ,[ItemQty]
 
-		   --,[BOMMstType]
+		   ,[ItemStage]
            ,[CreatedUserId]
 		   ,[CreatedDate]
            )
@@ -59,7 +59,7 @@ BEGIN TRY
 			[ItemId],
 			[ItemQty],
 			
-			--[BOMMstType],
+			[ItemStage],
 			[CreatedUserId],
 			[CreatedDate]
 
@@ -72,7 +72,7 @@ BEGIN TRY
 		   [ItemId] int, 
            [ItemQty] numeric(18,2),
 		   
-		   --[BOMMstType] nvarchar(50),
+		   [ItemStage] nvarchar(50),
            CreatedUserId int,         
            CreatedDate nvarchar(20)
 	)

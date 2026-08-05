@@ -28,27 +28,42 @@ BEGIN TRY
 
 SELECT
 (
-	SELECT [BOMMstId]
-	  --,[BOMMstType]
-      ,[ProductId]
-      ,[AssemblyHdr].[AssemblyHdrId]
-      ,[AssemblyHdr].[AssemblyName]
+	SELECT
+      BOMMst.BOMMstId,
+      BOMMst.ProductId,
 
-      ,[Item].[ItemId]
-	  ,[Item].[ItemType]
-      ,[AssemblyItem].[ItemQty]
-      
-	  ,[Item].[ItemName]
-      ,[DefaultData].[DefaultDataName] as 'UOM'
-	  ,[Item].[ItemLength] as 'ItemLength'
-      
-	  FROM [dbo].[BOMMst]
-	  INNER JOIN [AssemblyHdr] On [AssemblyHdr].[AssemblyHdrId] = [BOMMst].[AssemblyHdrId]
-	  INNER JOIN [AssemblyItem] On [AssemblyItem].[AssemblyHdrId] = [AssemblyHdr].[AssemblyHdrId]
-	  INNER JOIN [Item] On [Item].[ItemId] = [AssemblyItem].[ItemId]
-	  INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+      AssemblyHdr.AssemblyHdrId,
+      AssemblyHdr.AssemblyName,
 
-	  Where [BOMMst].ProductId = @ProductId
+      Item.ItemId,
+      Item.ItemType,
+
+      CASE
+           WHEN BOMMst.AssemblyHdrId IS NULL
+                THEN BOMMst.ItemQty
+           ELSE AssemblyItem.ItemQty
+      END AS ItemQty,
+
+      Item.ItemName,
+      DefaultData.DefaultDataName AS UOM,
+      Item.ItemLength,
+      BOMMst.ItemStage
+
+	FROM BOMMst
+
+			LEFT JOIN AssemblyHdr ON AssemblyHdr.AssemblyHdrId = BOMMst.AssemblyHdrId
+			LEFT JOIN AssemblyItem ON AssemblyItem.AssemblyHdrId = AssemblyHdr.AssemblyHdrId
+			LEFT JOIN Item
+				   ON Item.ItemId =
+					  CASE
+						  WHEN BOMMst.AssemblyHdrId IS NULL
+							   THEN BOMMst.ItemId
+						  ELSE AssemblyItem.ItemId
+					  END
+
+			LEFT JOIN DefaultData ON DefaultData.DefaultDataId = Item.UomId
+
+			WHERE BOMMst.ProductId = @ProductId
 
 	  FOR JSON PATH, ROOT('BOMListByProdId')
 
@@ -75,6 +90,30 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+
+--SELECT [BOMMstId]
+--	  --,[BOMMstType]
+--      ,[ProductId]
+--      ,[AssemblyHdr].[AssemblyHdrId]
+--      ,[AssemblyHdr].[AssemblyName]
+
+--      ,[Item].[ItemId]
+--	  ,[Item].[ItemType]
+--      ,[AssemblyItem].[ItemQty]
+      
+--	  ,[Item].[ItemName]
+--      ,[DefaultData].[DefaultDataName] as 'UOM'
+--	  ,[Item].[ItemLength] as 'ItemLength'
+--	  ,[BOMMst].[ItemStage]
+      
+--	  FROM [dbo].[BOMMst]
+--	  LEFT JOIN [AssemblyHdr] On [AssemblyHdr].[AssemblyHdrId] = [BOMMst].[AssemblyHdrId]
+--	  LEFT JOIN [AssemblyItem] On [AssemblyItem].[AssemblyHdrId] = [AssemblyHdr].[AssemblyHdrId]
+--	  INNER JOIN [Item] On [Item].[ItemId] = [AssemblyItem].[ItemId]
+--	  INNER JOIN [DefaultData] ON [DefaultData].DefaultDataId = [Item].[UomId]
+
+--	  Where [BOMMst].ProductId = @ProductId
 
 --,[AssemblyHdrId]
       --,[ItemId]

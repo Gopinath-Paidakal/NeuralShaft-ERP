@@ -27,6 +27,7 @@ using NeuralShaft.Service.ServiceImplementation.Purchase;
 using NeuralShaft.Service.ServiceImplementation.Quotation;
 using NeuralShaft.Service.ServiceImplementation.QuotationAMC;
 using NeuralShaft.Service.ServiceImplementation.QuoteItem;
+using NeuralShaft.Service.ServiceImplementation.Receipt;
 using NeuralShaft.Service.ServiceImplementation.SaleOrderItem;
 using NeuralShaft.Service.ServiceImplementation.SalesOrder;
 using NeuralShaft.Service.ServiceImplementation.SalesOrderAMC;
@@ -49,6 +50,7 @@ using NeuralShaft.Service.ServiceInterfaces.Purchase;
 using NeuralShaft.Service.ServiceInterfaces.Quotation;
 using NeuralShaft.Service.ServiceInterfaces.QuotationAMC;
 using NeuralShaft.Service.ServiceInterfaces.QuoteItem;
+using NeuralShaft.Service.ServiceInterfaces.Receipt;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrder;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrderAMC;
 using NeuralShaft.Service.ServiceInterfaces.SalesOrderItem;
@@ -168,6 +170,10 @@ builder.Services.AddScoped<IStocksInward, StocksInwardService>();
 
 //------- MPL
 builder.Services.AddScoped<IMPL, MPLService>();
+
+//------- Receipt
+builder.Services.AddScoped<IReceipt, ReceiptService>();
+
 
 
 //----- SMTP Setting for email services

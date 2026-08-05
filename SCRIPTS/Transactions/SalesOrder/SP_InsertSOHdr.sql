@@ -105,6 +105,7 @@ BEGIN TRY
            ,[OrdClientHdrId]
 		   --,[OrdClientAddrId]
 
+		   ,[SOHType]
            ,[SOHNo]
 		   ,[SOHSlNo]
            ,[SOHDate]
@@ -143,6 +144,7 @@ BEGIN TRY
 		,@OrdClientHdrId
 		--,@OrdClientAddrId
 
+		,'SO_Product'
 		,@SOHNo
 		,@SOHSlNo
 
