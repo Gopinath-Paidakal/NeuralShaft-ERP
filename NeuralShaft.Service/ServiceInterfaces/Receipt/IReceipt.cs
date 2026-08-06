@@ -7,11 +7,11 @@ namespace NeuralShaft.Service.ServiceInterfaces.Receipt
     public interface IReceipt
     {
         Task<string> GetReceipt(string fromDate, string toDate);
-        Task<string> GetReceiptById(int receiptId);
-        Task<string> GetPaymentsByOrdClientId(int receiptId);
+        Task<string> GetReceiptById(int receiptHdrId);
+        Task<string> GetSOByOrdClientId(int ordClientHdrId);
 
         Task<string> InsertReceipt(object receipt);
-        Task<string> UpdateReceipt(int receiptId, object receipt);
+        Task<string> UpdateReceipt(int receiptHdrId, object receipt);
         //Task<string> DeleteReceipt(int receiptId);
     }
 }

@@ -24,16 +24,16 @@ namespace NeuralShaft.Service.ServiceImplementation.Receipt
             return GetReceipt;
         }
 
-        public async Task<string> GetReceiptById(int receiptId)
+        public async Task<string> GetReceiptById(int receiptHdrId)
         {
             var getReceiptById = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetReceiptById",
-                                  new { @ReceiptId = receiptId });
+                                  new { @ReceiptHdrId = receiptHdrId });
             return getReceiptById;
         }
 
-        public async Task<string> GetPaymentsByOrdClientId(int receiptId)
+        public async Task<string> GetSOByOrdClientId(int ordClientHdrId)
         {
-            string GetPaymentsByOrdClientId = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetPaymentsByOrdClientId", new { @OrdClientHdrId = receiptId });
+            string GetPaymentsByOrdClientId = await _repoJSon.ExecuteJsonSPWithParameter("SP_GetSOByOrdClientId", new { @OrdClientHdrId = ordClientHdrId });
             return GetPaymentsByOrdClientId;
         }
 
@@ -44,9 +44,11 @@ namespace NeuralShaft.Service.ServiceImplementation.Receipt
 
         }
 
-        public async Task<string> UpdateReceipt(int receiptId, object receipt)
+        public async Task<string> UpdateReceipt(int receiptHdrId, object receipt)
         {
-            throw new NotImplementedException();
+            string updateReceipt = await _repoJSon.ExecuteJsonSPWithParameter("SP_UpdateReceipt", new { @ReceiptHdrId = receiptHdrId, @Receipt = receipt.ToString() });
+            return (updateReceipt);
+
         }
 
         //public async Task<string> DeleteReceipt(int receiptId)

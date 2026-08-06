@@ -30,10 +30,11 @@ BEGIN TRY
 		  SELECT
 		(
 
-		SELECT [ReceiptId]
+		SELECT [ReceiptHdrId]
 			  --,[CompanyId]
 			  --,[BranchId]
-			  ,[Receipt].[OrdClientHdrId]
+			  ,[ReceiptHdr].[OrdClientHdrId]
+			  ,[OrdClientHdr].[OrdClientName]
 			  ,[ReceiptNo]
 			  ,[ReceiptDate]
 
@@ -47,14 +48,14 @@ BEGIN TRY
 			  ,[Amount]
 			  ,[TotalAmount]
      
-			FROM [dbo].[Receipt]
+			FROM [dbo].[ReceiptHdr]
 			
-			INNER JOIN [OrdClientHdr] ON [OrdClientHdr].[OrdClientHdrId] = [Receipt].[OrdClientHdrId]
+			INNER JOIN [OrdClientHdr] ON [OrdClientHdr].[OrdClientHdrId] = [ReceiptHdr].[OrdClientHdrId]
 
 			--- Both Date and Time-- best practice
-			WHERE [Receipt].[ReceiptDate] >= @FromDate AND [Receipt].[ReceiptDate] < DATEADD(DAY, 1, @ToDate)
+			WHERE [ReceiptHdr].[ReceiptDate] >= @FromDate AND [ReceiptHdr].[ReceiptDate] < DATEADD(DAY, 1, @ToDate)
 
-			Order by [Receipt].[ReceiptNo]
+			Order by [ReceiptHdr].[ReceiptNo]
 
 		
 			FOR JSON PATH, ROOT('Receipt')  -- ROOT WITHOUT_ARRAY_WRAPPER

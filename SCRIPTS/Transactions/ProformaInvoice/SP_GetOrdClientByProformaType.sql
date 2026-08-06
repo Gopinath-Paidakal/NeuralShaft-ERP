@@ -32,11 +32,19 @@ set @SOHDrId = (select SOHDrId from SOHdr where OrdClientHdrId = @OrdClientHdrId
              SET @JobOrderDtl = (
 
                SELECT 
-                    [JobOrder].SOHdrId,
-                    [JobOrder].JobOrderNo
+                    [JobOrder].[SOHdrId],
+                    [JobOrder].[JobOrderNo],
+                    
+                    [JobOrder].[SODtlId],
+                    [SODtl].[DDProductId] as 'ProductId'
+                    --[DefaultData].[DefaultDataId] as 'ProductId'
+
 
                FROM [dbo].[JobOrder]
-               where SOHdrId = @SOHDrId
+               INNER JOIN [SODtl] ON [SODtl].SODtlId = [JobOrder].[SODtlId]
+               INNER JOIN [DefaultData] ON [DefaultData].[DefaultDataId] = [SODtl].[DDProductId]
+
+               where [SODtl].[SOHdrId] = @SOHDrId
 
                 FOR JSON PATH   
             )

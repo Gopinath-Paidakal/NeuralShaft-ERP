@@ -9,24 +9,24 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[SP_GetReceiptById]
 (
-    @ReceiptId INT
+    @ReceiptHdrId INT
 )
 ----With Encryption
 AS
 SET NOCOUNT ON;
-DECLARE @Receipt           NVARCHAR(MAX)
-DECLARE @Payments          NVARCHAR(MAX)
+DECLARE @ReceiptHdr         NVARCHAR(MAX)
+DECLARE @ReceiptDtl         NVARCHAR(MAX)
 DECLARE @ReceiptHdrDtl      NVARCHAR(MAX)
 
 BEGIN TRY
 
 	Declare @OrdClientHdrId int
 
-	SET @OrdClientHdrId = (Select OrdClientHdrId from Receipt where ReceiptId = @ReceiptId)
+	SET @OrdClientHdrId = (Select OrdClientHdrId from ReceiptHdr where ReceiptHdrId = @ReceiptHdrId)
     
-    SET @Receipt = (
+    SET @ReceiptHdr = (
       
-        SELECT [ReceiptId]
+        SELECT [ReceiptHdrId]
 			  --,[CompanyId]
 			  --,[BranchId]
 			  ,[OrdClientHdrId]
@@ -43,97 +43,48 @@ BEGIN TRY
 			  ,[Amount]
 			  ,[TotalAmount]
      
-			FROM [dbo].[Receipt]
+			FROM [dbo].[ReceiptHdr]
 			
 
-        WHERE ReceiptId = @ReceiptId
+        WHERE ReceiptHdrId = @ReceiptHdrId
         FOR JSON PATH
     )
 
-    SET @Payments = (
+    SET @ReceiptDtl = (
 
-         SELECT *
-			FROM
-		(
-		   SELECT 
+			SELECT [ReceiptDtlId]
+			  ,[ReceiptHdrId]
+			  ,[TableName]
+			  ,[TableId]
+			  ,[OrdClientHdrId]
 
-			'SOHDr' as 'Table',
-			SoHdrId as 'Id',
-			OrdClientHdr.OrdClientHdrId,
-			OrdClientHdr.OrdClientName,
-			SOHSlNo as 'DocNo',
+			  ,[OrdClientName]
+			  ,[DocNo]
+			  ,[Type]
+			  ,[OrderAmount]
+			  ,[DiscountAmount]
+			  
+			  ,[TaxAmount]
+			  ,[TotalAmount]
+			  ,[Paid]
+			  --,[Balance]
+			  ,[TotalAmount]-[Paid] as 'Balance'
 
-			SOHType as 'Type',
-			OrdSubTotal as 'Order Amount',
-			0 as 'DiscountAmount',
-			OrdTax as 'GST Amount',
-			OrdTotalAmount as 'Total Amount',
+			  --,[CreatedUserId]
+			  --,[CreatedDate]
 
-			OrdPayments as 'Paid',
-			(OrdTotalAmount - OrdPayments) as 'Balance'
-
-			from SOHDr 
-			inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = SOHDr.OrdClientHdrId
-
-			where OrdClientHdr.OrdClientHdrId = @OrdClientHdrId --and OrdTotalAmount > 0
-
-			union all
-
-			select 
-				'QuoteSOItemHdr' as 'Table',
-				QuoteSOItemHdrId as 'Id',
-				OrdClientHdr.OrdClientHdrId,
-				OrdClientHdr.OrdClientName,
-				QuoteSOItemSlNo  as 'DocNo',
-				
-				QuoteSOItemType as 'Type',
-				QuoteSOItemAmount as 'Order Amount', 
-				QuoteSOItemDiscountAmount as 'DiscountAmount', 
-				QuoteSOItemTaxAmount 'GST Amount',
-				QuoteSOItemTotalAmount,
-
-				OrderSOItemPayments as 'Paid',  
-				(QuoteSOItemTotalAmount - OrderSOItemPayments)  as 'Balance'
-
-			from QuoteSOItemHdr 
-			inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = QuoteSOItemHdr.OrdClientHdrId
-			where OrdClientHdr.OrdClientHdrId = @OrdClientHdrId ---and QuoteSOItemTotalAmount > 0
-
-			union all
-
-			select 
-				'QuoteSOAMCHdr' as 'Table',
-				QuoteSOAMCHdrId as 'Id',
-				OrdClientHdr.OrdClientHdrId,
-				OrdClientHdr.OrdClientName,
-				QuoteSOAMCSlNo as 'DocNo',
-
-				QuoteSOAMCType as 'Type',
-				QuoteSOAMCAmount as 'Order Amount', 
-				QuoteSOAMCDiscountAmount as 'DiscountAmount', 
-				QuoteSOAMCTaxAmount 'GST Amount',
-				QuoteSOAMCTotalAmount,
-
-				OrderSOAMCPayments as 'Paid',
-				(QuoteSOAMCTotalAmount - OrderSOAMCPayments) as 'Balance'
-
-			from QuoteSOAMCHdr 
-			inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = QuoteSOAMCHdr.OrdClientHdrId
-			where OrdClientHdr.OrdClientHdrId = @OrdClientHdrId 
-
-			) Payments
-          
-        --WHERE StocksInwardHdrId = @StocksInwardHdrId
-
+			  --,[ModifiedUserId]
+			  --,[ModifiedDate]
+		  FROM [dbo].[ReceiptDtl]
+		  WHERE ReceiptHdrId = @ReceiptHdrId
+		
         FOR JSON PATH    
     )
 
-   
-
     SET @ReceiptHdrDtl = (
         SELECT
-            JSON_QUERY(@Receipt)  AS  Receipt,
-            JSON_QUERY(@Payments) AS  Payments
+            JSON_QUERY(@ReceiptHdr)  AS  ReceiptHdr,
+            JSON_QUERY(@ReceiptDtl) AS  ReceiptDtl
             
         FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
     )
@@ -153,3 +104,78 @@ BEGIN CATCH
     SET @ErrMsg       = @ErrMsg + ' / ' + ISNULL(@ErrProcedure, '')
     RAISERROR(@ErrMsg, @ErrSeverity, 1)
 END CATCH
+
+
+
+  --       SELECT *
+		--	FROM
+		--(
+		--   SELECT 
+
+		--	'SOHDr' as 'Table',
+		--	SoHdrId as 'Id',
+		--	OrdClientHdr.OrdClientHdrId,
+		--	OrdClientHdr.OrdClientName,
+		--	SOHSlNo as 'DocNo',
+
+		--	SOHType as 'Type',
+		--	OrdSubTotal as 'Order Amount',
+		--	0 as 'DiscountAmount',
+		--	OrdTax as 'GST Amount',
+		--	OrdTotalAmount as 'Total Amount',
+
+		--	OrdPayments as 'Paid',
+		--	(OrdTotalAmount - OrdPayments) as 'Balance'
+
+		--	from SOHDr 
+		--	inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = SOHDr.OrdClientHdrId
+
+		--	where OrdClientHdr.OrdClientHdrId = @OrdClientHdrId --and OrdTotalAmount > 0
+
+		--	union all
+
+		--	select 
+		--		'QuoteSOItemHdr' as 'Table',
+		--		QuoteSOItemHdrId as 'Id',
+		--		OrdClientHdr.OrdClientHdrId,
+		--		OrdClientHdr.OrdClientName,
+		--		QuoteSOItemSlNo  as 'DocNo',
+				
+		--		QuoteSOItemType as 'Type',
+		--		QuoteSOItemAmount as 'Order Amount', 
+		--		QuoteSOItemDiscountAmount as 'DiscountAmount', 
+		--		QuoteSOItemTaxAmount 'GST Amount',
+		--		QuoteSOItemTotalAmount,
+
+		--		OrderSOItemPayments as 'Paid',  
+		--		(QuoteSOItemTotalAmount - OrderSOItemPayments)  as 'Balance'
+
+		--	from QuoteSOItemHdr 
+		--	inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = QuoteSOItemHdr.OrdClientHdrId
+		--	where OrdClientHdr.OrdClientHdrId = @OrdClientHdrId ---and QuoteSOItemTotalAmount > 0
+
+		--	union all
+
+		--	select 
+		--		'QuoteSOAMCHdr' as 'Table',
+		--		QuoteSOAMCHdrId as 'Id',
+		--		OrdClientHdr.OrdClientHdrId,
+		--		OrdClientHdr.OrdClientName,
+		--		QuoteSOAMCSlNo as 'DocNo',
+
+		--		QuoteSOAMCType as 'Type',
+		--		QuoteSOAMCAmount as 'Order Amount', 
+		--		QuoteSOAMCDiscountAmount as 'DiscountAmount', 
+		--		QuoteSOAMCTaxAmount 'GST Amount',
+		--		QuoteSOAMCTotalAmount,
+
+		--		OrderSOAMCPayments as 'Paid',
+		--		(QuoteSOAMCTotalAmount - OrderSOAMCPayments) as 'Balance'
+
+		--	from QuoteSOAMCHdr 
+		--	inner join OrdClientHdr on OrdClientHdr.OrdClientHdrId = QuoteSOAMCHdr.OrdClientHdrId
+		--	where OrdClientHdr.OrdClientHdrId = @OrdClientHdrId 
+
+		--	) Payments
+          
+  --      --WHERE StocksInwardHdrId = @StocksInwardHdrId

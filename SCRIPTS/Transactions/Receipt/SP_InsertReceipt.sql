@@ -24,7 +24,7 @@ AS
 SET NOCOUNT ON;
 
 BEGIN TRY
-	DECLARE @ReceiptId INT
+	DECLARE @ReceiptHdrId INT
 
 	BEGIN TRANSACTION
 
@@ -38,7 +38,7 @@ BEGIN TRY
     --set @Prefix = (select DefaultDataName from DefaultData where FormType = 'TaxInv' and DefaultDataType = 'Prefix' and DefaultDataOrderBy = 1 )
     ----set @EnqDtlId = (Select EnqDtlId from EnqDtl where EnqHdrId = @EnqHdrId)
 
-	select @ReceiptNo = max(ReceiptNo) from Receipt where CompanyId = @CompanyId  and  BranchId = @BranchId
+	select @ReceiptNo = max(ReceiptNo) from [ReceiptHdr] where CompanyId = @CompanyId  and  BranchId = @BranchId
 	if @ReceiptNo = 0 or @ReceiptNo is NULL
 		set @ReceiptNo = 1
 	else
@@ -47,7 +47,7 @@ BEGIN TRY
 	--set @ReceiptNo = @Prefix + RIGHT('00' + CAST(@TaxInvNo AS VARCHAR(10)), 5) + '/'            
 	--                 + RIGHT(CAST(YEAR(GETDATE()) AS VARCHAR), 2) + '-' + RIGHT(CAST(YEAR(GETDATE()) + 1 AS VARCHAR), 2)
 
-	INSERT INTO Receipt
+	INSERT INTO ReceiptHdr
     (
             CompanyId,
             BranchId,
@@ -89,7 +89,7 @@ BEGIN TRY
           CreatedUserId,
           CreatedDate
 
-    FROM OPENJSON(@Receipt, '$.Receipt')
+    FROM OPENJSON(@Receipt, '$.ReceiptHdr')
     WITH
     (
           ReceiptId          INT,
@@ -111,10 +111,74 @@ BEGIN TRY
 
     );
 
-    SET @ReceiptId = SCOPE_IDENTITY();
+    SET @ReceiptHdrId = SCOPE_IDENTITY();
 
+    ---=========================================
+    ----- Inserting the ProductDtl Amounts
+    ----========================================
+
+   INSERT INTO dbo.ReceiptDtl
+        (
+            ReceiptHdrId,
+            TableName,
+            TableId,
+            OrdClientHdrId,
+            OrdClientName,
+
+            DocNo,
+            Type,
+            OrderAmount,
+            DiscountAmount,
+            TaxAmount,
+            
+            TotalAmount,
+            Paid,
+            Balance,
+            CreatedUserId,
+            CreatedDate
+        )
+        SELECT
+            @ReceiptHdrId,
+            TableName,
+            TableId,
+            OrdClientHdrId,
+            OrdClientName,
+
+            DocNo,
+            Type,
+            OrderAmount,
+            DiscountAmount,
+            TaxAmount,
+            
+            TotalAmount,
+            Paid,
+            Balance,
+            CreatedUserId,
+            CreatedDate
+
+        FROM OPENJSON(@Receipt, '$.ReceiptDtl')
+        WITH
+        (
+            --ReceiptHdId      INT,
+            TableName        NVARCHAR(100),
+            TableId          INT,
+            OrdClientHdrId   INT,
+            OrdClientName    NVARCHAR(200),
+            DocNo            NVARCHAR(100),
+
+            Type             NVARCHAR(50),
+            OrderAmount      DECIMAL(18,2),
+            DiscountAmount   DECIMAL(18,2),
+            TaxAmount        DECIMAL(18,2),
+            TotalAmount      DECIMAL(18,2),
+            
+            Paid             DECIMAL(18,2),
+            Balance          DECIMAL(18,2),
+            CreatedUserId    INT,
+            CreatedDate      DATETIME
+        );
     ---========================================================
-    --- Update Amounts in SoDtl, SoItemHdr, SoAMC
+    --- Update Amounts in SoHdr, SoItemHdr, SoAMCHDr
     ---========================================================
     Declare @TableName NVARCHAR(50)
     Declare @Id INT
@@ -129,11 +193,11 @@ BEGIN TRY
             TableName,
             Id,
             Paid
-        FROM OPENJSON(@Receipt, '$.Payments')
+        FROM OPENJSON(@Receipt, '$.ReceiptDtl')
         WITH
         (
-            TableName VARCHAR(50) '$.Table',
-            Id        INT         '$.Id',
+            TableName VARCHAR(50) '$.TableName',
+            Id        INT         '$.TableId',
             Paid      DECIMAL(18,2) '$.Paid'
         );
 
@@ -172,7 +236,7 @@ BEGIN TRY
         CLOSE CurPayment;
         DEALLOCATE CurPayment;
 
-    Select @ReceiptId
+    Select @ReceiptHdrId
 
 	COMMIT TRANSACTION
 END TRY
@@ -195,3 +259,45 @@ END TRY
 	END CATCH
 
 End_Prog:
+
+
+  --UPDATE RD
+  --  SET
+  --      RD.ReceiptHdId      = @ReceiptId,
+  --      --RD.TableName        = J.TableName,
+  --      --RD.TableId          = J.TableId,
+  --      --RD.OrdClientHdrId   = J.OrdClientHdrId,
+  --      --RD.OrdClientName    = J.OrdClientName,
+  --      --RD.DocNo            = J.DocNo,
+  --      --RD.Type             = J.Type,
+  --      --RD.OrderAmount      = J.OrderAmount,
+  --      --RD.DiscountAmount   = J.DiscountAmount,
+  --      --RD.TaxAmount        = J.TaxAmount,
+  --      --RD.TotalAmount      = J.TotalAmount,
+  --      RD.Paid             = J.Paid,
+  --      --RD.Balance          = J.Balance,
+  --      RD.ModifiedUserId   = J.ModifiedUserId,
+  --      RD.ModifiedDate     = J.ModifiedDate
+
+  --  FROM dbo.ReceiptDtl RD
+  --  INNER JOIN OPENJSON(@Receipt, '$.ReceiptDtl')
+  --  WITH
+  --  (
+  --      ReceiptDtlId      INT,
+  --      --ReceiptHdId       INT,
+  --      --TableName         NVARCHAR(100),
+  --      --TableId           INT,
+  --      --OrdClientHdrId    INT,
+  --      --OrdClientName     NVARCHAR(200),
+  --      --DocNo             NVARCHAR(100),
+  --      --Type              NVARCHAR(50),
+  --      --OrderAmount       DECIMAL(18,2),
+  --      --DiscountAmount    DECIMAL(18,2),
+  --      --TaxAmount         DECIMAL(18,2),
+  --      --TotalAmount       DECIMAL(18,2),
+  --      Paid              DECIMAL(18,2),
+  --      --Balance           DECIMAL(18,2),
+  --      ModifiedUserId    INT,
+  --      ModifiedDate      DATETIME
+  --  ) J
+  --  ON RD.ReceiptDtlId = J.ReceiptDtlId;

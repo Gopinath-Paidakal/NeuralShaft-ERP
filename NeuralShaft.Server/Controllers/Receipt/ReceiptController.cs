@@ -23,22 +23,22 @@ namespace NeuralShaft.Server.Controllers.Receipt
             //return Ok(getDept);
         }
 
-        [HttpGet("GetReceiptById/{receiptId}")]
-        public async Task<ActionResult> GetReceiptById(int receiptId)
+        [HttpGet("GetReceiptById/{receiptHdrId}")]
+        public async Task<ActionResult> GetReceiptById(int receiptHdrId)
         {
 
-            var getReceiptById = await _receiptService.GetReceiptById(receiptId);
+            var getReceiptById = await _receiptService.GetReceiptById(receiptHdrId);
             //int len = json.ToString().Length;
             return Content(getReceiptById, "application/json");
             //return Ok(json);
         }
 
 
-        [HttpGet("GetPaymentsByOrdClientId/{ordClientHdrId}")]
+        [HttpGet("GetSOByOrdClientId/{ordClientHdrId}")]
         public async Task<ActionResult> GetPaymentsByOrdClientId(int ordClientHdrId)
         {
 
-            var getReceiptPayments = await _receiptService.GetPaymentsByOrdClientId(ordClientHdrId);
+            var getReceiptPayments = await _receiptService.GetSOByOrdClientId(ordClientHdrId);
             //int len = json.ToString().Length;
             return Content(getReceiptPayments, "application/json");
             //return Ok(json);
@@ -54,12 +54,12 @@ namespace NeuralShaft.Server.Controllers.Receipt
 
         }
 
-        //[HttpPost("UpdateDepartment/{DeptId}")]
-        //public async Task<IActionResult> UpdateDepartment(int DeptId, [FromBody] object dept)
-        //{
-        //    var updateDept = await _receiptService.UpdateDepartment(DeptId, dept);
-        //    return Ok(updateDept);
+        [HttpPost("UpdateReceipt/{receiptHdrId}")]
+        public async Task<IActionResult> UpdateReceipt(int receiptHdrId, [FromBody] object receipt)
+        {
+            var updateReceipt = await _receiptService.UpdateReceipt(receiptHdrId, receipt);
+            return Ok(updateReceipt);
 
-        //}
+        }
     }
 }
