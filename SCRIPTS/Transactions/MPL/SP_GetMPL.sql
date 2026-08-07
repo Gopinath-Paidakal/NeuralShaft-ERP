@@ -32,13 +32,15 @@ BEGIN TRY
 
 		SELECT 
 
-			  [MPLHdrId]
+			   [MPLHdrId]
 			  ,[MPLHdr].[JobOrderId]
-			  ,[MPLStage]
+			  ,[MPLNo]
 			  ,[MPLDate]
+			  ,[MPLStage]
 			  ,[MPLStatus]
 
 			  ,[SOHdr].SOCustComp
+			  ,[JobOrder].[JobOrderNo]
 
 			  --,[CreatedUserId]
 			  --,[CreatedDate]
@@ -57,9 +59,9 @@ BEGIN TRY
 			--Order by [DeliveryChallanHdr].[DCNo]
 
 		
-			FOR JSON PATH, ROOT('DeliveryChallanHdr')  -- ROOT WITHOUT_ARRAY_WRAPPER
+			FOR JSON PATH, ROOT('MPL')  -- ROOT WITHOUT_ARRAY_WRAPPER
 
-		) AS DeliveryChallanHdr
+		) AS MPL
 
 	COMMIT TRANSACTION
 END TRY

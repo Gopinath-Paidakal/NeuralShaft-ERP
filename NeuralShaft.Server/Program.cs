@@ -15,6 +15,7 @@ using NeuralShaft.Service.EMail;
 using NeuralShaft.Service.ServiceImplementation;
 using NeuralShaft.Service.ServiceImplementation.CRM;
 using NeuralShaft.Service.ServiceImplementation.DeliveryChallan;
+using NeuralShaft.Service.ServiceImplementation.Desparch;
 using NeuralShaft.Service.ServiceImplementation.Enquiry;
 using NeuralShaft.Service.ServiceImplementation.JobOrder;
 using NeuralShaft.Service.ServiceImplementation.Login;
@@ -38,6 +39,7 @@ using NeuralShaft.Service.ServiceImplementation.Vendor;
 using NeuralShaft.Service.ServiceInterfaces;
 using NeuralShaft.Service.ServiceInterfaces.CRM;
 using NeuralShaft.Service.ServiceInterfaces.DeliveryChallan;
+using NeuralShaft.Service.ServiceInterfaces.Despatch;
 using NeuralShaft.Service.ServiceInterfaces.Enquiry;
 using NeuralShaft.Service.ServiceInterfaces.JobOrder;
 using NeuralShaft.Service.ServiceInterfaces.Login;
@@ -167,6 +169,9 @@ builder.Services.AddScoped<IPurchaseOrder, PurchaseOrderService>();
 
 //------- Stocks Inward
 builder.Services.AddScoped<IStocksInward, StocksInwardService>();
+
+//------- Despatch
+builder.Services.AddScoped<IDespatch, DespatchService>();
 
 //------- MPL
 builder.Services.AddScoped<IMPL, MPLService>();

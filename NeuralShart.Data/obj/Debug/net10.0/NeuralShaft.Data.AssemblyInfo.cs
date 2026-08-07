@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeuralShaft.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+722e5c11b15bf9a9c83741a0a7da40b7cb7c183a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cad3323bd922cf8e7d5cfbbe1aba8ad718fffb3")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeuralShaft.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeuralShaft.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

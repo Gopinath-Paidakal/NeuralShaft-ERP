@@ -26,13 +26,20 @@ SET NOCOUNT ON;
 BEGIN TRY
 
 	Declare @MPLHdrId int
-	--Declare @CreatedUserId int
-	--Declare @CreatedDate date
+	Declare @JobOrderId int
+	Declare @ProductId int 
 
 	BEGIN TRANSACTION
 
-		--set @CreatedUserId = JSON_VALUE(@MPLHdr, '$.MPLHdr.CreatedUserId')
+		set @JobOrderId = JSON_VALUE(@MPLHdr, '$.MPLHdr.JobOrderId')
 		--set @CreatedDate = JSON_VALUE(@MPLHdr, '$.MPLHdr.CreatedDate')
+
+		set @ProductId = (SELECT SODtl.DDProductId
+							FROM MPLHdr
+							INNER JOIN joborder on joborder.joborderid = MPLHdr.JobOrderId
+							INNER JOIN SODtl ON SODtl.SODtlId = JobOrder.SODtlId
+							WHERE MPLHdr.JobOrderId = @JobOrderId)
+
 		
 		INSERT INTO dbo.MPLHdr
 		(
@@ -105,7 +112,7 @@ BEGIN TRY
 				  ,[CreatedUserId]
 				  ,[CreatedDate]
 
-			FROM [dbo].[JobOrderBOM]
+			FROM [dbo].[JobOrderBOM] where ProductId = @ProductId
 		
 
 	select @MPLHdrId

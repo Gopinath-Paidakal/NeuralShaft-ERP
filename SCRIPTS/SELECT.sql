@@ -161,15 +161,15 @@ Select * from ProformaInvDtl
 Select * from TaxInvHdr
 Select * from TaxInvDtl
 
-Delete from ReceiptHdr
-Delete from ReceiptDtl
+delete from ReceiptHdr
+delete from ReceiptDtl
 
 Select * from ReceiptHdr
 Select * from ReceiptDtl
 
---update sohdr set ordpayments = 0 where ordclienthdrid = 161
---update QuoteSOItemHdr set OrderSOItemPayments = 0 where ordclienthdrid = 161
---update QuoteSOAMCHdr set OrderSOAMCPayments = 0 where ordclienthdrid = 161
+update sohdr set ordpayments = 0 where ordclienthdrid = 161
+update QuoteSOItemHdr set OrderSOItemPayments = 0 where ordclienthdrid = 161
+update QuoteSOAMCHdr set OrderSOAMCPayments = 0 where ordclienthdrid = 161
 
 select ordpayments from sohdr where ordclienthdrid = 161
 select OrderSOItemPayments from QuoteSOItemHdr where ordclienthdrid = 161
