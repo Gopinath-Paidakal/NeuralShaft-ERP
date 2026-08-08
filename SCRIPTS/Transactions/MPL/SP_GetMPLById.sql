@@ -50,7 +50,7 @@ BEGIN TRY
             ,[SODtl].[NoStopDetails]
             ,[SODtl].[FloorDetails]
              
-             [MPLStage]
+            ,[MPLStage]
             ,[MPLNo]
             ,[MPLDate]
             ,[MPLStatus]
@@ -76,63 +76,26 @@ BEGIN TRY
 
           Item.ItemId,
           Item.ItemType,
-
-          CASE
-               WHEN MPLDtl.AssemblyHdrId IS NULL
-                    THEN MPLDtl.ItemQty
-               ELSE AssemblyItem.ItemQty
-          END AS ItemQty,
-
+          
           Item.ItemName,
           DefaultData.DefaultDataName AS UOM,
           Item.ItemLength,
 
           MPLDtl.ItemReqdQty,
           MPLDtl.ItemTotalQty,
-          MPLDTl.ItemStockQty
+          Item.ItemStockQty
 
 	    FROM MPLDtl
 
 		LEFT JOIN AssemblyHdr ON AssemblyHdr.AssemblyHdrId = MPLDtl.AssemblyHdrId
-		LEFT JOIN AssemblyItem ON AssemblyItem.AssemblyHdrId = AssemblyHdr.AssemblyHdrId
-		LEFT JOIN Item
-				ON Item.ItemId =
-					CASE
-						WHEN MPLDtl.AssemblyHdrId IS NULL
-							THEN MPLDtl.ItemId
-						ELSE AssemblyItem.ItemId
-					END
+		LEFT JOIN Item on Item.ItemId = MPLDtl.ItemId
 
 		LEFT JOIN DefaultData ON DefaultData.DefaultDataId = Item.UomId
 
 		WHERE MPLDtl.ProductId = @ProductId
-
-	    FOR JSON PATH)
-
-	   --    SELECT [MPLDtlId]
-    --          ,[MPLHdrId]
-    --          ,[SODtlId]
-    --          ,[JobOrderId]
-    --          ,[ProductId]
-    --          ,[AssemblyHdr].[AssemblyHdrId]
-    --          ,[AssemblyHdr].[AssemblyName]
-    --          ,[MPLDtl].[ItemId]
-    --          ,[MPLDtl].[ItemQty]
-    --          ,[ItemReqdQty]
-    --          ,[ItemTotalQty]
-    --          ,[ItemStockQty]
-
-    --          --,[CreatedUserId]
-    --          --,[CreatedDate]
-
-    --      FROM [dbo].[MPLDtl]
-    --      LEFT JOIN AssemblyHdr ON AssemblyHdr.AssemblyHdrId = MPLDtl.AssemblyHdrId
-		  --LEFT JOIN AssemblyItem ON AssemblyItem.AssemblyHdrId = AssemblyHdr.AssemblyHdrId
-
-    --    WHERE MPLHdrId = @MPLHdrId
-
-    --    FOR JSON PATH    
-    --)
+    
+        FOR JSON PATH    
+    )
    
 
     SET @MPLHdrDtl = (

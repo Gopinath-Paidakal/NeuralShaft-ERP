@@ -87,7 +87,79 @@ BEGIN TRY
 
     --Select @ProductId
 
-    Select 'Job Order BOM Inserted'
+
+
+    --===================================================
+    --- Insert MPLHdr from Job Order
+    --===================================================
+
+    --INSERT INTO [dbo].[MPLHdr]
+    --       ([JobOrderId]
+    --       ,[MPLStage]
+    --       ,[MPLNo]
+    --       ,[MPLDate]
+    --       ,[MPLStatus]
+    --       ,[CreatedUserId]
+    --       ,[CreatedDate])
+    --       --,[ModifiedUserId]
+    --       --,[ModifiedDate])
+    -- VALUES
+    --       (
+    --        11,
+    --        'Stage 01',
+    --        2,
+    --        '2026-08-08',
+    --        'Pending'
+    --        15,
+    --        '2026-08-08')
+          
+
+    --===================================================
+    --- Insert MPLDtl from Job Order
+    --===================================================
+
+
+
+
+    --INSERT INTO [dbo].[MPLDtl]
+    --       (--[MPLHdrId]
+           
+    --       [SODtlId]
+    --       ,[JobOrderId]
+    --       ,[ProductId]
+    --       ,[AssemblyHdrId]
+
+    --       ,[ItemId]
+    --       ,[ItemQty]
+    --       ,[ItemReqdQty]
+    --       ,[ItemTotalQty]
+
+    --       --,[ItemStockQty]
+    --       ,[CreatedUserId]
+    --       ,[CreatedDate])
+
+    -- SELECT --[JobOrderBOMId]
+    --      [SODtlId]
+    --      ,[JobOrderId]
+    --      ,[ProductId]
+    --      ,[AssemblyHdrId]
+
+    --      ,[ItemId]
+    --      ,[ItemQty]
+    --      ,[ItemReqdQty]
+    --      ,[ItemTotalQty]
+      
+    --      ,[CreatedUserId]
+    --      ,[CreatedDate]
+    --  FROM [NSERPLIVE].[dbo].[JobOrderBOM]
+     
+
+     
+
+
+    Select 'Job Order BOM/MPL Inserted'
+
+
 
     COMMIT TRANSACTION
   

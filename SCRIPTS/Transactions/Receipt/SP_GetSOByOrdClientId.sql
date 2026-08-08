@@ -78,7 +78,7 @@ BEGIN TRY
 			SOHSlNo as 'DocNo',
 
 			SOHType as 'Type',
-			OrdSubTotal as 'OrderAmount',
+			OrdAmount as 'OrderAmount',
 			--0 as 'DiscountAmount',
 			OrdTax as 'GSTAmount',
 			OrdTotalAmount as 'TotalAmount',

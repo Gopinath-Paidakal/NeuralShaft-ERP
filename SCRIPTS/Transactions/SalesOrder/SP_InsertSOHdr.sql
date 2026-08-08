@@ -192,7 +192,7 @@ BEGIN TRY
 	-------------------------------
 
 	------------------------------------------
-	-- Copy SODtl from EnqDtl and Update SOHdrId in EnqDtl
+	-- Insert SODtl from EnqDtl and Update SOHdrId in EnqDtl
 	----------------------------------------------
 	INSERT INTO [dbo].[SoDtl]
            (
@@ -303,7 +303,7 @@ BEGIN TRY
 
 			)           --60
 		   
-	SELECT 
+	SELECT                          --- From EnqDtl
 			 [EnqHdrId]			
 		 	,[EnqDtlId]
 			  
@@ -416,6 +416,32 @@ BEGIN TRY
 		  where EnqDtl.EnqDtlId = @EnqDtlId
 
 		  set @SODtlId = SCOPE_IDENTITY()
+
+		  -----=====================================================
+		  ----- Update Amounts in SOHdr
+		  -----=====================================================
+		   UPDATE H
+                SET
+                    
+                    H.OrdAmount               = ISNULL(T.SOSubTotal,0),
+                    H.OrdTax                  = ISNULL(T.SOTaxAmount,0),
+                    H.OrdTotalAmount          = ISNULL(T.SOTotalAmount,0)
+
+                    FROM SOHdr H
+
+                OUTER APPLY
+                (
+                    SELECT
+                        SUM(SOSubTotal)          AS SOSubTotal,
+                        SUM(SOTaxAmount)         AS SOTaxAmount,
+                        SUM(SOTotalAmount)       AS SOTotalAmount
+
+                    FROM SoDtl D
+                    WHERE D.SOHdrId =  @SOHdrId
+                ) T
+
+                WHERE H.SOHdrId = @SOHdrId;  
+
 
 		  --==========================================
 		  -- Inserting SOLandDoor
